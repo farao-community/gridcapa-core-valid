@@ -5,7 +5,7 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package com.farao_community.farao.gridcapa_core_valid.app;
+package com.farao_community.farao.gridcapa_core_valid.app.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
@@ -18,13 +18,13 @@ import java.util.List;
  */
 @ConstructorBinding
 @ConfigurationProperties("core-valid-server")
-public class CoreValidProperties {
+public class CoreValidServerProperties {
     private final RequestsProperties requests;
     private final ResponsesProperties responses;
     private final MinioProperties minio;
     private final SecurityProperties security;
 
-    public CoreValidProperties(RequestsProperties requests,
+    public CoreValidServerProperties(RequestsProperties requests,
                                      ResponsesProperties responses,
                                      MinioProperties minio,
                                      SecurityProperties security) {

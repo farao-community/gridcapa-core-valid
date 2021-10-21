@@ -4,8 +4,8 @@ spring:
   rabbitmq:
     host: ${RABBITMQ_HOST:localhost}
     port: ${RABBITMQ_PORT:5672}
-    username: ${RABBITMQ_USERNAME:core-validation}
-    password: ${RABBITMQ_PASSWORD:core-validation}
+    username: ${RABBITMQ_USERNAME:gridcapa}
+    password: ${RABBITMQ_PASSWORD:gridcapa}
     template:
       reply-timeout: 6000000
 
