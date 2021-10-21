@@ -1,0 +1,30 @@
+spring:
+  banner:
+    location: classpath:banner.txt
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:core-validation}
+    password: ${RABBITMQ_PASSWORD:core-validation}
+    template:
+      reply-timeout: 6000000
+
+core-valid-server:
+  requests:
+    queue-name: ${CORE_VALID_SERVER_QUEUE_NAME:core-valid-requests}
+  responses:
+    exchange: core-valid-response
+    expiration: 60000
+  minio:
+    access:
+      name: ${MINIO_USERNAME:core-validation}
+      secret: ${MINIO_PASSWORD:core-validation}
+    url: http://${MINIO_HOST:localhost}:${MINIO_PORT:9000}
+    bucket: ${MINIO_BUCKET:core-validation}
+    base-path: ${CORE_VALID_SERVER_MINIO_BASE_PATH:core-valid/}
+  security:
+    whitelist:
+      - http://${MINIO_HOST:localhost}:${MINIO_PORT:9000}
+
+server:
+  port: ${CORE_VALID_SERVER_PORT:8080}
