@@ -20,15 +20,56 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class CoreValidRequest {
     @Id
     private final String id;
-    //todo add others inputs
+    private final String timestamp;
+    private final CoreValidFileResource cgm;
+    private final CoreValidFileResource cbcora;
+    private final CoreValidFileResource glsk;
+    private final CoreValidFileResource refProg;
+    private final CoreValidFileResource studyPoints;
 
     @JsonCreator
-    public CoreValidRequest(@JsonProperty("id") String id) {
+    public CoreValidRequest(@JsonProperty("id") String id,
+                            @JsonProperty("timestamp") String timestamp,
+                            @JsonProperty("cgm") CoreValidFileResource cgm,
+                            @JsonProperty("cbcora") CoreValidFileResource cbcora,
+                            @JsonProperty("glsk") CoreValidFileResource glsk,
+                            @JsonProperty("refProg") CoreValidFileResource refProg,
+                            @JsonProperty("studyPoints") CoreValidFileResource studyPoints) {
         this.id = id;
+        this.timestamp = timestamp;
+        this.cgm = cgm;
+        this.cbcora = cbcora;
+        this.glsk = glsk;
+        this.refProg = refProg;
+        this.studyPoints = studyPoints;
     }
 
     public String getId() {
         return id;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public CoreValidFileResource getCgm() {
+        return cgm;
+    }
+
+    public CoreValidFileResource getCbcora() {
+        return cbcora;
+    }
+
+    public CoreValidFileResource getGlsk() {
+        return glsk;
+    }
+
+    public CoreValidFileResource getRefProg() {
+        return refProg;
+    }
+
+    public CoreValidFileResource getStudyPoints() {
+        return studyPoints;
     }
 
     @Override

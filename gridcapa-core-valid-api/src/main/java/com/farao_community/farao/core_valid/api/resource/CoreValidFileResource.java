@@ -8,26 +8,31 @@
 package com.farao_community.farao.core_valid.api.resource;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.github.jasminb.jsonapi.annotations.Id;
-import com.github.jasminb.jsonapi.annotations.Type;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.util.Objects;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
-@Type("core-valid-response")
-public class CoreValidResponse {
-
-    @Id
-    private final String id;
+public class CoreValidFileResource {
+    private final String filename;
+    private final String url;
 
     @JsonCreator
-    public CoreValidResponse(String id) {
-        this.id = id;
+    public CoreValidFileResource(@JsonProperty("filename") String filename,
+                                 @JsonProperty("url") String url) {
+        this.filename = Objects.requireNonNull(filename);
+        this.url = Objects.requireNonNull(url);
     }
 
-    public String getId() {
-        return id;
+    public String getFilename() {
+        return filename;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     @Override
