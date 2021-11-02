@@ -11,7 +11,6 @@ import com.farao_community.farao.core_valid.api.exception.AbstractCoreValidExcep
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataException;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
-import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

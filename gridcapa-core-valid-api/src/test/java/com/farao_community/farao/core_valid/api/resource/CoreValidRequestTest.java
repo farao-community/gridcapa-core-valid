@@ -9,9 +9,6 @@ package com.farao_community.farao.core_valid.api.resource;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
-import java.util.TreeMap;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
