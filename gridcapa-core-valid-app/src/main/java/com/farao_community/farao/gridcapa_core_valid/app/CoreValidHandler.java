@@ -13,6 +13,8 @@ import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
 import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
+import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
+import com.farao_community.farao.data.refprog.refprog_xml_importer.RefProgImporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -20,8 +22,11 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.HashMap;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -37,13 +42,23 @@ public class CoreValidHandler {
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
         Network cgm = loadNetwork(coreValidRequest.getCgm());
-        Map<String, Double> referenceNPByCountry = computeRefProgNP(coreValidRequest.getRefProg().getUrl());
+        ReferenceProgram referenceProgram = importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
+        Map<String, Double> coreNetPositions = computeCoreReferenceNetPositions(referenceProgram);
         importStudyPoints(coreValidRequest.getStudyPoints().getUrl());
         Map<String, Double> studyPointNPByCountry = computeStudyPointNP();
-        shiftNetPosition(cgm, coreValidRequest.getGlsk(), referenceNPByCountry);
+        shiftNetPosition(cgm, coreValidRequest.getGlsk(), coreNetPositions);
         shiftAlegroNP(cgm);
         saveShiftedCgm();
         return new CoreValidResponse(coreValidRequest.getId());
+    }
+
+    ReferenceProgram importReferenceProgram(CoreValidFileResource refProgFile, LocalDateTime timestamp) {
+        OffsetDateTime offsetDateTime = OffsetDateTime.of(timestamp, ZoneOffset.UTC);
+        try (InputStream refProgStream = new URL(refProgFile.getUrl()).openStream()) {
+            return RefProgImporter.importRefProg(refProgStream, offsetDateTime);
+        } catch (IOException e) {
+            throw new CoreValidInvalidDataException(String.format("Cannot download reference program file from URL '%s'", refProgFile.getUrl()), e);
+        }
     }
 
     private void importStudyPoints(String url) {
@@ -66,9 +81,17 @@ public class CoreValidHandler {
         return null;
     }
 
-    private Map<String, Double> computeRefProgNP(String url) {
-        //todo compute for each country NPref in Core
-        return new HashMap<>();
+    Map<String, Double> computeCoreReferenceNetPositions(ReferenceProgram referenceProgram) {
+        Map<String, Double> coreNetPositions = new TreeMap<>();
+        referenceProgram.getReferenceExchangeDataList().forEach(referenceExchangeData -> {
+            String areaIn = referenceExchangeData.getAreaIn().toString();
+            String areaOut = referenceExchangeData.getAreaOut().toString();
+            if (CoreAreasId.ID_MAPPING.containsKey(areaIn) && CoreAreasId.ID_MAPPING.containsKey(areaOut)) {
+                coreNetPositions.put(areaIn, coreNetPositions.getOrDefault(areaIn, 0.) - referenceExchangeData.getFlow());
+                coreNetPositions.put(areaOut, coreNetPositions.getOrDefault(areaOut, 0.) + referenceExchangeData.getFlow());
+            }
+        });
+        return coreNetPositions;
     }
 
     private Network loadNetwork(CoreValidFileResource network) {

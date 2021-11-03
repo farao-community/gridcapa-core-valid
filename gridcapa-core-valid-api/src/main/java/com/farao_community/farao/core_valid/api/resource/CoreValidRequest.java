@@ -13,6 +13,8 @@ import com.github.jasminb.jsonapi.annotations.Id;
 import com.github.jasminb.jsonapi.annotations.Type;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.time.LocalDateTime;
+
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
@@ -20,7 +22,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class CoreValidRequest {
     @Id
     private final String id;
-    private final String timestamp;
+    private final LocalDateTime timestamp;
     private final CoreValidFileResource cgm;
     private final CoreValidFileResource cbcora;
     private final CoreValidFileResource glsk;
@@ -29,7 +31,7 @@ public class CoreValidRequest {
 
     @JsonCreator
     public CoreValidRequest(@JsonProperty("id") String id,
-                            @JsonProperty("timestamp") String timestamp,
+                            @JsonProperty("timestamp") LocalDateTime timestamp,
                             @JsonProperty("cgm") CoreValidFileResource cgm,
                             @JsonProperty("cbcora") CoreValidFileResource cbcora,
                             @JsonProperty("glsk") CoreValidFileResource glsk,
@@ -48,7 +50,7 @@ public class CoreValidRequest {
         return id;
     }
 
-    public String getTimestamp() {
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 

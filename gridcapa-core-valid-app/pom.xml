@@ -68,6 +68,14 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>com.farao-community.farao</groupId>
+            <artifactId>farao-reference-program</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.farao-community.farao</groupId>
+            <artifactId>farao-refprog-xml-importer</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>
         </dependency>

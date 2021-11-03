@@ -2,7 +2,7 @@
   "data": {
     "type": "core-valid-request",
     "id": "id",
-    "timestamp": "timestamp",
+    "timestamp": "2021-10-03T00:30",
     "attributes": {
       "cgm": {
         "filename": "cgm.txt"
