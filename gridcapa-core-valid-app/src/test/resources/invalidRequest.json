@@ -1,0 +1,28 @@
+{
+  "data": {
+    "type": "core-valid-request",
+    "id": "id",
+    "timestamp": "timestamp",
+    "attributes": {
+      "cgm": {
+        "filename": "cgm.txt"
+      },
+      "cbcora": {
+        "filename": "cbcora.txt",
+        "url": "https://cbcora/file/url"
+      },
+      "glsk": {
+        "filename": "glsk.txt",
+        "url": "https://glsk/file/url"
+      },
+      "refProg": {
+        "filename": "refProg.txt",
+        "url": "https://refProg/file/url"
+      },
+      "studyPoints": {
+        "filename": "studyPoints.txt",
+        "url": "https://studyPoints/file/url"
+      }
+    }
+  }
+}
