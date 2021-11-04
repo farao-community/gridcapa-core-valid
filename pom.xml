@@ -48,7 +48,7 @@
         <jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
         <jaxb-runtime.version>2.4.0-b180830.0438</jaxb-runtime.version>
         <jsonapi.converter.version>0.10</jsonapi.converter.version>
-
+        <opencsv.version>5.2</opencsv.version>
         <farao.bom.version>1.0.10</farao.bom.version>
     </properties>
 
@@ -87,7 +87,11 @@
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons.lang.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.opencsv</groupId>
+                <artifactId>opencsv</artifactId>
+                <version>${opencsv.version}</version>
+            </dependency>
 
             <!-- RUNTIME -->
             <dependency>

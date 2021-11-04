@@ -11,6 +11,7 @@ import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataEx
 import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
+import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
 import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
@@ -25,6 +26,8 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -44,7 +47,7 @@ public class CoreValidHandler {
         Network cgm = loadNetwork(coreValidRequest.getCgm());
         ReferenceProgram referenceProgram = importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
         Map<String, Double> coreNetPositions = computeCoreReferenceNetPositions(referenceProgram);
-        importStudyPoints(coreValidRequest.getStudyPoints().getUrl());
+        List<StudyPoint> studyPoints = importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
         Map<String, Double> studyPointNPByCountry = computeStudyPointNP();
         shiftNetPosition(cgm, coreValidRequest.getGlsk(), coreNetPositions);
         shiftAlegroNP(cgm);
@@ -61,8 +64,9 @@ public class CoreValidHandler {
         }
     }
 
-    private void importStudyPoints(String url) {
+    private List<StudyPoint> importStudyPoints(CoreValidFileResource studyPointsFileResource, LocalDateTime timestamp) {
         //todo
+        return new ArrayList<>();
     }
 
     private void shiftAlegroNP(Network cgm) {
