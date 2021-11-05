@@ -9,8 +9,7 @@ package com.farao_community.farao.core_valid.api.resource;
 
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.OffsetDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,11 +25,11 @@ class CoreValidRequestTest {
         CoreValidFileResource glsk = new CoreValidFileResource("glsk.txt", "http://path/to/glsk/file");
         CoreValidFileResource refProg = new CoreValidFileResource("refprog.txt", "http://path/to/refProg/file");
         CoreValidFileResource studyPoints = new CoreValidFileResource("study-points.txt", "http://path/to/studyPoints/file");
-        LocalDateTime dateTime = LocalDateTime.parse("2021-10-03T00:30", DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        OffsetDateTime dateTime = OffsetDateTime.parse("2021-10-03T00:30Z");
         CoreValidRequest coreValidRequest = new CoreValidRequest("id", dateTime, cgm, cbcora, glsk, refProg, studyPoints);
         assertNotNull(coreValidRequest);
         assertEquals("id", coreValidRequest.getId());
-        assertEquals("2021-10-03T00:30", coreValidRequest.getTimestamp().toString());
+        assertEquals("2021-10-03T00:30Z", coreValidRequest.getTimestamp().toString());
         assertEquals("network.txt", coreValidRequest.getCgm().getFilename());
         assertEquals("cbcora.txt", coreValidRequest.getCbcora().getFilename());
         assertEquals("refprog.txt", coreValidRequest.getRefProg().getFilename());

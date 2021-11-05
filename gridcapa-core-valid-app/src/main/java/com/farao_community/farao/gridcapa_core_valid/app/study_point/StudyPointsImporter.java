@@ -17,7 +17,10 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -25,12 +28,14 @@ import java.util.*;
 public final class StudyPointsImporter {
     private static final Logger LOGGER = LoggerFactory.getLogger(StudyPointsImporter.class);
 
-    public static List<StudyPoint> importStudyPoints(File file) {
-        try {
-            return importStudyPoints(new FileReader(file));
-        } catch (FileNotFoundException e) {
-            throw new UncheckedIOException(e);
-        }
+    public static List<StudyPoint> importStudyPoints(InputStream inputStream) {
+        return importStudyPoints(new InputStreamReader(inputStream));
+    }
+
+    public static List<StudyPoint> importStudyPoints(InputStream studyPointsStream, OffsetDateTime timestamp) {
+        List<StudyPoint> allStudyPoints = StudyPointsImporter.importStudyPoints(studyPointsStream);
+        int period = timestamp.atZoneSameInstant(ZoneId.of("Europe/Paris")).getHour();
+        return allStudyPoints.stream().filter(studyPoint -> studyPoint.getPeriod() == period).collect(Collectors.toList());
     }
 
     private static List<StudyPoint> importStudyPoints(Reader reader) {

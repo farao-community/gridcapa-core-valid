@@ -17,8 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.net.URL;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.OffsetDateTime;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,10 +41,10 @@ class CoreValidHandlerTest {
         String requestId = "Test request";
         CoreValidFileResource networkFile = createFileResource(getClass().getResource(testDirectory + "/20210723_0030_2D5_CGM.uct"));
 
-        LocalDateTime dateTime = LocalDateTime.parse("2021-07-22T22:30", DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        OffsetDateTime dateTime = OffsetDateTime.parse("2021-07-22T22:30Z");
         CoreValidFileResource refProgFile = createFileResource(getClass().getResource(testDirectory + "/20210723-F110-v1-17XTSO-CS------W-to-10V1001C--00085T.xml"));
-        CoreValidFileResource studyPointsFile = new CoreValidFileResource("study-points", "url");
-        CoreValidFileResource glskFile = new CoreValidFileResource("glsk", "url");
+        CoreValidFileResource studyPointsFile = createFileResource(getClass().getResource(testDirectory + "/20210723-Points_Etudes-v01.csv"));
+        CoreValidFileResource glskFile = createFileResource(getClass().getResource(testDirectory + "/20210723-F226-v1-17XTSO-CS------W-to-10V1001C--00085T.xml"));
         CoreValidFileResource cbcoraFile = new CoreValidFileResource("cbcora", "url");
 
         CoreValidRequest request = new CoreValidRequest(requestId, dateTime, networkFile, cbcoraFile, glskFile,  refProgFile, studyPointsFile);
@@ -59,7 +58,7 @@ class CoreValidHandlerTest {
     @Test
     void computeCoreNetPositionsTest() {
         CoreValidFileResource refProgFile = createFileResource(getClass().getResource(testDirectory + "/20210723-F110-v1-17XTSO-CS------W-to-10V1001C--00085T.xml"));
-        LocalDateTime dateTime = LocalDateTime.parse("2021-07-22T22:30", DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        OffsetDateTime dateTime = OffsetDateTime.parse("2021-07-22T22:30Z");
         ReferenceProgram referenceProgram = coreValidHandler.importReferenceProgram(refProgFile, dateTime);
         assertEquals(-50, referenceProgram.getGlobalNetPosition("10YFR-RTE------C"));
         assertEquals(-450, referenceProgram.getGlobalNetPosition("10YCB-GERMANY--8"));

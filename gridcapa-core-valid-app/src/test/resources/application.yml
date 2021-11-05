@@ -1,0 +1,23 @@
+spring:
+  rabbitmq:
+    host: localhost-test
+    port: 1234
+    username: guest-test
+    password: guest-test
+
+core-valid-server:
+  requests:
+    queue-name: core-valid-test
+  responses:
+    exchange: core-valid-response-test
+    expiration: 60000
+  minio:
+    access:
+      name: minioadmin-test
+      secret: minioadmin-test
+    url: http://localhost-test:9000
+    bucket: core-validation-test
+    base-path: core-valid-test/
+  security:
+    whitelist:
+      - file:/
