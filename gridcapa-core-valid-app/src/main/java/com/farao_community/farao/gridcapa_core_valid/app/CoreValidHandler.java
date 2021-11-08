@@ -11,12 +11,14 @@ import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataEx
 import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
+import com.farao_community.farao.data.glsk.api.GlskDocument;
+import com.farao_community.farao.data.glsk.api.io.GlskDocumentImporters;
+import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
+import com.farao_community.farao.data.refprog.refprog_xml_importer.RefProgImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointsImporter;
 import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
-import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
-import com.farao_community.farao.data.refprog.refprog_xml_importer.RefProgImporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -24,7 +26,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.OffsetDateTime;
-
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -47,13 +48,22 @@ public class CoreValidHandler {
         Network cgm = loadNetwork(coreValidRequest.getCgm());
         ReferenceProgram referenceProgram = importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
         Map<String, Double> coreNetPositions = computeCoreReferenceNetPositions(referenceProgram);
+        GlskDocument glskDocument = importGlskFile(coreValidRequest.getGlsk());
         List<StudyPoint> studyPoints = importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
 
-        studyPoints.forEach(studyPoint -> computeStudyPoint(studyPoint, cgm, coreNetPositions));
+        studyPoints.forEach(studyPoint -> computeStudyPoint(studyPoint, cgm, coreNetPositions, glskDocument));
         return new CoreValidResponse(coreValidRequest.getId());
     }
 
-    private void computeStudyPoint(StudyPoint studyPoint, Network cgm, Map<String, Double> coreNetPositions) {
+    GlskDocument importGlskFile(CoreValidFileResource glskFileResource) {
+        try (InputStream glskStream = urlValidationService.openUrlStream(glskFileResource.getUrl())) {
+            return GlskDocumentImporters.importGlsk(glskStream);
+        } catch (IOException e) {
+            throw new CoreValidInvalidDataException(String.format("Cannot download reference program file from URL '%s'", glskFileResource.getUrl()), e);
+        }
+    }
+
+    private void computeStudyPoint(StudyPoint studyPoint, Network cgm, Map<String, Double> coreNetPositions, GlskDocument glskDocument) {
         shiftNetPosition(cgm, coreNetPositions, studyPoint.getPositions());
         shiftAlegroNP(cgm);
         saveShiftedCgm();

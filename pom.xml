@@ -50,6 +50,7 @@
         <jsonapi.converter.version>0.10</jsonapi.converter.version>
         <opencsv.version>5.2</opencsv.version>
         <farao.bom.version>1.0.10</farao.bom.version>
+        <farao.core.version>3.2.0</farao.core.version>
     </properties>
 
     <build>
@@ -91,6 +92,11 @@
                 <groupId>com.opencsv</groupId>
                 <artifactId>opencsv</artifactId>
                 <version>${opencsv.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.farao-community.farao</groupId>
+                <artifactId>farao-glsk-document-api</artifactId>
+                <version>${farao.core.version}</version>
             </dependency>
 
             <!-- RUNTIME -->

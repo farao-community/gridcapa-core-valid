@@ -10,6 +10,8 @@ package com.farao_community.farao.gridcapa_core_valid.app;
 import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
+import com.farao_community.farao.data.glsk.api.GlskDocument;
+import com.farao_community.farao.data.glsk.ucte.UcteGlskDocument;
 import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,5 +72,13 @@ class CoreValidHandlerTest {
         assertEquals(-450, coreNetPositions.get("DE"));
         assertEquals(225, coreNetPositions.get("NL"));
         assertEquals(275, coreNetPositions.get("BE"));
+    }
+
+    @Test
+    void importGlskTest() {
+        CoreValidFileResource glskFile = createFileResource(getClass().getResource(testDirectory + "/20210723-F226-v1-17XTSO-CS------W-to-10V1001C--00085T.xml"));
+        GlskDocument glskDocument = coreValidHandler.importGlskFile(glskFile);
+        assertEquals(4, ((UcteGlskDocument) glskDocument).getListGlskSeries().size());
+        assertEquals(1, glskDocument.getGlskPoints("10YFR-RTE------C").size());
     }
 }
