@@ -22,7 +22,6 @@ import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointsImporter;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.iidm.export.Exporters;
-import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Country;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Network;
@@ -58,37 +57,32 @@ public class CoreValidHandler {
     }
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
-        Network cgm = loadNetwork(coreValidRequest.getCgm());
+        InputStream networkStream = urlValidationService.openUrlStream(coreValidRequest.getCgm().getUrl());
+        Network network = NetworkHandler.loadNetwork(coreValidRequest.getCgm().getFilename(), networkStream);
         ReferenceProgram referenceProgram = importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
         Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
         GlskDocument glskDocument = importGlskFile(coreValidRequest.getGlsk());
         List<StudyPoint> studyPoints = importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
-        ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(cgm, coreValidRequest.getTimestamp().toInstant());
-        Map<String, InitGenerator> initGenerators = setPminPmaxToDefaultValue(cgm, scalableZonalData);
-        studyPoints.forEach(studyPoint -> computeStudyPoint(studyPoint, cgm, scalableZonalData, coreNetPositions, initGenerators));
+        ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
+        Map<String, InitGenerator> initGenerators = setPminPmaxToDefaultValue(network, scalableZonalData);
+        studyPoints.forEach(studyPoint -> computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions, initGenerators));
         return new CoreValidResponse(coreValidRequest.getId());
     }
 
     GlskDocument importGlskFile(CoreValidFileResource glskFileResource) {
         try (InputStream glskStream = urlValidationService.openUrlStream(glskFileResource.getUrl())) {
             LOGGER.info("Import of Glsk file {} ", glskFileResource.getFilename());
-            GlskDocument glskDocument = GlskDocumentImporters.importGlsk(glskStream);
-            removeAlegroGskSeries(glskDocument);
-            return glskDocument;
+            return GlskDocumentImporters.importGlsk(glskStream);
         } catch (IOException e) {
             throw new CoreValidInvalidDataException(String.format("Cannot download reference program file from URL '%s'", glskFileResource.getUrl()), e);
         }
     }
 
-    private void removeAlegroGskSeries(GlskDocument glskDocument) {
-        //todo
-    }
-
-    private void computeStudyPoint(StudyPoint studyPoint, Network cgm, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, Map<String, InitGenerator> initGenerators) {
+    private void computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, Map<String, InitGenerator> initGenerators) {
         LOGGER.info("Running computation for study point {} ", studyPoint.getId());
-        NetPositionsHandler.shiftNetPositionToStudyPoint(cgm, studyPoint, scalableZonalData, coreNetPositions);
-        resetInitialPminPmax(cgm, scalableZonalData, initGenerators);
-        saveShiftedCgm(cgm, studyPoint);
+        NetPositionsHandler.shiftNetPositionToStudyPoint(network, studyPoint, scalableZonalData, coreNetPositions);
+        resetInitialPminPmax(network, scalableZonalData, initGenerators);
+        saveShiftedCgm(network, studyPoint);
     }
 
     ReferenceProgram importReferenceProgram(CoreValidFileResource refProgFile, OffsetDateTime timestamp) {
@@ -108,19 +102,11 @@ public class CoreValidHandler {
         }
     }
 
-    private void saveShiftedCgm(Network cgm, StudyPoint studyPoint) { //todo save in minio
-        String fileName = cgm.getNameOrId() + "_" + studyPoint.getId() + ".uct";
+    private void saveShiftedCgm(Network network, StudyPoint studyPoint) { //todo save in minio
+        String fileName = network.getNameOrId() + "_" + studyPoint.getId() + ".uct";
         Path path = Paths.get(fileName);
-        Exporters.export("UCTE", cgm, new Properties(), path);
-    }
-
-    private Network loadNetwork(CoreValidFileResource networkFileResource) {
-        try (InputStream networkStream = urlValidationService.openUrlStream(networkFileResource.getUrl())) {
-            LOGGER.info("IIDM import of network : {}", networkFileResource.getFilename());
-            return Importers.loadNetwork(networkFileResource.getFilename(), networkStream);
-        } catch (IOException e) {
-            throw new CoreValidInvalidDataException(String.format("Cannot download networkFileResource file from URL '%s'", networkFileResource.getUrl()), e);
-        }
+        NetworkHandler.removeAlegroVirtualGeneratorsFromNetwork(network);
+        Exporters.export("UCTE", network, new Properties(), path);
     }
 
     private Map<String, InitGenerator> setPminPmaxToDefaultValue(Network network, ZonalData<Scalable> scalableZonalData) {

@@ -27,13 +27,17 @@ public class UrlValidationService {
         this.securityProperties = serverProperties.getSecurity();
     }
 
-    public InputStream openUrlStream(String urlString) throws IOException {
+    public InputStream openUrlStream(String urlString) {
         if (securityProperties.getWhitelist().stream().noneMatch(urlString::startsWith)) {
             StringJoiner sj = new StringJoiner(", ", "Whitelist: ", ".");
             securityProperties.getWhitelist().forEach(sj::add);
             throw new CoreValidInvalidDataException(String.format("URL '%s' is not part of application's whitelist. %s", urlString, sj));
         }
-        URL url = new URL(urlString);
-        return url.openStream(); // NOSONAR Usage of whitelist not triggered by Sonar quality assessment, even if listed as a solution to the vulnerability
+        try {
+            URL url = new URL(urlString);
+            return url.openStream();
+        } catch (IOException e) {
+            throw new CoreValidInvalidDataException(String.format("Cannot download networkFileResource file from URL '%s'", urlString), e);
+        }
     }
 }

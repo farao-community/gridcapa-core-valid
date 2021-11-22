@@ -39,7 +39,7 @@ class CoreValidHandlerTest {
     @Test
     void handleCoreValidRequestTest() {
         String requestId = "Test request";
-        CoreValidFileResource networkFile = createFileResource(getClass().getResource(testDirectory + "/20210723_0030_2D5_CGM.uct"));
+        CoreValidFileResource networkFile = createFileResource(getClass().getResource(testDirectory + "/20210723_0030_2D5_CGM_limits.uct"));
 
         OffsetDateTime dateTime = OffsetDateTime.parse("2021-07-22T22:30Z");
         CoreValidFileResource refProgFile = createFileResource(getClass().getResource(testDirectory + "/20210723-F110.xml"));
@@ -49,6 +49,23 @@ class CoreValidHandlerTest {
 
         CoreValidRequest request = new CoreValidRequest(requestId, dateTime, networkFile, cbcoraFile, glskFile,  refProgFile, studyPointsFile);
         CoreValidResponse response = coreValidHandler.handleCoreValidRequest(request);
+
+        /*assertEquals(2917.5, network.getGenerator("BBE1AA1 _generator").getTargetP(), 0.01);
+        assertEquals(2917.5, network.getGenerator("BBE1AA1 _generator").getMaxP(), 0.01);
+        assertEquals(-9000., network.getGenerator("BBE1AA1 _generator").getMinP(), 0.01);
+        assertEquals(5835.0, network.getGenerator("BBE2AA1 _generator").getTargetP(), 0.01);
+        assertEquals(2972.5, network.getGenerator("BBE3AA1 _generator").getTargetP(), 0.01);
+        assertEquals(2620.0, network.getGenerator("DDE1AA1 _generator").getTargetP(), 0.01);
+        assertEquals(2120.0, network.getGenerator("DDE2AA1 _generator").getTargetP(), 0.01);
+        assertEquals(1740.0, network.getGenerator("DDE3AA1 _generator").getTargetP(), 0.01);
+        assertEquals(420.0, network.getGenerator("FFR1AA1 _generator").getTargetP(), 0.01);
+        assertEquals(420.0, network.getGenerator("FFR2AA1 _generator").getTargetP(), 0.01);
+        assertEquals(2210.0, network.getGenerator("FFR3AA1 _generator").getTargetP(), 0.01);
+        assertEquals(716.25, network.getGenerator("NNL1AA1 _generator").getTargetP(), 0.01);
+        assertEquals(-1328.75, network.getGenerator("NNL2AA1 _generator").getTargetP(), 0.01);
+        assertEquals(-612.5, network.getGenerator("NNL3AA1 _generator").getTargetP(), 0.01);
+        assertEquals(-600.0, network.getDanglingLineStream().filter(dl -> dl.getUcteXnodeCode().equals("XLI_OB1B")).findAny().get().getP0(), 0.01);
+        assertEquals(600.0, network.getDanglingLineStream().filter(dl -> dl.getUcteXnodeCode().equals("XLI_OB1A")).findAny().get().getP0(), 0.01);*/
     }
 
     private CoreValidFileResource createFileResource(URL resource) {
