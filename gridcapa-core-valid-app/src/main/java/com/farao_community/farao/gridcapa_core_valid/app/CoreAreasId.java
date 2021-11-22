@@ -7,6 +7,8 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Map.entry;
@@ -32,7 +34,9 @@ public final class CoreAreasId {
             entry("NP_DE_ALEGrO", "22Y201903145---4")
     );
 
-    public static Map<String, String> getIdMapping() {
-        return ID_MAPPING;
+    public static List<String> getCountriesId() {
+        List<String> ids = new ArrayList<>(ID_MAPPING.values());
+        ids.removeIf(id -> id.equals("22Y201903144---9") || id.equals("22Y201903145---4"));
+        return ids;
     }
 }

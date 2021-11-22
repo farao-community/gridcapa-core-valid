@@ -10,28 +10,20 @@ package com.farao_community.farao.gridcapa_core_valid.app.net_position;
 import com.farao_community.farao.commons.CountryEICode;
 import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
-import com.farao_community.farao.data.glsk.api.GlskDocument;
 import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
 import com.farao_community.farao.gridcapa_core_valid.app.CoreAreasId;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.iidm.network.Country;
 import com.powsybl.iidm.network.DanglingLine;
-import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Network;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.time.OffsetDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
 public final class NetPositionsHandler {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(NetPositionsHandler.class);
 
     public static Map<String, Double> computeCoreReferenceNetPositions(ReferenceProgram referenceProgram) {
         Map<String, Double> coreNetPositions = new TreeMap<>();
@@ -46,8 +38,7 @@ public final class NetPositionsHandler {
         return coreNetPositions;
     }
 
-    public static void shiftNetPositionToStudyPoint(Network network, StudyPoint studyPoint, GlskDocument glskDocument, Map<String, Double> coreNetPositions, OffsetDateTime timestamp) {
-        ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, timestamp.toInstant());
+    public static void shiftNetPositionToStudyPoint(Network network, StudyPoint studyPoint, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions) {
         studyPoint.getPositions().forEach((studyPointZoneId, netPosition) -> {
             try {
                 if (studyPointZoneId.equals("NP_BE_ALEGrO")) {
@@ -64,9 +55,6 @@ public final class NetPositionsHandler {
                     String zoneEiCode = new CountryEICode(Country.valueOf(zone)).getCode();
                     Scalable scalable = scalableZonalData.getData(zoneEiCode);
                     if (scalable != null) {
-                        List<Generator> generators = scalable.filterInjections(network).stream().filter(injection -> injection instanceof Generator).map(injection -> (Generator) injection).collect(Collectors.toList());
-                        List<Generator> generatorswithNan = generators.stream().filter(generator -> Double.isNaN(generator.getTargetP())).collect(Collectors.toList());
-                        generatorswithNan.forEach(generator -> generator.setTargetP(0));
                         scalable.scale(network, shift);
                     }
                 }

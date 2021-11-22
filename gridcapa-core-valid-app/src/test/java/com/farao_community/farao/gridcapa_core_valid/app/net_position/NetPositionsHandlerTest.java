@@ -7,12 +7,14 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.net_position;
 
+import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.data.glsk.api.GlskDocument;
 import com.farao_community.farao.data.glsk.api.io.GlskDocumentImporters;
 import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
 import com.farao_community.farao.data.refprog.refprog_xml_importer.RefProgImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointsImporter;
+import com.powsybl.action.util.Scalable;
 import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,8 +68,8 @@ class NetPositionsHandlerTest {
         Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
         InputStream networkStream = getClass().getResourceAsStream(testDirectory + "/20210723_0030_2D5_CGM.uct");
         Network network = Importers.loadNetwork("20210723_0030_2D5_CGM.uct", networkStream);
-
-        NetPositionsHandler.shiftNetPositionToStudyPoint(network, allStudyPoints.get(0), glskDocument, coreNetPositions, dateTime);
+        ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, dateTime.toInstant());
+        NetPositionsHandler.shiftNetPositionToStudyPoint(network, allStudyPoints.get(0), scalableZonalData, coreNetPositions);
         assertEquals(2917.5, network.getGenerator("BBE1AA1 _generator").getTargetP(), 0.01);
         assertEquals(5835.0, network.getGenerator("BBE2AA1 _generator").getTargetP(), 0.01);
         assertEquals(2972.5, network.getGenerator("BBE3AA1 _generator").getTargetP(), 0.01);
@@ -91,8 +93,8 @@ class NetPositionsHandlerTest {
         Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
         InputStream networkStream = getClass().getResourceAsStream(testDirectory + "/20210723_0430_2D5_CGM.uct");
         Network network = Importers.loadNetwork("20210723_0430_2D5_CGM.uct", networkStream);
-
-        NetPositionsHandler.shiftNetPositionToStudyPoint(network, allStudyPoints.get(1), glskDocument, coreNetPositions, dateTime);
+        ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, dateTime.toInstant());
+        NetPositionsHandler.shiftNetPositionToStudyPoint(network, allStudyPoints.get(1), scalableZonalData, coreNetPositions);
 
         assertEquals(1335.0, network.getGenerator("BBE1AA1 _generator").getTargetP(), 0.01);
         assertEquals(2670.0, network.getGenerator("BBE2AA1 _generator").getTargetP(), 0.01);
@@ -117,8 +119,8 @@ class NetPositionsHandlerTest {
         Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
         InputStream networkStream = getClass().getResourceAsStream(testDirectory + "/20210723_1130_2D5_CGM.uct");
         Network network = Importers.loadNetwork("20210723_1130_2D5_CGM.uct", networkStream);
-
-        NetPositionsHandler.shiftNetPositionToStudyPoint(network, allStudyPoints.get(2), glskDocument, coreNetPositions, dateTime);
+        ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, dateTime.toInstant());
+        NetPositionsHandler.shiftNetPositionToStudyPoint(network, allStudyPoints.get(2), scalableZonalData, coreNetPositions);
 
         assertEquals(-585.0, network.getGenerator("BBE1AA1 _generator").getTargetP(), 0.01);
         assertEquals(-1170.0, network.getGenerator("BBE2AA1 _generator").getTargetP(), 0.01);
