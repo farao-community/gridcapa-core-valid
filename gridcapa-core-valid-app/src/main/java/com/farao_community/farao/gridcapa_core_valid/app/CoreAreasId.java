@@ -16,20 +16,20 @@ import static java.util.Map.entry;
  */
 public final class CoreAreasId {
     public static final Map<String, String> ID_MAPPING = Map.ofEntries(
-            entry("AT", "NP_AT"),
-            entry("BE", "NP_BE"),
-            entry("CZ", "NP_CZ"),
-            entry("DE", "NP_DE"),
-            entry("FR", "NP_FR"),
-            entry("HR", "NP_HR"),
-            entry("HU", "NP_HU"),
-            entry("NL", "NP_NL"),
-            entry("PL", "NP_PL"),
-            entry("RO", "NP_RO"),
-            entry("SI", "NP_SI"),
-            entry("SK", "NP_SK"),
-            entry("22Y201903144---9", "NP_BE_ALEGrO"),
-            entry("22Y201903145---4", "NP_DE_ALEGrO")
+            entry("NP_AT", "AT"),
+            entry("NP_BE", "BE"),
+            entry("NP_CZ", "CZ"),
+            entry("NP_DE", "DE"),
+            entry("NP_FR", "FR"),
+            entry("NP_HR", "HR"),
+            entry("NP_HU", "HU"),
+            entry("NP_NL", "NL"),
+            entry("NP_PL", "PL"),
+            entry("NP_RO", "RO"),
+            entry("NP_SI", "SI"),
+            entry("NP_SK", "SK"),
+            entry("NP_BE_ALEGrO", "22Y201903144---9"),
+            entry("NP_DE_ALEGrO", "22Y201903145---4")
     );
 
     public static Map<String, String> getIdMapping() {
