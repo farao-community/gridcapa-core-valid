@@ -9,6 +9,7 @@ package com.farao_community.farao.gridcapa_core_valid.app;
 
 import com.farao_community.farao.commons.CountryEICode;
 import com.farao_community.farao.commons.ZonalData;
+import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataException;
 import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
@@ -21,6 +22,7 @@ import com.farao_community.farao.gridcapa_core_valid.app.net_position.NetPositio
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointsImporter;
 import com.powsybl.action.util.Scalable;
+import com.powsybl.commons.datasource.MemDataSource;
 import com.powsybl.iidm.export.Exporters;
 import com.powsybl.iidm.network.Country;
 import com.powsybl.iidm.network.Generator;
@@ -31,8 +33,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +50,7 @@ public class CoreValidHandler {
     private final UrlValidationService urlValidationService;
     private static final double DEFAULT_PMAX = 9999.0;
     private static final double DEFAULT_PMIN = -9999.0;
+    public static final String ARTIFACTS_S = "artifacts/%s";
 
     public CoreValidHandler(MinioAdapter minioAdapter, UrlValidationService urlValidationService) {
         this.minioAdapter = minioAdapter;
@@ -102,11 +103,19 @@ public class CoreValidHandler {
         }
     }
 
-    private void saveShiftedCgm(Network network, StudyPoint studyPoint) { //todo save in minio
+    private String saveShiftedCgm(Network network, StudyPoint studyPoint) {
         String fileName = network.getNameOrId() + "_" + studyPoint.getId() + ".uct";
-        Path path = Paths.get(fileName);
+        String networkPath = String.format(ARTIFACTS_S, fileName);
+        MemDataSource memDataSource = new MemDataSource();
         NetworkHandler.removeAlegroVirtualGeneratorsFromNetwork(network);
-        Exporters.export("UCTE", network, new Properties(), path);
+        Exporters.export("UCTE", network, new Properties(), memDataSource);
+        try (InputStream is = memDataSource.newInputStream("", "uct")) {
+            LOGGER.info("Uploading shifted cgm to {}", networkPath);
+            minioAdapter.uploadFile(networkPath, is);
+        } catch (IOException e) {
+            throw new CoreValidInternalException("Error while trying to save shifted network", e);
+        }
+        return minioAdapter.generatePreSignedUrl(networkPath);
     }
 
     private Map<String, InitGenerator> setPminPmaxToDefaultValue(Network network, ZonalData<Scalable> scalableZonalData) {

@@ -4,8 +4,8 @@ spring:
   rabbitmq:
     host: ${RABBITMQ_HOST:localhost}
     port: ${RABBITMQ_PORT:5672}
-    username: ${RABBITMQ_USERNAME:gridcapa}
-    password: ${RABBITMQ_PASSWORD:gridcapa}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
     template:
       reply-timeout: 6000000
 
@@ -17,8 +17,8 @@ core-valid-server:
     expiration: 60000
   minio:
     access:
-      name: ${MINIO_USERNAME:core-validation}
-      secret: ${MINIO_PASSWORD:core-validation}
+      name: ${MINIO_USERNAME:minioadmin}
+      secret: ${MINIO_PASSWORD:minioadmin}
     url: http://${MINIO_HOST:localhost}:${MINIO_PORT:9000}
     bucket: ${MINIO_BUCKET:core-validation}
     base-path: ${CORE_VALID_SERVER_MINIO_BASE_PATH:core-valid/}
