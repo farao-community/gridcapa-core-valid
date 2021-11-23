@@ -21,3 +21,4 @@ core-valid-server:
   security:
     whitelist:
       - file:/
+      - http://${MINIO_HOST:localhost}:${MINIO_PORT:9000}
