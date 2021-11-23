@@ -81,9 +81,13 @@ public class CoreValidHandler {
 
     private void computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, Map<String, InitGenerator> initGenerators) {
         LOGGER.info("Running computation for study point {} ", studyPoint.getId());
-        NetPositionsHandler.shiftNetPositionToStudyPoint(network, studyPoint, scalableZonalData, coreNetPositions);
-        resetInitialPminPmax(network, scalableZonalData, initGenerators);
-        saveShiftedCgm(network, studyPoint);
+        try {
+            NetPositionsHandler.shiftNetPositionToStudyPoint(network, studyPoint, scalableZonalData, coreNetPositions);
+            resetInitialPminPmax(network, scalableZonalData, initGenerators);
+            saveShiftedCgm(network, studyPoint);
+        } catch (Exception e) {
+            LOGGER.error("Error during study point {} computation", studyPoint.getId(), e);
+        }
     }
 
     ReferenceProgram importReferenceProgram(CoreValidFileResource refProgFile, OffsetDateTime timestamp) {

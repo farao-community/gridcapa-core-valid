@@ -13,11 +13,11 @@ core-valid-server:
     expiration: 60000
   minio:
     access:
-      name: minioadmin-test
-      secret: minioadmin-test
-    url: http://localhost-test:9000
-    bucket: core-validation-test
-    base-path: core-valid-test/
+      name: minioadmin
+      secret: minioadmin
+    url: http://localhost:9000
+    bucket: core-validation
+    base-path: core-valid/
   security:
     whitelist:
       - file:/

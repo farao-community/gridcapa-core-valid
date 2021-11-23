@@ -50,6 +50,7 @@ class CoreValidHandlerTest {
 
         CoreValidRequest request = new CoreValidRequest(requestId, dateTime, networkFile, cbcoraFile, glskFile,  refProgFile, studyPointsFile);
         CoreValidResponse response = coreValidHandler.handleCoreValidRequest(request);
+        //todo add assertion
     }
 
     private CoreValidFileResource createFileResource(String filename, URL resource) {
