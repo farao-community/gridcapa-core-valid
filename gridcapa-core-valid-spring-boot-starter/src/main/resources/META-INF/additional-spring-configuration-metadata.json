@@ -1,0 +1,24 @@
+{
+  "properties": [
+    {
+      "name": "core-valid.amqp.application-id",
+      "type": "java.lang.String",
+      "description": "Name of the application that call core valid through starter."
+    },
+    {
+      "name": "core-valid.amqp.exchange",
+      "type": "java.lang.String",
+      "description": "AMQP exchange to be used to send core valid requests."
+    },
+    {
+      "name": "core-valid.amqp.routing-key",
+      "type": "java.lang.String",
+      "description": "AMQP routing key to associate to core valid requests."
+    },
+    {
+      "name": "core-valid.amqp.expiration",
+      "type": "java.lang.String",
+      "description": "Expiration time of core valid requests."
+    }
+  ]
+}

@@ -21,5 +21,6 @@ class CoreValidResponseTest {
         CoreValidResponse coreValidResponse = new CoreValidResponse("id");
         assertNotNull(coreValidResponse);
         assertEquals("id", coreValidResponse.getId());
+        //todo complete test when result files added
     }
 }

@@ -25,10 +25,10 @@ import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
  *
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
-public class JsonConverter {
+public class JsonApiConverter {
     private final ObjectMapper objectMapper;
 
-    public JsonConverter() {
+    public JsonApiConverter() {
         this.objectMapper = createObjectMapper();
     }
 

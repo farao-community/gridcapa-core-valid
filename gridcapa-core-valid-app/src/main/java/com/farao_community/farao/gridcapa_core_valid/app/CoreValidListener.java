@@ -7,7 +7,7 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app;
 
-import com.farao_community.farao.core_valid.api.JsonConverter;
+import com.farao_community.farao.core_valid.api.JsonApiConverter;
 import com.farao_community.farao.core_valid.api.exception.AbstractCoreValidException;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
@@ -30,13 +30,13 @@ public class CoreValidListener implements MessageListener {
     private static final String CONTENT_TYPE = "application/vnd.api+json";
     private static final int PRIORITY = 1;
 
-    private final JsonConverter jsonConverter;
+    private final JsonApiConverter jsonApiConverter;
     private final AmqpTemplate amqpTemplate;
     private final CoreValidHandler coreValidHandler;
     private final AmqpMessagesConfiguration amqpMessagesConfiguration;
 
     public CoreValidListener(CoreValidHandler coreValidHandler, AmqpTemplate amqpTemplate, AmqpMessagesConfiguration amqpMessagesConfiguration) {
-        this.jsonConverter = new JsonConverter();
+        this.jsonApiConverter = new JsonApiConverter();
         this.coreValidHandler = coreValidHandler;
         this.amqpTemplate = amqpTemplate;
         this.amqpMessagesConfiguration = amqpMessagesConfiguration;
@@ -47,7 +47,7 @@ public class CoreValidListener implements MessageListener {
         String replyTo = message.getMessageProperties().getReplyTo();
         String correlationId = message.getMessageProperties().getCorrelationId();
         try {
-            CoreValidRequest coreValidRequest = jsonConverter.fromJsonMessage(message.getBody(), CoreValidRequest.class);
+            CoreValidRequest coreValidRequest = jsonApiConverter.fromJsonMessage(message.getBody(), CoreValidRequest.class);
             LOGGER.info("Core valid request received: {}", coreValidRequest);
             CoreValidResponse coreValidResponse = coreValidHandler.handleCoreValidRequest(coreValidRequest);
             LOGGER.info("Core valid response sent: {}", coreValidResponse);
@@ -79,13 +79,13 @@ public class CoreValidListener implements MessageListener {
     }
 
     private Message createMessageResponse(CoreValidResponse coreValidResponse, String correlationId) {
-        return MessageBuilder.withBody(jsonConverter.toJsonMessage(coreValidResponse))
+        return MessageBuilder.withBody(jsonApiConverter.toJsonMessage(coreValidResponse))
                 .andProperties(buildMessageResponseProperties(correlationId))
                 .build();
     }
 
     private Message createErrorResponse(AbstractCoreValidException exception, String correlationId) {
-        return MessageBuilder.withBody(jsonConverter.toJsonMessage(exception))
+        return MessageBuilder.withBody(jsonApiConverter.toJsonMessage(exception))
                 .andProperties(buildMessageResponseProperties(correlationId))
                 .build();
     }

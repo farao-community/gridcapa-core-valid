@@ -8,6 +8,7 @@
 package com.farao_community.farao.core_valid.api.resource;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.jasminb.jsonapi.annotations.Id;
 import com.github.jasminb.jsonapi.annotations.Type;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -22,7 +23,7 @@ public class CoreValidResponse {
     private final String id;
 
     @JsonCreator
-    public CoreValidResponse(String id) {
+    public CoreValidResponse(@JsonProperty("id") String id) {
         this.id = id;
     }
 
