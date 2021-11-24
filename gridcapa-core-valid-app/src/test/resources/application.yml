@@ -7,16 +7,16 @@ spring:
 
 core-valid-server:
   requests:
-    queue-name: core-valid-test
+    queue-name: core-valid-requests
   responses:
-    exchange: core-valid-response-test
+    exchange: core-valid-response
     expiration: 60000
   minio:
     access:
       name: minioadmin
       secret: minioadmin
     url: http://localhost:9000
-    bucket: core-validation
+    bucket: core-valid-data
     base-path: core-valid/
   security:
     whitelist:

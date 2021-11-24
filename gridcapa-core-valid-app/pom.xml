@@ -42,6 +42,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.farao-community.farao</groupId>
+            <artifactId>gridcapa-core-valid-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
@@ -53,15 +58,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.amqp</groupId>
             <artifactId>spring-amqp</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.farao-community.farao</groupId>
-            <artifactId>gridcapa-core-valid-api</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.farao-community.farao</groupId>
@@ -125,6 +126,7 @@
             <artifactId>powsybl-ucte-converter</artifactId>
             <scope>runtime</scope>
         </dependency>
+
         <!-- TEST DEPENDENCIES -->
         <dependency>
             <groupId>com.powsybl</groupId>

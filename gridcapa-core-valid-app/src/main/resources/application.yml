@@ -20,7 +20,7 @@ core-valid-server:
       name: ${MINIO_USERNAME:minioadmin}
       secret: ${MINIO_PASSWORD:minioadmin}
     url: http://${MINIO_HOST:localhost}:${MINIO_PORT:9000}
-    bucket: ${MINIO_BUCKET:core-validation}
+    bucket: ${MINIO_BUCKET:core-valid-data}
     base-path: ${CORE_VALID_SERVER_MINIO_BASE_PATH:core-valid/}
   security:
     whitelist:

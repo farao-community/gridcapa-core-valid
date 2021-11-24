@@ -31,7 +31,7 @@ public class UrlValidationService {
         if (securityProperties.getWhitelist().stream().noneMatch(urlString::startsWith)) {
             StringJoiner sj = new StringJoiner(", ", "Whitelist: ", ".");
             securityProperties.getWhitelist().forEach(sj::add);
-            throw new CoreValidInvalidDataException(String.format("URL '%s' is not part of application's whitelist. %s", urlString, sj));
+            throw new CoreValidInvalidDataException(String.format("URL '%s' is not part of application's whitelisted url's", urlString));
         }
         try {
             URL url = new URL(urlString);
