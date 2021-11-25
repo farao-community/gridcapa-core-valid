@@ -65,8 +65,7 @@ public class CoreValidHandler {
         GlskDocument glskDocument = importGlskFile(coreValidRequest.getGlsk());
         List<StudyPoint> studyPoints = importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
         ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
-        Map<String, InitGenerator> initGenerators = setPminPmaxToDefaultValue(network, scalableZonalData);
-        studyPoints.forEach(studyPoint -> computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions, initGenerators));
+        studyPoints.forEach(studyPoint -> computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions));
         return new CoreValidResponse(coreValidRequest.getId());
     }
 
@@ -79,14 +78,22 @@ public class CoreValidHandler {
         }
     }
 
-    private void computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, Map<String, InitGenerator> initGenerators) {
+    private void computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions) {
         LOGGER.info("Running computation for study point {} ", studyPoint.getId());
+        String initialVariant = network.getVariantManager().getWorkingVariantId();
+        String newVariant = initialVariant + "_" + studyPoint.getId();
+        network.getVariantManager().cloneVariant(initialVariant, newVariant);
+        network.getVariantManager().setWorkingVariant(newVariant);
         try {
+            Map<String, InitGenerator> initGenerators = setPminPmaxToDefaultValue(network, scalableZonalData);
             NetPositionsHandler.shiftNetPositionToStudyPoint(network, studyPoint, scalableZonalData, coreNetPositions);
             resetInitialPminPmax(network, scalableZonalData, initGenerators);
             saveShiftedCgm(network, studyPoint);
         } catch (Exception e) {
             LOGGER.error("Error during study point {} computation", studyPoint.getId(), e);
+        } finally {
+            network.getVariantManager().setWorkingVariant(initialVariant);
+            network.getVariantManager().removeVariant(newVariant);
         }
     }
 
