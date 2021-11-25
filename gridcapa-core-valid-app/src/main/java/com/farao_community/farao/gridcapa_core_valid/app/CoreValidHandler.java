@@ -7,9 +7,7 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app;
 
-import com.farao_community.farao.commons.CountryEICode;
 import com.farao_community.farao.commons.ZonalData;
-import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataException;
 import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
@@ -20,12 +18,9 @@ import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram
 import com.farao_community.farao.data.refprog.refprog_xml_importer.RefProgImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.net_position.NetPositionsHandler;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
+import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointService;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointsImporter;
 import com.powsybl.action.util.Scalable;
-import com.powsybl.commons.datasource.MemDataSource;
-import com.powsybl.iidm.export.Exporters;
-import com.powsybl.iidm.network.Country;
-import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Network;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,11 +29,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.OffsetDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.stream.Collectors;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -46,15 +38,12 @@ import java.util.stream.Collectors;
 @Component
 public class CoreValidHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(CoreValidHandler.class);
-    private final MinioAdapter minioAdapter;
     private final UrlValidationService urlValidationService;
-    private static final double DEFAULT_PMAX = 9999.0;
-    private static final double DEFAULT_PMIN = -9999.0;
-    public static final String ARTIFACTS_S = "artifacts/%s";
+    private final StudyPointService studyPointService;
 
-    public CoreValidHandler(MinioAdapter minioAdapter, UrlValidationService urlValidationService) {
-        this.minioAdapter = minioAdapter;
+    public CoreValidHandler(UrlValidationService urlValidationService, StudyPointService studyPointService) {
         this.urlValidationService = urlValidationService;
+        this.studyPointService = studyPointService;
     }
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
@@ -65,7 +54,7 @@ public class CoreValidHandler {
         GlskDocument glskDocument = importGlskFile(coreValidRequest.getGlsk());
         List<StudyPoint> studyPoints = importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
         ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
-        studyPoints.forEach(studyPoint -> computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions));
+        studyPoints.forEach(studyPoint -> studyPointService.computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions));
         return new CoreValidResponse(coreValidRequest.getId());
     }
 
@@ -75,25 +64,6 @@ public class CoreValidHandler {
             return GlskDocumentImporters.importGlsk(glskStream);
         } catch (IOException e) {
             throw new CoreValidInvalidDataException(String.format("Cannot download reference program file from URL '%s'", glskFileResource.getUrl()), e);
-        }
-    }
-
-    private void computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions) {
-        LOGGER.info("Running computation for study point {} ", studyPoint.getId());
-        String initialVariant = network.getVariantManager().getWorkingVariantId();
-        String newVariant = initialVariant + "_" + studyPoint.getId();
-        network.getVariantManager().cloneVariant(initialVariant, newVariant);
-        network.getVariantManager().setWorkingVariant(newVariant);
-        try {
-            Map<String, InitGenerator> initGenerators = setPminPmaxToDefaultValue(network, scalableZonalData);
-            NetPositionsHandler.shiftNetPositionToStudyPoint(network, studyPoint, scalableZonalData, coreNetPositions);
-            resetInitialPminPmax(network, scalableZonalData, initGenerators);
-            saveShiftedCgm(network, studyPoint);
-        } catch (Exception e) {
-            LOGGER.error("Error during study point {} computation", studyPoint.getId(), e);
-        } finally {
-            network.getVariantManager().setWorkingVariant(initialVariant);
-            network.getVariantManager().removeVariant(newVariant);
         }
     }
 
@@ -114,86 +84,4 @@ public class CoreValidHandler {
         }
     }
 
-    private String saveShiftedCgm(Network network, StudyPoint studyPoint) {
-        String fileName = network.getNameOrId() + "_" + studyPoint.getId() + ".uct";
-        String networkPath = String.format(ARTIFACTS_S, fileName);
-        MemDataSource memDataSource = new MemDataSource();
-        NetworkHandler.removeAlegroVirtualGeneratorsFromNetwork(network);
-        Exporters.export("UCTE", network, new Properties(), memDataSource);
-        try (InputStream is = memDataSource.newInputStream("", "uct")) {
-            LOGGER.info("Uploading shifted cgm to {}", networkPath);
-            minioAdapter.uploadFile(networkPath, is);
-        } catch (IOException e) {
-            throw new CoreValidInternalException("Error while trying to save shifted network", e);
-        }
-        return minioAdapter.generatePreSignedUrl(networkPath);
-    }
-
-    private Map<String, InitGenerator> setPminPmaxToDefaultValue(Network network, ZonalData<Scalable> scalableZonalData) {
-        Map<String, InitGenerator> initGenerators = new HashMap<>();
-        CoreAreasId.getCountriesId().forEach(zone -> {
-            String zoneEiCode = new CountryEICode(Country.valueOf(zone)).getCode();
-            Scalable scalable = scalableZonalData.getData(zoneEiCode);
-            if (scalable != null) {
-                List<Generator> generators = scalable.filterInjections(network).stream()
-                        .filter(injection -> injection instanceof Generator)
-                        .map(injection -> (Generator) injection)
-                        .collect(Collectors.toList());
-
-                generators.forEach(generator -> {
-                    if (Double.isNaN(generator.getTargetP())) {
-                        generator.setTargetP(0.);
-                    }
-                    InitGenerator initGenerator = new InitGenerator();
-                    initGenerator.setpMin(generator.getMinP());
-                    initGenerator.setpMax(generator.getMaxP());
-                    initGenerators.put(generator.getId(), initGenerator);
-                    generator.setMinP(DEFAULT_PMIN);
-                    generator.setMaxP(DEFAULT_PMAX);
-                });
-            }
-        });
-        LOGGER.info("Pmax and Pmin are set to default values for network {}", network.getNameOrId());
-        return initGenerators;
-    }
-
-    private void resetInitialPminPmax(Network network, ZonalData<Scalable> scalableZonalData, Map<String, InitGenerator> initGenerators) {
-        CoreAreasId.getCountriesId().forEach(zone -> {
-            String zoneEiCode = new CountryEICode(Country.valueOf(zone)).getCode();
-            Scalable scalable = scalableZonalData.getData(zoneEiCode);
-            if (scalable != null) {
-                List<Generator> generators = scalable.filterInjections(network).stream()
-                        .filter(injection -> injection instanceof Generator)
-                        .map(injection -> (Generator) injection)
-                        .collect(Collectors.toList());
-
-                generators.forEach(generator -> {
-                    generator.setMaxP(Math.max(generator.getTargetP(), initGenerators.get(generator.getId()).getpMax()));
-                    generator.setMinP(Math.min(generator.getTargetP(), initGenerators.get(generator.getId()).getpMin()));
-                });
-            }
-        });
-        LOGGER.info("Pmax and Pmin are reset to initial values for network {}", network.getNameOrId());
-    }
-
-    private static class InitGenerator {
-        double pMin;
-        double pMax;
-
-        public double getpMin() {
-            return pMin;
-        }
-
-        public void setpMin(double pMin) {
-            this.pMin = pMin;
-        }
-
-        public double getpMax() {
-            return pMax;
-        }
-
-        public void setpMax(double pMax) {
-            this.pMax = pMax;
-        }
-    }
 }

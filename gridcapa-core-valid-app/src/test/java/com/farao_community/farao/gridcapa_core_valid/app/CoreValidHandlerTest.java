@@ -28,9 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 class CoreValidHandlerTest {
 
-    @MockBean
-    private MinioAdapter minioAdapter;
-
     @Autowired
     private CoreValidHandler coreValidHandler;
 
@@ -50,7 +47,7 @@ class CoreValidHandlerTest {
 
         CoreValidRequest request = new CoreValidRequest(requestId, dateTime, networkFile, cbcoraFile, glskFile,  refProgFile, studyPointsFile);
         CoreValidResponse response = coreValidHandler.handleCoreValidRequest(request);
-        //todo add assertion
+        assertEquals(requestId, response.getId());
     }
 
     private CoreValidFileResource createFileResource(String filename, URL resource) {
