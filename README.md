@@ -2,7 +2,8 @@
 It's provide a full suite to perform CEP 70% validation process on CORE zone 
 
 ## Functional overview
-
+The Clean Energy Package CEP 70% project provides for increases in exchange capacity at interconnections in the CORE region.
+The aim of this application is to validate these capacity levels by studying the effect of the increasing capacity on certain study-points of interest of the flow-based domain.
 
 ## Environment
 
