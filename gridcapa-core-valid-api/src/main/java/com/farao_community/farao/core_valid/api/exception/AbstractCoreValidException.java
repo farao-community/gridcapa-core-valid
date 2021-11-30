@@ -5,13 +5,13 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package com.farao_community.farao.core_valid.api.exception;
-import com.farao_community.farao.core_valid.api.JsonConverter;
+import com.farao_community.farao.core_valid.api.JsonApiConverter;
 
 /**
  * Custom abstract exception to be extended by all application exceptions.
  * Any subclass may be automatically wrapped to a JSON API error message if needed
  *
- * @see JsonConverter
+ * @see JsonApiConverter
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
 public abstract class AbstractCoreValidException extends RuntimeException {

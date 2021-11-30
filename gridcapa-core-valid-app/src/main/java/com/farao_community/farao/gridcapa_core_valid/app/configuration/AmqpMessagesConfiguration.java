@@ -28,17 +28,17 @@ public class AmqpMessagesConfiguration {
     }
 
     @Bean
-    public Queue dichotomyRequestQueue() {
+    public Queue coreValidRequestQueue() {
         return new Queue(serverProperties.getRequests().getQueueName());
     }
 
     @Bean
     public MessageListenerContainer messageListenerContainer(ConnectionFactory connectionFactory,
-                                                             Queue dichotomyRequestQueue,
+                                                             Queue coreValidRequestQueue,
                                                              CoreValidListener listener) {
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory);
-        simpleMessageListenerContainer.setQueues(dichotomyRequestQueue);
+        simpleMessageListenerContainer.setQueues(coreValidRequestQueue);
         simpleMessageListenerContainer.setMessageListener(listener);
         return simpleMessageListenerContainer;
     }

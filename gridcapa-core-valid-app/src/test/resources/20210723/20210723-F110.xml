@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PublicationDocument DtdRelease="1" DtdVersion="0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="publication-document-v2r0_FlowBased_v01.xsd">
+  <DocumentIdentification v="17XTSO-CS------W-20210723F110v1"/>
+  <DocumentVersion v="1"/>
+  <DocumentType v="A45"/>
+  <SenderIdentification codingScheme="A01" v="17XTSO-CS------W"/>
+  <SenderRole v="A36"/>
+  <ReceiverIdentification codingScheme="A01" v="10V1001C--00085T"/>
+  <ReceiverRole v="A04"/>
+  <CreationDateTime v="2021-07-21T21:38:09Z"/>
+  <PublicationTimeInterval v="2021-07-22T22:00Z/2021-07-23T22:00Z"/>
+  <Domain codingScheme="A01" v="10Y1001C--00059P"/>
+    <PublicationTimeSeries>
+      <TimeSeriesIdentification v="DE-NL"/>
+      <BusinessType v="A66"/>
+      <InArea codingScheme="A01" v="10YNL----------L"/>
+      <OutArea codingScheme="A01" v="10YCB-GERMANY--8"/>
+        <MeasureUnitQuantity v="MAW"/>
+        <Period>
+          <TimeInterval v="2021-07-22T22:00Z/2021-07-23T22:00Z"/>
+          <Resolution v="PT60M"/>
+            <Interval>
+              <Pos v="1"/>
+                <Qty v="-300"/>
+            </Interval>
+            <Interval>
+              <Pos v="2"/>
+                <Qty v="-200"/>
+            </Interval>
+            <Interval>
+              <Pos v="3"/>
+                <Qty v="-250"/>
+            </Interval>
+            <Interval>
+              <Pos v="4"/>
+                <Qty v="-500"/>
+            </Interval>
+            <Interval>
+              <Pos v="5"/>
+                <Qty v="-1000"/>
+            </Interval>
+            <Interval>
+              <Pos v="6"/>
+                <Qty v="-750"/>
+            </Interval>
+            <Interval>
+              <Pos v="7"/>
+                <Qty v="-500"/>
+            </Interval>
+            <Interval>
+              <Pos v="8"/>
+                <Qty v="-1000"/>
+            </Interval>
+            <Interval>
+              <Pos v="9"/>
+                <Qty v="-500"/>
+            </Interval>
+            <Interval>
+              <Pos v="10"/>
+                <Qty v="-300"/>
+            </Interval>
+            <Interval>
+              <Pos v="11"/>
+                <Qty v="-1000"/>
+            </Interval>
+            <Interval>
+              <Pos v="12"/>
+                <Qty v="-1500"/>
+            </Interval>
+            <Interval>
+              <Pos v="13"/>
+                <Qty v="-1500"/>
+            </Interval>
+            <Interval>
+              <Pos v="14"/>
+                <Qty v="-1750"/>
+            </Interval>
+            <Interval>
+              <Pos v="15"/>
+                <Qty v="-2000"/>
+            </Interval>
+            <Interval>
+              <Pos v="16"/>
+                <Qty v="-2500"/>
+            </Interval>
+            <Interval>
+              <Pos v="17"/>
+                <Qty v="-2500"/>
+            </Interval>
+            <Interval>
+              <Pos v="18"/>
+                <Qty v="-2500"/>
+            </Interval>
+            <Interval>
+              <Pos v="19"/>
+                <Qty v="-1500"/>
+            </Interval>
+            <Interval>
+              <Pos v="20"/>
+                <Qty v="-1000"/>
+            </Interval>
+            <Interval>
+              <Pos v="21"/>
+                <Qty v="-1250"/>
+            </Interval>
+            <Interval>
+              <Pos v="22"/>
+                <Qty v="-1000"/>
+            </Interval>
+            <Interval>
+              <Pos v="23"/>
+                <Qty v="-500"/>
+            </Interval>
+            <Interval>
+              <Pos v="24"/>
+                <Qty v="-200"/>
+            </Interval>
+        </Period>
+    </PublicationTimeSeries>
+    <PublicationTimeSeries>
+      <TimeSeriesIdentification v="FR-BE"/>
+      <BusinessType v="A66"/>
+      <InArea codingScheme="A01" v="10YBE----------2"/>
+      <OutArea codingScheme="A01" v="10YFR-RTE------C"/>
+        <MeasureUnitQuantity v="MAW"/>
+        <Period>
+          <TimeInterval v="2021-07-22T22:00Z/2021-07-23T22:00Z"/>
+          <Resolution v="PT60M"/>
+            <Interval>
+              <Pos v="1"/>
+                <Qty v="-200"/>
+            </Interval>
+            <Interval>
+              <Pos v="2"/>
+                <Qty v="10"/>
+            </Interval>
+            <Interval>
+              <Pos v="3"/>
+                <Qty v="250"/>
+            </Interval>
+            <Interval>
+              <Pos v="4"/>
+                <Qty v="350"/>
+            </Interval>
+            <Interval>
+              <Pos v="5"/>
+                <Qty v="400"/>
+            </Interval>
+            <Interval>
+              <Pos v="6"/>
+                <Qty v="250"/>
+            </Interval>
+            <Interval>
+              <Pos v="7"/>
+                <Qty v="500"/>
+            </Interval>
+            <Interval>
+              <Pos v="8"/>
+                <Qty v="500"/>
+            </Interval>
+            <Interval>
+              <Pos v="9"/>
+                <Qty v="400"/>
+            </Interval>
+            <Interval>
+              <Pos v="10"/>
+                <Qty v="-500"/>
+            </Interval>
+            <Interval>
+              <Pos v="11"/>
+                <Qty v="-1500"/>
+            </Interval>
+            <Interval>
+              <Pos v="12"/>
+                <Qty v="-2500"/>
+            </Interval>
+            <Interval>
+              <Pos v="13"/>
+                <Qty v="-2500"/>
+            </Interval>
+            <Interval>
+              <Pos v="14"/>
+                <Qty v="-2250"/>
+            </Interval>
+            <Interval>
+              <Pos v="15"/>
+                <Qty v="-2500"/>
+            </Interval>
+            <Interval>
+              <Pos v="16"/>
+                <Qty v="-2750"/>
+            </Interval>
+            <Interval>
+              <Pos v="17"/>
+                <Qty v="-2250"/>
+            </Interval>
+            <Interval>
+              <Pos v="18"/>
+                <Qty v="-1750"/>
+            </Interval>
+            <Interval>
+              <Pos v="19"/>
+                <Qty v="-750"/>
+            </Interval>
+            <Interval>
+              <Pos v="20"/>
+                <Qty v="-250"/>
+            </Interval>
+            <Interval>
+              <Pos v="21"/>
+                <Qty v="-100"/>
+            </Interval>
+            <Interval>
+              <Pos v="22"/>
+                <Qty v="150"/>
+            </Interval>
+            <Interval>
+              <Pos v="23"/>
+                <Qty v="60"/>
+            </Interval>
+            <Interval>
+              <Pos v="24"/>
+                <Qty v="-500"/>
+            </Interval>
+        </Period>
+    </PublicationTimeSeries>
+    <PublicationTimeSeries>
+      <TimeSeriesIdentification v="BE-NL"/>
+      <BusinessType v="A66"/>
+      <InArea codingScheme="A01" v="10YNL----------L"/>
+      <OutArea codingScheme="A01" v="10YBE----------2"/>
+        <MeasureUnitQuantity v="MAW"/>
+        <Period>
+          <TimeInterval v="2021-07-22T22:00Z/2021-07-23T22:00Z"/>
+          <Resolution v="PT60M"/>
+            <Interval>
+              <Pos v="1"/>
+                <Qty v="75"/>
+            </Interval>
+            <Interval>
+              <Pos v="2"/>
+                <Qty v="200"/>
+            </Interval>
+            <Interval>
+              <Pos v="3"/>
+                <Qty v="750"/>
+            </Interval>
+            <Interval>
+              <Pos v="4"/>
+                <Qty v="1500"/>
+            </Interval>
+            <Interval>
+              <Pos v="5"/>
+                <Qty v="1000"/>
+            </Interval>
+            <Interval>
+              <Pos v="6"/>
+                <Qty v="1000"/>
+            </Interval>
+            <Interval>
+              <Pos v="7"/>
+                <Qty v="800"/>
+            </Interval>
+            <Interval>
+              <Pos v="8"/>
+                <Qty v="750"/>
+            </Interval>
+            <Interval>
+              <Pos v="9"/>
+                <Qty v="250"/>
+            </Interval>
+            <Interval>
+              <Pos v="10"/>
+                <Qty v="-500"/>
+            </Interval>
+            <Interval>
+              <Pos v="11"/>
+                <Qty v="-750"/>
+            </Interval>
+            <Interval>
+              <Pos v="12"/>
+                <Qty v="-1000"/>
+            </Interval>
+            <Interval>
+              <Pos v="13"/>
+                <Qty v="-1000"/>
+            </Interval>
+            <Interval>
+              <Pos v="14"/>
+                <Qty v="-1000"/>
+            </Interval>
+            <Interval>
+              <Pos v="15"/>
+                <Qty v="-750"/>
+            </Interval>
+            <Interval>
+              <Pos v="16"/>
+                <Qty v="-500"/>
+            </Interval>
+            <Interval>
+              <Pos v="17"/>
+                <Qty v="-400"/>
+            </Interval>
+            <Interval>
+              <Pos v="18"/>
+                <Qty v="10"/>
+            </Interval>
+            <Interval>
+              <Pos v="19"/>
+                <Qty v="350"/>
+            </Interval>
+            <Interval>
+              <Pos v="20"/>
+                <Qty v="750"/>
+            </Interval>
+            <Interval>
+              <Pos v="21"/>
+                <Qty v="750"/>
+            </Interval>
+            <Interval>
+              <Pos v="22"/>
+                <Qty v="1000"/>
+            </Interval>
+            <Interval>
+              <Pos v="23"/>
+                <Qty v="500"/>
+            </Interval>
+            <Interval>
+              <Pos v="24"/>
+                <Qty v="200"/>
+            </Interval>
+        </Period>
+    </PublicationTimeSeries>
+    <PublicationTimeSeries>
+      <TimeSeriesIdentification v="FR-DE"/>
+      <BusinessType v="A66"/>
+      <InArea codingScheme="A01" v="10YCB-GERMANY--8"/>
+      <OutArea codingScheme="A01" v="10YFR-RTE------C"/>
+        <MeasureUnitQuantity v="MAW"/>
+        <Period>
+          <TimeInterval v="2021-07-22T22:00Z/2021-07-23T22:00Z"/>
+          <Resolution v="PT60M"/>
+            <Interval>
+              <Pos v="1"/>
+                <Qty v="150"/>
+            </Interval>
+            <Interval>
+              <Pos v="2"/>
+                <Qty v="500"/>
+            </Interval>
+            <Interval>
+              <Pos v="3"/>
+                <Qty v="1250"/>
+            </Interval>
+            <Interval>
+              <Pos v="4"/>
+                <Qty v="2500"/>
+            </Interval>
+            <Interval>
+              <Pos v="5"/>
+                <Qty v="2500"/>
+            </Interval>
+            <Interval>
+              <Pos v="6"/>
+                <Qty v="2250"/>
+            </Interval>
+            <Interval>
+              <Pos v="7"/>
+                <Qty v="1750"/>
+            </Interval>
+            <Interval>
+              <Pos v="8"/>
+                <Qty v="2250"/>
+            </Interval>
+            <Interval>
+              <Pos v="9"/>
+                <Qty v="1000"/>
+            </Interval>
+            <Interval>
+              <Pos v="10"/>
+                <Qty v="-750"/>
+            </Interval>
+            <Interval>
+              <Pos v="11"/>
+                <Qty v="-1500"/>
+            </Interval>
+            <Interval>
+              <Pos v="12"/>
+                <Qty v="-1500"/>
+            </Interval>
+            <Interval>
+              <Pos v="13"/>
+                <Qty v="-2000"/>
+            </Interval>
+            <Interval>
+              <Pos v="14"/>
+                <Qty v="-1750"/>
+            </Interval>
+            <Interval>
+              <Pos v="15"/>
+                <Qty v="-1250"/>
+            </Interval>
+            <Interval>
+              <Pos v="16"/>
+                <Qty v="-1000"/>
+            </Interval>
+            <Interval>
+              <Pos v="17"/>
+                <Qty v="-250"/>
+            </Interval>
+            <Interval>
+              <Pos v="18"/>
+                <Qty v="750"/>
+            </Interval>
+            <Interval>
+              <Pos v="19"/>
+                <Qty v="1000"/>
+            </Interval>
+            <Interval>
+              <Pos v="20"/>
+                <Qty v="1500"/>
+            </Interval>
+            <Interval>
+              <Pos v="21"/>
+                <Qty v="2000"/>
+            </Interval>
+            <Interval>
+              <Pos v="22"/>
+                <Qty v="2000"/>
+            </Interval>
+            <Interval>
+              <Pos v="23"/>
+                <Qty v="1000"/>
+            </Interval>
+            <Interval>
+              <Pos v="24"/>
+                <Qty v="-200"/>
+            </Interval>
+        </Period>
+    </PublicationTimeSeries>
+</PublicationDocument>

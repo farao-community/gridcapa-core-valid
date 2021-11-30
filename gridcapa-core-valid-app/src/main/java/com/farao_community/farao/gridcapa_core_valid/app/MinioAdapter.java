@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 
-import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -50,16 +50,27 @@ public class MinioAdapter {
         }
     }
 
-    public void putFile(byte[] fileBytes, String filePath) {
-        createBucketIfDoesNotExist(bucket);
-        String fullFilePath = String.format("%s/%s", basePath, filePath);
-        LOGGER.info("Put file '{}' in Minio bucket '{}'", fullFilePath, bucket);
+    public void uploadFile(String filePath, InputStream sourceInputStream) {
+        String fullPath = String.format("%s/%s", basePath, filePath);
         try {
-            client.putObject(PutObjectArgs.builder()
-                    .bucket(bucket)
-                    .object(fullFilePath)
-                    .stream(new ByteArrayInputStream(fileBytes), fileBytes.length, -1)
-                    .build());
+            createBucketIfDoesNotExist(bucket);
+            client.putObject(PutObjectArgs.builder().bucket(bucket).object(fullPath).stream(sourceInputStream, -1, 50000000).build());
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new CoreValidInternalException(String.format("Exception occurred while uploading file: %s, to minio server", filePath));
+        }
+    }
+
+    public String generatePreSignedUrl(String filePath) {
+        String fullPath = String.format("%s/%s", basePath, filePath);
+        try {
+            return client.getPresignedObjectUrl(
+                    GetPresignedObjectUrlArgs.builder()
+                            .bucket(bucket).object(fullPath)
+                            .expiry(DEFAULT_DOWNLOAD_LINK_EXPIRY_IN_DAYS, TimeUnit.DAYS)
+                            .method(Method.GET)
+                            .build()
+            );
         } catch (Exception e) {
             throw new CoreValidInternalException("Exception in MinIO connection.", e);
         }

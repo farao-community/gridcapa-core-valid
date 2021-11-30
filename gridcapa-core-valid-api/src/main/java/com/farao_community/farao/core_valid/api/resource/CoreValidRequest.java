@@ -7,11 +7,18 @@
 
 package com.farao_community.farao.core_valid.api.resource;
 
+import com.farao_community.farao.core_valid.api.OffsetDateTimeDeserializer;
+import com.farao_community.farao.core_valid.api.OffsetDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.github.jasminb.jsonapi.annotations.Id;
 import com.github.jasminb.jsonapi.annotations.Type;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.OffsetDateTime;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -20,7 +27,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class CoreValidRequest {
     @Id
     private final String id;
-    private final String timestamp;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
+    private final OffsetDateTime timestamp;
     private final CoreValidFileResource cgm;
     private final CoreValidFileResource cbcora;
     private final CoreValidFileResource glsk;
@@ -29,7 +40,7 @@ public class CoreValidRequest {
 
     @JsonCreator
     public CoreValidRequest(@JsonProperty("id") String id,
-                            @JsonProperty("timestamp") String timestamp,
+                            @JsonProperty("timestamp") OffsetDateTime timestamp,
                             @JsonProperty("cgm") CoreValidFileResource cgm,
                             @JsonProperty("cbcora") CoreValidFileResource cbcora,
                             @JsonProperty("glsk") CoreValidFileResource glsk,
@@ -48,7 +59,7 @@ public class CoreValidRequest {
         return id;
     }
 
-    public String getTimestamp() {
+    public OffsetDateTime getTimestamp() {
         return timestamp;
     }
 
