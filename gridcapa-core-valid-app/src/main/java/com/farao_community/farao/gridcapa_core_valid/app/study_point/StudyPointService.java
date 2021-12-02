@@ -59,6 +59,16 @@ public class StudyPointService {
             NetPositionsHandler.shiftNetPositionToStudyPoint(network, studyPoint, scalableZonalData, coreNetPositions);
             resetInitialPminPmax(network, scalableZonalData, initGenerators);
             String url = saveShiftedCgm(network, studyPoint);
+
+            /*
+                Récupération des 3 fichiers (url minio) : CGM, CRAC et GLSK
+                Prendre en compte la configuration du rao
+                lancer le rao
+             */
+
+
+
+
             result.setStatus(StudyPointResult.Status.SUCCESS);
             result.setShiftedCgmUrl(url);
         } catch (Exception e) {
