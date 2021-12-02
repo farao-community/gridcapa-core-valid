@@ -66,9 +66,6 @@ public class StudyPointService {
                 lancer le rao
              */
 
-
-
-
             result.setStatus(StudyPointResult.Status.SUCCESS);
             result.setShiftedCgmUrl(url);
         } catch (Exception e) {
