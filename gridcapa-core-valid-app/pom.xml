@@ -108,6 +108,14 @@
             <groupId>com.powsybl</groupId>
             <artifactId>powsybl-iidm-converter-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.rte-france.farao</groupId>
+            <artifactId>rao-runner-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.rte-france.farao</groupId>
+            <artifactId>rao-runner-spring-boot-starter</artifactId>
+        </dependency>
 
         <!-- RUNTIME DEPENDENCIES -->
         <dependency>
