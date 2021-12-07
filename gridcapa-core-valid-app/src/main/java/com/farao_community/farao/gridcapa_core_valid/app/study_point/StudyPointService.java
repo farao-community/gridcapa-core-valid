@@ -10,6 +10,7 @@ package com.farao_community.farao.gridcapa_core_valid.app.study_point;
 import com.farao_community.farao.commons.CountryEICode;
 import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
+import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.gridcapa_core_valid.app.CoreAreasId;
 import com.farao_community.farao.gridcapa_core_valid.app.MinioAdapter;
 import com.farao_community.farao.gridcapa_core_valid.app.NetworkHandler;
@@ -52,7 +53,7 @@ public class StudyPointService {
         this.raoRunner = raoRunner;
     }
 
-    public StudyPointResult computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, RaoRequest raoRequest) {
+    public StudyPointResult computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, CoreValidRequest coreValidRequest) {
         LOGGER.info("Running computation for study point {} ", studyPoint.getId());
         StudyPointResult result = new StudyPointResult(studyPoint.getId());
         String initialVariant = network.getVariantManager().getWorkingVariantId();
@@ -63,10 +64,11 @@ public class StudyPointService {
             Map<String, InitGenerator> initGenerators = setPminPmaxToDefaultValue(network, scalableZonalData);
             NetPositionsHandler.shiftNetPositionToStudyPoint(network, studyPoint, scalableZonalData, coreNetPositions);
             resetInitialPminPmax(network, scalableZonalData, initGenerators);
-            String url = saveShiftedCgm(network, studyPoint);
+            String cgmUrl = saveShiftedCgm(network, studyPoint);
+            RaoRequest raoRequest = buildRaoRequest(coreValidRequest.getId(), coreValidRequest.getCbcora().getUrl(), cgmUrl, coreValidRequest.getGlsk().getUrl());
             RaoResponse raoResponse = raoRunner.runRao(raoRequest);
             result.setStatus(StudyPointResult.Status.SUCCESS);
-            result.setShiftedCgmUrl(url);
+            result.setShiftedCgmUrl(cgmUrl);
         } catch (Exception e) {
             LOGGER.error("Error during study point {} computation", studyPoint.getId(), e);
             result.setStatus(StudyPointResult.Status.ERROR);
@@ -137,6 +139,10 @@ public class StudyPointService {
             }
         });
         LOGGER.info("Pmax and Pmin are reset to initial values for network {}", network.getNameOrId());
+    }
+
+    private RaoRequest buildRaoRequest(String requestId, String cbcora, String cgm, String glsk) {
+        return new RaoRequest(requestId, null, cgm, null, cbcora, glsk, null, null, null);
     }
 
     private static class InitGenerator {
