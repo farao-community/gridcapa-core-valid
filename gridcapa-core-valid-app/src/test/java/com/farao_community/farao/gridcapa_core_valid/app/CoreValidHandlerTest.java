@@ -43,8 +43,9 @@ class CoreValidHandlerTest {
         CoreValidFileResource studyPointsFile = createFileResource("", getClass().getResource(testDirectory + "/20210723-Points_Etudes-v01.csv"));
         CoreValidFileResource glskFile = createFileResource("", getClass().getResource(testDirectory + "/20210723-F226-v1.xml"));
         CoreValidFileResource cbcoraFile = new CoreValidFileResource("cbcora", "url");
+        CoreValidFileResource raoParameters = new CoreValidFileResource("raoParameters", "url"); // todo
 
-        CoreValidRequest request = new CoreValidRequest(requestId, dateTime, networkFile, cbcoraFile, glskFile,  refProgFile, studyPointsFile);
+        CoreValidRequest request = new CoreValidRequest(requestId, dateTime, networkFile, cbcoraFile, glskFile,  refProgFile, studyPointsFile, raoParameters);
         CoreValidResponse response = coreValidHandler.handleCoreValidRequest(request);
         assertEquals(requestId, response.getId());
     }

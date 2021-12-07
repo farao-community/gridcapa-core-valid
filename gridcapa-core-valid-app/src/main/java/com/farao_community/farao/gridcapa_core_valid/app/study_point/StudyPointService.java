@@ -10,7 +10,7 @@ package com.farao_community.farao.gridcapa_core_valid.app.study_point;
 import com.farao_community.farao.commons.CountryEICode;
 import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
-import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
+import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.gridcapa_core_valid.app.CoreAreasId;
 import com.farao_community.farao.gridcapa_core_valid.app.MinioAdapter;
 import com.farao_community.farao.gridcapa_core_valid.app.NetworkHandler;
@@ -53,7 +53,7 @@ public class StudyPointService {
         this.raoRunnerClient = raoRunnerClient;
     }
 
-    public StudyPointResult computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, CoreValidFileResource cbcora) {
+    public StudyPointResult computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, CoreValidRequest coreValidRequest) {
         LOGGER.info("Running computation for study point {} ", studyPoint.getId());
         StudyPointResult result = new StudyPointResult(studyPoint.getId());
         String initialVariant = network.getVariantManager().getWorkingVariantId();
@@ -70,7 +70,7 @@ public class StudyPointService {
             try {
                 RaoRequest raoRequest = buildRaoRequest(raoRequestId,
                         url,
-                        cbcora.getUrl());
+                        coreValidRequest);
                 RaoResponse raoResponse = raoRunnerClient.runRao(raoRequest);
                 // todo que faire avec la réponse ?
             } catch (Exception e) {
@@ -90,8 +90,8 @@ public class StudyPointService {
         return result;
     }
 
-    private RaoRequest buildRaoRequest(String requestId, String networkUrl, String cracUrl) {
-        return new RaoRequest(requestId, networkUrl, cracUrl, null /*raoParametersUrl*/); // todo parametrte ?
+    private RaoRequest buildRaoRequest(String requestId, String networkUrl, CoreValidRequest coreValidRequest) {
+        return new RaoRequest(requestId, networkUrl, coreValidRequest.getCbcora().getUrl(), coreValidRequest.getRaoParameters().getUrl());
     }
 
     private String saveShiftedCgm(Network network, StudyPoint studyPoint) {

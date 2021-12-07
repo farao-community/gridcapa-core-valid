@@ -22,6 +22,10 @@
       "studyPoints": {
         "filename": "studyPoints.txt",
         "url": "https://studyPoints/file/url"
+      },
+      "raoParameters": {
+        "filename": "raoParameters.txt",
+        "url": "https://raoParameters/file/url"
       }
     }
   }

@@ -54,7 +54,7 @@ public class CoreValidHandler {
         GlskDocument glskDocument = importGlskFile(coreValidRequest.getGlsk());
         List<StudyPoint> studyPoints = importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
         ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
-        studyPoints.forEach(studyPoint -> studyPointService.computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions, coreValidRequest.getCbcora()));
+        studyPoints.forEach(studyPoint -> studyPointService.computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions, coreValidRequest));
         return new CoreValidResponse(coreValidRequest.getId());
     }
 
