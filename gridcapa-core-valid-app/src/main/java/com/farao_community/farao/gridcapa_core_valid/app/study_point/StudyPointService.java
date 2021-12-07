@@ -10,10 +10,14 @@ package com.farao_community.farao.gridcapa_core_valid.app.study_point;
 import com.farao_community.farao.commons.CountryEICode;
 import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
+import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.gridcapa_core_valid.app.CoreAreasId;
 import com.farao_community.farao.gridcapa_core_valid.app.MinioAdapter;
 import com.farao_community.farao.gridcapa_core_valid.app.NetworkHandler;
 import com.farao_community.farao.gridcapa_core_valid.app.net_position.NetPositionsHandler;
+import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
+import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
+import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.commons.datasource.MemDataSource;
 import com.powsybl.iidm.export.Exporters;
@@ -42,12 +46,14 @@ public class StudyPointService {
     private static final double DEFAULT_PMIN = -9999.0;
     public static final String ARTIFACTS_S = "artifacts/%s";
     private final MinioAdapter minioAdapter;
+    private final RaoRunnerClient raoRunnerClient;
 
-    public StudyPointService(MinioAdapter minioAdapter) {
+    public StudyPointService(MinioAdapter minioAdapter, RaoRunnerClient raoRunnerClient) {
         this.minioAdapter = minioAdapter;
+        this.raoRunnerClient = raoRunnerClient;
     }
 
-    public StudyPointResult computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions) {
+    public StudyPointResult computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, CoreValidFileResource cbcora) {
         LOGGER.info("Running computation for study point {} ", studyPoint.getId());
         StudyPointResult result = new StudyPointResult(studyPoint.getId());
         String initialVariant = network.getVariantManager().getWorkingVariantId();
@@ -59,6 +65,19 @@ public class StudyPointService {
             NetPositionsHandler.shiftNetPositionToStudyPoint(network, studyPoint, scalableZonalData, coreNetPositions);
             resetInitialPminPmax(network, scalableZonalData, initGenerators);
             String url = saveShiftedCgm(network, studyPoint);
+            String raoRequestId = String.format("%s-%s", studyPoint.getId(), network.getNameOrId());
+
+            try {
+                RaoRequest raoRequest = buildRaoRequest(raoRequestId,
+                        url,
+                        cbcora.getUrl());
+                RaoResponse raoResponse = raoRunnerClient.runRao(raoRequest);
+                // todo que faire avec la réponse ?
+            } catch (Exception e) {
+                LOGGER.error("Error during rao {} computation", raoRequestId, e);
+                result.setStatus(StudyPointResult.Status.ERROR);
+            }
+
             result.setStatus(StudyPointResult.Status.SUCCESS);
             result.setShiftedCgmUrl(url);
         } catch (Exception e) {
@@ -69,6 +88,10 @@ public class StudyPointService {
             network.getVariantManager().removeVariant(newVariant);
         }
         return result;
+    }
+
+    private RaoRequest buildRaoRequest(String requestId, String networkUrl, String cracUrl) {
+        return new RaoRequest(requestId, networkUrl, cracUrl, null /*raoParametersUrl*/); // todo parametrte ?
     }
 
     private String saveShiftedCgm(Network network, StudyPoint studyPoint) {
