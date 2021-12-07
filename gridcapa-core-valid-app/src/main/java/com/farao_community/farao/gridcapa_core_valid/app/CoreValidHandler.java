@@ -22,6 +22,7 @@ import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointS
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointsImporter;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.iidm.network.Network;
+import com.rte_france.farao.rao_runner.api.resource.RaoRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -47,6 +48,7 @@ public class CoreValidHandler {
     }
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
+        RaoRequest raoRequest = buildRaoRequest(coreValidRequest.getId(), coreValidRequest.getCbcora().getUrl(), coreValidRequest.getCgm().getUrl(), coreValidRequest.getGlsk().getUrl());
         InputStream networkStream = urlValidationService.openUrlStream(coreValidRequest.getCgm().getUrl());
         Network network = NetworkHandler.loadNetwork(coreValidRequest.getCgm().getFilename(), networkStream);
         ReferenceProgram referenceProgram = importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
@@ -54,7 +56,7 @@ public class CoreValidHandler {
         GlskDocument glskDocument = importGlskFile(coreValidRequest.getGlsk());
         List<StudyPoint> studyPoints = importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
         ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
-        studyPoints.forEach(studyPoint -> studyPointService.computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions));
+        studyPoints.forEach(studyPoint -> studyPointService.computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions, raoRequest));
         return new CoreValidResponse(coreValidRequest.getId());
     }
 
@@ -84,4 +86,7 @@ public class CoreValidHandler {
         }
     }
 
+    private RaoRequest buildRaoRequest(String requestId, String cbcora, String cgm, String glsk) {
+        return new RaoRequest(requestId, null, cgm, null, cbcora, glsk, null, null, null);
+    }
 }

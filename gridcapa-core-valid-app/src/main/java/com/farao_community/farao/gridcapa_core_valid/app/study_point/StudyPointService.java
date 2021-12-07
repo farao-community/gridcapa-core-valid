@@ -13,6 +13,7 @@ import com.farao_community.farao.core_valid.api.exception.CoreValidInternalExcep
 import com.farao_community.farao.gridcapa_core_valid.app.CoreAreasId;
 import com.farao_community.farao.gridcapa_core_valid.app.MinioAdapter;
 import com.farao_community.farao.gridcapa_core_valid.app.NetworkHandler;
+import com.farao_community.farao.gridcapa_core_valid.app.RaoRunner;
 import com.farao_community.farao.gridcapa_core_valid.app.net_position.NetPositionsHandler;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.commons.datasource.MemDataSource;
@@ -20,6 +21,8 @@ import com.powsybl.iidm.export.Exporters;
 import com.powsybl.iidm.network.Country;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Network;
+import com.rte_france.farao.rao_runner.api.resource.RaoRequest;
+import com.rte_france.farao.rao_runner.api.resource.RaoResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -42,12 +45,14 @@ public class StudyPointService {
     private static final double DEFAULT_PMIN = -9999.0;
     public static final String ARTIFACTS_S = "artifacts/%s";
     private final MinioAdapter minioAdapter;
+    private final RaoRunner raoRunner;
 
-    public StudyPointService(MinioAdapter minioAdapter) {
+    public StudyPointService(MinioAdapter minioAdapter, RaoRunner raoRunner) {
         this.minioAdapter = minioAdapter;
+        this.raoRunner = raoRunner;
     }
 
-    public StudyPointResult computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions) {
+    public StudyPointResult computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, RaoRequest raoRequest) {
         LOGGER.info("Running computation for study point {} ", studyPoint.getId());
         StudyPointResult result = new StudyPointResult(studyPoint.getId());
         String initialVariant = network.getVariantManager().getWorkingVariantId();
@@ -59,13 +64,7 @@ public class StudyPointService {
             NetPositionsHandler.shiftNetPositionToStudyPoint(network, studyPoint, scalableZonalData, coreNetPositions);
             resetInitialPminPmax(network, scalableZonalData, initGenerators);
             String url = saveShiftedCgm(network, studyPoint);
-
-            /*
-                Récupération des 3 fichiers (url minio) : CGM, CRAC et GLSK
-                Prendre en compte la configuration du rao
-                lancer le rao
-             */
-
+            RaoResponse raoResponse = raoRunner.runRao(raoRequest);
             result.setStatus(StudyPointResult.Status.SUCCESS);
             result.setShiftedCgmUrl(url);
         } catch (Exception e) {
