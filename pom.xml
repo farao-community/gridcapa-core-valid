@@ -30,6 +30,12 @@
             <organization>RTE</organization>
             <organizationUrl>http://www.rte-france.com</organizationUrl>
         </developer>
+        <developer>
+            <name>Theo PASCOLI</name>
+            <email>theo.pascoli@rte-france.com</email>
+            <organization>RTE</organization>
+            <organizationUrl>http://www.rte-france.com</organizationUrl>
+        </developer>
     </developers>
 
     <modules>
