@@ -20,12 +20,17 @@ import com.farao_community.farao.gridcapa_core_valid.app.net_position.NetPositio
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointService;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointsImporter;
+import com.farao_community.farao.rao_api.json.JsonRaoParameters;
+import com.farao_community.farao.rao_api.parameters.RaoParameters;
+import com.farao_community.farao.search_tree_rao.SearchTreeRaoParameters;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.iidm.network.Network;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.OffsetDateTime;
@@ -38,12 +43,15 @@ import java.util.Map;
 @Component
 public class CoreValidHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(CoreValidHandler.class);
+    private static final String RAO_PARAMETERS_FILE_NAME = "raoParameters.json";
     private final UrlValidationService urlValidationService;
     private final StudyPointService studyPointService;
+    private final MinioAdapter minioAdapter;
 
-    public CoreValidHandler(UrlValidationService urlValidationService, StudyPointService studyPointService) {
+    public CoreValidHandler(UrlValidationService urlValidationService, StudyPointService studyPointService, MinioAdapter minioAdapter) {
         this.urlValidationService = urlValidationService;
         this.studyPointService = studyPointService;
+        this.minioAdapter = minioAdapter;
     }
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
@@ -54,8 +62,21 @@ public class CoreValidHandler {
         GlskDocument glskDocument = importGlskFile(coreValidRequest.getGlsk());
         List<StudyPoint> studyPoints = importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
         ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
-        studyPoints.forEach(studyPoint -> studyPointService.computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions, coreValidRequest));
+        String raoParameters = saveRaoParameters();
+        studyPoints.forEach(studyPoint -> studyPointService.computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions, coreValidRequest, raoParameters));
         return new CoreValidResponse(coreValidRequest.getId());
+    }
+
+    private String saveRaoParameters() {
+        RaoParameters raoParameters = RaoParameters.load();
+        SearchTreeRaoParameters searchTreeRaoParameters = new SearchTreeRaoParameters();
+        raoParameters.addExtension(SearchTreeRaoParameters.class, searchTreeRaoParameters);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        JsonRaoParameters.write(raoParameters, baos);
+        String raoParametersDestinationPath = RAO_PARAMETERS_FILE_NAME;
+        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+        minioAdapter.uploadFile(raoParametersDestinationPath, bais);
+        return minioAdapter.generatePreSignedUrl(raoParametersDestinationPath);
     }
 
     GlskDocument importGlskFile(CoreValidFileResource glskFileResource) {

@@ -25,9 +25,8 @@ class CoreValidRequestTest {
         CoreValidFileResource glsk = new CoreValidFileResource("glsk.txt", "http://path/to/glsk/file");
         CoreValidFileResource refProg = new CoreValidFileResource("refprog.txt", "http://path/to/refProg/file");
         CoreValidFileResource studyPoints = new CoreValidFileResource("study-points.txt", "http://path/to/studyPoints/file");
-        CoreValidFileResource raoParameters = new CoreValidFileResource("rao-parameters.txt", "http://path/to/raoParameters/file");
         OffsetDateTime dateTime = OffsetDateTime.parse("2021-10-03T00:30Z");
-        CoreValidRequest coreValidRequest = new CoreValidRequest("id", dateTime, cgm, cbcora, glsk, refProg, studyPoints, raoParameters);
+        CoreValidRequest coreValidRequest = new CoreValidRequest("id", dateTime, cgm, cbcora, glsk, refProg, studyPoints);
         assertNotNull(coreValidRequest);
         assertEquals("id", coreValidRequest.getId());
         assertEquals("2021-10-03T00:30Z", coreValidRequest.getTimestamp().toString());
@@ -36,7 +35,6 @@ class CoreValidRequestTest {
         assertEquals("refprog.txt", coreValidRequest.getRefProg().getFilename());
         assertEquals("glsk.txt", coreValidRequest.getGlsk().getFilename());
         assertEquals("http://path/to/studyPoints/file", coreValidRequest.getStudyPoints().getUrl());
-        assertEquals("http://path/to/raoParameters/file", coreValidRequest.getRaoParameters().getUrl());
     }
 
 }

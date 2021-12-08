@@ -10,6 +10,7 @@ package com.farao_community.farao.gridcapa_core_valid.app.study_point;
 import com.farao_community.farao.commons.CountryEICode;
 import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
+import com.farao_community.farao.core_valid.api.exception.CoreValidRaoException;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.gridcapa_core_valid.app.CoreAreasId;
 import com.farao_community.farao.gridcapa_core_valid.app.MinioAdapter;
@@ -53,7 +54,7 @@ public class StudyPointService {
         this.raoRunnerClient = raoRunnerClient;
     }
 
-    public StudyPointResult computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, CoreValidRequest coreValidRequest) {
+    public StudyPointResult computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, CoreValidRequest coreValidRequest, String raoParameters) {
         LOGGER.info("Running computation for study point {} ", studyPoint.getId());
         StudyPointResult result = new StudyPointResult(studyPoint.getId());
         String initialVariant = network.getVariantManager().getWorkingVariantId();
@@ -67,19 +68,13 @@ public class StudyPointService {
             String url = saveShiftedCgm(network, studyPoint);
             String raoRequestId = String.format("%s-%s", studyPoint.getId(), network.getNameOrId());
 
-            try {
-                RaoRequest raoRequest = buildRaoRequest(raoRequestId,
-                        url,
-                        coreValidRequest);
-                RaoResponse raoResponse = raoRunnerClient.runRao(raoRequest);
-                // todo que faire avec la réponse ?
-            } catch (Exception e) {
-                LOGGER.error("Error during rao {} computation", raoRequestId, e);
-                result.setStatus(StudyPointResult.Status.ERROR);
-            }
+            startRao(raoRequestId, url, coreValidRequest.getCbcora().getUrl(), raoParameters);
 
             result.setStatus(StudyPointResult.Status.SUCCESS);
             result.setShiftedCgmUrl(url);
+        } catch(CoreValidRaoException e) {
+            LOGGER.error("Error during RAO {}", studyPoint.getId(), e);
+            result.setStatus(StudyPointResult.Status.ERROR);
         } catch (Exception e) {
             LOGGER.error("Error during study point {} computation", studyPoint.getId(), e);
             result.setStatus(StudyPointResult.Status.ERROR);
@@ -90,8 +85,13 @@ public class StudyPointService {
         return result;
     }
 
-    private RaoRequest buildRaoRequest(String requestId, String networkUrl, CoreValidRequest coreValidRequest) {
-        return new RaoRequest(requestId, networkUrl, coreValidRequest.getCbcora().getUrl(), coreValidRequest.getRaoParameters().getUrl());
+    private RaoResponse startRao(String raoRequestId, String networkUrl, String cracUrl, String raoParametersUrl) throws CoreValidRaoException {
+        try {
+            RaoRequest raoRequest = new RaoRequest(raoRequestId, networkUrl, cracUrl, raoParametersUrl);
+            return raoRunnerClient.runRao(raoRequest);
+        } catch (Exception e) {
+            throw new CoreValidRaoException(String.format("Error during RAO for request %s", raoRequestId), e);
+        }
     }
 
     private String saveShiftedCgm(Network network, StudyPoint studyPoint) {

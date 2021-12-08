@@ -37,7 +37,6 @@ public class CoreValidRequest {
     private final CoreValidFileResource glsk;
     private final CoreValidFileResource refProg;
     private final CoreValidFileResource studyPoints;
-    private final CoreValidFileResource raoParameters;
 
     @JsonCreator
     public CoreValidRequest(@JsonProperty("id") String id,
@@ -46,8 +45,7 @@ public class CoreValidRequest {
                             @JsonProperty("cbcora") CoreValidFileResource cbcora,
                             @JsonProperty("glsk") CoreValidFileResource glsk,
                             @JsonProperty("refProg") CoreValidFileResource refProg,
-                            @JsonProperty("studyPoints") CoreValidFileResource studyPoints,
-                            @JsonProperty("raoParameters") CoreValidFileResource raoParameters) {
+                            @JsonProperty("studyPoints") CoreValidFileResource studyPoints) {
         this.id = id;
         this.timestamp = timestamp;
         this.cgm = cgm;
@@ -55,7 +53,6 @@ public class CoreValidRequest {
         this.glsk = glsk;
         this.refProg = refProg;
         this.studyPoints = studyPoints;
-        this.raoParameters = raoParameters;
     }
 
     public String getId() {
@@ -84,10 +81,6 @@ public class CoreValidRequest {
 
     public CoreValidFileResource getStudyPoints() {
         return studyPoints;
-    }
-
-    public CoreValidFileResource getRaoParameters() {
-        return raoParameters;
     }
 
     @Override
