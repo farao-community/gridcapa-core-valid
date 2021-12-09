@@ -8,9 +8,13 @@
 package com.farao_community.farao.gridcapa_core_valid.app.study_point;
 
 import com.farao_community.farao.commons.ZonalData;
+import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
+import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.data.glsk.api.GlskDocument;
 import com.farao_community.farao.data.glsk.api.io.GlskDocumentImporters;
 import com.farao_community.farao.gridcapa_core_valid.app.MinioAdapter;
+import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
+import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
@@ -38,6 +42,9 @@ class StudyPointServiceTest {
     @MockBean
     private MinioAdapter minioAdapter;
 
+    @MockBean
+    private RaoRunnerClient raoRunnerClient;
+
     @Autowired StudyPointService studyPointService;
 
     private final String testDirectory = "/20210723";
@@ -46,6 +53,7 @@ class StudyPointServiceTest {
     private Network network;
     private ZonalData<Scalable> scalableZonalData;
     private Map<String, Double> coreNetPositions = new HashMap<>();
+    private CoreValidRequest coreValidRequest;
 
     @BeforeEach
     public void setup() {
@@ -60,12 +68,14 @@ class StudyPointServiceTest {
         network = Importers.loadNetwork("20210723_0030_2D5_CGM.uct", networkStream);
         scalableZonalData = glskDocument.getZonalScalable(network, dateTime.toInstant());
 
+        coreValidRequest = new CoreValidRequest("id",  null, null, new CoreValidFileResource("name", "url"), null, null, null);
     }
 
     @Test
     void checkStudyPointComputationSucceed() {
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("http://url");
-        StudyPointResult result = studyPointService.computeStudyPoint(studyPoints.get(0), network, scalableZonalData, coreNetPositions, null);
+        Mockito.when(raoRunnerClient.runRao(Mockito.any())).thenReturn(new RaoResponse("id", "instant", "praUrl", "cracUrl", "raoUrl"));
+        StudyPointResult result = studyPointService.computeStudyPoint(studyPoints.get(0), network, scalableZonalData, coreNetPositions, coreValidRequest, "");
         assertEquals("0_9", result.getId());
         assertEquals(StudyPointResult.Status.SUCCESS, result.getStatus());
         assertEquals("http://url", result.getShiftedCgmUrl());
@@ -74,7 +84,7 @@ class StudyPointServiceTest {
     @Test
     void checkStudyPointComputationFailed() {
         scalableZonalData = null;
-        StudyPointResult result = studyPointService.computeStudyPoint(studyPoints.get(0), network, scalableZonalData, coreNetPositions, null);
+        StudyPointResult result = studyPointService.computeStudyPoint(studyPoints.get(0), network, scalableZonalData, coreNetPositions, null, "");
         assertEquals("0_9", result.getId());
         assertEquals(StudyPointResult.Status.ERROR, result.getStatus());
         assertEquals("", result.getShiftedCgmUrl());

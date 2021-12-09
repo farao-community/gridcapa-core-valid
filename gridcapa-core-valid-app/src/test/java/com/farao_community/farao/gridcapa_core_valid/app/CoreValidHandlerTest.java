@@ -12,9 +12,13 @@ import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
 import com.farao_community.farao.data.glsk.api.GlskDocument;
 import com.farao_community.farao.data.glsk.ucte.UcteGlskDocument;
+import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
+import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.net.URL;
 import java.time.OffsetDateTime;
@@ -30,10 +34,18 @@ class CoreValidHandlerTest {
     @Autowired
     private CoreValidHandler coreValidHandler;
 
+    @MockBean
+    private MinioAdapter minioAdapter;
+
+    @MockBean
+    private RaoRunnerClient raoRunnerClient;
+
     private final String testDirectory = "/20210723";
 
     @Test
     void handleCoreValidRequestTest() {
+        Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("http://url");
+        Mockito.when(raoRunnerClient.runRao(Mockito.any())).thenReturn(new RaoResponse("id", "instant", "praUrl", "cracUrl", "raoUrl"));
         String requestId = "Test request";
         String networkFileName = "20210723_0030_2D5_CGM_limits.uct";
         CoreValidFileResource networkFile = createFileResource(networkFileName, getClass().getResource(testDirectory + "/" + networkFileName));
@@ -43,9 +55,8 @@ class CoreValidHandlerTest {
         CoreValidFileResource studyPointsFile = createFileResource("", getClass().getResource(testDirectory + "/20210723-Points_Etudes-v01.csv"));
         CoreValidFileResource glskFile = createFileResource("", getClass().getResource(testDirectory + "/20210723-F226-v1.xml"));
         CoreValidFileResource cbcoraFile = new CoreValidFileResource("cbcora", "url");
-        CoreValidFileResource raoParameters = new CoreValidFileResource("raoParameters", "url"); // todo
 
-        CoreValidRequest request = new CoreValidRequest(requestId, dateTime, networkFile, cbcoraFile, glskFile,  refProgFile, studyPointsFile, raoParameters);
+        CoreValidRequest request = new CoreValidRequest(requestId, dateTime, networkFile, cbcoraFile, glskFile,  refProgFile, studyPointsFile);
         CoreValidResponse response = coreValidHandler.handleCoreValidRequest(request);
         assertEquals(requestId, response.getId());
     }

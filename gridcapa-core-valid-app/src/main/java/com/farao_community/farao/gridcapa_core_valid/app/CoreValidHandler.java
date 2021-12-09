@@ -34,6 +34,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.OffsetDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +70,7 @@ public class CoreValidHandler {
 
     private String saveRaoParameters() {
         RaoParameters raoParameters = RaoParameters.load();
-        SearchTreeRaoParameters searchTreeRaoParameters = new SearchTreeRaoParameters();
+        SearchTreeRaoParameters searchTreeRaoParameters = getSearchTreeRaoParameters();
         raoParameters.addExtension(SearchTreeRaoParameters.class, searchTreeRaoParameters);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         JsonRaoParameters.write(raoParameters, baos);
@@ -77,6 +78,16 @@ public class CoreValidHandler {
         ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
         minioAdapter.uploadFile(raoParametersDestinationPath, bais);
         return minioAdapter.generatePreSignedUrl(raoParametersDestinationPath);
+    }
+
+    private SearchTreeRaoParameters getSearchTreeRaoParameters() {
+        SearchTreeRaoParameters searchTreeRaoParameters = new SearchTreeRaoParameters();
+        HashMap<String, Integer> mapParameters = new HashMap<>();
+        mapParameters.put("FR", 1);
+        searchTreeRaoParameters.setMaxCurativePstPerTso(mapParameters);
+        searchTreeRaoParameters.setMaxCurativeRaPerTso(mapParameters);
+        searchTreeRaoParameters.setMaxCurativeTopoPerTso(mapParameters);
+        return searchTreeRaoParameters;
     }
 
     GlskDocument importGlskFile(CoreValidFileResource glskFileResource) {

@@ -31,10 +31,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -72,7 +69,7 @@ public class StudyPointService {
 
             result.setStatus(StudyPointResult.Status.SUCCESS);
             result.setShiftedCgmUrl(url);
-        } catch(CoreValidRaoException e) {
+        } catch (CoreValidRaoException e) {
             LOGGER.error("Error during RAO {}", studyPoint.getId(), e);
             result.setStatus(StudyPointResult.Status.ERROR);
         } catch (Exception e) {
@@ -111,28 +108,20 @@ public class StudyPointService {
 
     private Map<String, InitGenerator> setPminPmaxToDefaultValue(Network network, ZonalData<Scalable> scalableZonalData) {
         Map<String, InitGenerator> initGenerators = new HashMap<>();
-        CoreAreasId.getCountriesId().forEach(zone -> {
-            String zoneEiCode = new CountryEICode(Country.valueOf(zone)).getCode();
-            Scalable scalable = scalableZonalData.getData(zoneEiCode);
-            if (scalable != null) {
-                List<Generator> generators = scalable.filterInjections(network).stream()
-                        .filter(injection -> injection instanceof Generator)
-                        .map(injection -> (Generator) injection)
-                        .collect(Collectors.toList());
-
-                generators.forEach(generator -> {
-                    if (Double.isNaN(generator.getTargetP())) {
-                        generator.setTargetP(0.);
-                    }
-                    InitGenerator initGenerator = new InitGenerator();
-                    initGenerator.setpMin(generator.getMinP());
-                    initGenerator.setpMax(generator.getMaxP());
-                    initGenerators.put(generator.getId(), initGenerator);
-                    generator.setMinP(DEFAULT_PMIN);
-                    generator.setMaxP(DEFAULT_PMAX);
-                });
+        CoreAreasId.getCountriesId().stream().map(zone -> new CountryEICode(Country.valueOf(zone)).getCode()).map(scalableZonalData::getData).filter(Objects::nonNull).map(scalable -> scalable.filterInjections(network).stream()
+                .filter(Generator.class::isInstance)
+                .map(Generator.class::cast)
+                .collect(Collectors.toList())).forEach(generators -> generators.forEach(generator -> {
+            if (Double.isNaN(generator.getTargetP())) {
+                generator.setTargetP(0.);
             }
-        });
+            InitGenerator initGenerator = new InitGenerator();
+            initGenerator.setpMin(generator.getMinP());
+            initGenerator.setpMax(generator.getMaxP());
+            initGenerators.put(generator.getId(), initGenerator);
+            generator.setMinP(DEFAULT_PMIN);
+            generator.setMaxP(DEFAULT_PMAX);
+        }));
         LOGGER.info("Pmax and Pmin are set to default values for network {}", network.getNameOrId());
         return initGenerators;
     }
@@ -143,8 +132,8 @@ public class StudyPointService {
             Scalable scalable = scalableZonalData.getData(zoneEiCode);
             if (scalable != null) {
                 List<Generator> generators = scalable.filterInjections(network).stream()
-                        .filter(injection -> injection instanceof Generator)
-                        .map(injection -> (Generator) injection)
+                        .filter(Generator.class::isInstance)
+                        .map(Generator.class::cast)
                         .collect(Collectors.toList());
 
                 generators.forEach(generator -> {

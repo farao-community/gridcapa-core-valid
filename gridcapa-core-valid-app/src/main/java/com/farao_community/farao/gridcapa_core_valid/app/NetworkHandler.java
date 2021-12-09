@@ -23,6 +23,10 @@ public final class NetworkHandler {
     private static final String ALEGRO_GEN_BE = "XLI_OB1B_generator";
     private static final String ALEGRO_GEN_DE = "XLI_OB1A_generator";
 
+    private NetworkHandler() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static Network loadNetwork(String filename, InputStream inputStream) {
         LOGGER.info("IIDM import of network : {}", filename);
         Network network = Importers.loadNetwork(filename, inputStream);

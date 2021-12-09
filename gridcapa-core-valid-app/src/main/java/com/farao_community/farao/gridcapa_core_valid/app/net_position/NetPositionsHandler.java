@@ -25,6 +25,10 @@ import java.util.*;
  */
 public final class NetPositionsHandler {
 
+    private NetPositionsHandler() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static Map<String, Double> computeCoreReferenceNetPositions(ReferenceProgram referenceProgram) {
         Map<String, Double> coreNetPositions = new TreeMap<>();
         referenceProgram.getReferenceExchangeDataList().forEach(referenceExchangeData -> {
