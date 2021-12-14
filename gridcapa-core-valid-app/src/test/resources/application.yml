@@ -5,6 +5,10 @@ spring:
     username: guest-test
     password: guest-test
 
+rao-runner-server:
+  amqp:
+    queue-name: ${RAO_ADAPTER_SERVER_QUEUE_NAME:rao-runner-requests}
+
 core-valid-server:
   requests:
     queue-name: core-valid-requests

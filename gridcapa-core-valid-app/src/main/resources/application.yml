@@ -9,6 +9,10 @@ spring:
     template:
       reply-timeout: 6000000
 
+rao-runner-server:
+  amqp:
+    queue-name: ${RAO_ADAPTER_SERVER_QUEUE_NAME:rao-runner-requests}
+
 core-valid-server:
   requests:
     queue-name: ${CORE_VALID_SERVER_QUEUE_NAME:core-valid-requests}

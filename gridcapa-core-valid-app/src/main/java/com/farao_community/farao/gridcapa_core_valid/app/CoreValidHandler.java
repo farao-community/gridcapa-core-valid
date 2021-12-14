@@ -22,6 +22,7 @@ import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointS
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointsImporter;
 import com.farao_community.farao.rao_api.json.JsonRaoParameters;
 import com.farao_community.farao.rao_api.parameters.RaoParameters;
+import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
 import com.farao_community.farao.search_tree_rao.SearchTreeRaoParameters;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.iidm.network.Network;
@@ -46,16 +47,17 @@ public class CoreValidHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(CoreValidHandler.class);
     private static final String RAO_PARAMETERS_FILE_NAME = "raoParameters.json";
     private final UrlValidationService urlValidationService;
-    private final StudyPointService studyPointService;
     private final MinioAdapter minioAdapter;
+    private final RaoRunnerClient raoRunnerClient;
 
-    public CoreValidHandler(UrlValidationService urlValidationService, StudyPointService studyPointService, MinioAdapter minioAdapter) {
+    public CoreValidHandler(UrlValidationService urlValidationService, MinioAdapter minioAdapter, RaoRunnerClient raoRunnerClient) {
         this.urlValidationService = urlValidationService;
-        this.studyPointService = studyPointService;
         this.minioAdapter = minioAdapter;
+        this.raoRunnerClient = raoRunnerClient;
     }
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
+        StudyPointService studyPointService = new StudyPointService(minioAdapter, raoRunnerClient);
         InputStream networkStream = urlValidationService.openUrlStream(coreValidRequest.getCgm().getUrl());
         Network network = NetworkHandler.loadNetwork(coreValidRequest.getCgm().getFilename(), networkStream);
         ReferenceProgram referenceProgram = importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
@@ -80,7 +82,7 @@ public class CoreValidHandler {
         return minioAdapter.generatePreSignedUrl(raoParametersDestinationPath);
     }
 
-    private SearchTreeRaoParameters getSearchTreeRaoParameters() {
+    private SearchTreeRaoParameters getSearchTreeRaoParameters() { //todo modify params in itools config file
         SearchTreeRaoParameters searchTreeRaoParameters = new SearchTreeRaoParameters();
         HashMap<String, Integer> mapParameters = new HashMap<>();
         mapParameters.put("FR", 1);
