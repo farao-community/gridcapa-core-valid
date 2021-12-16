@@ -7,7 +7,7 @@ spring:
 
 rao-runner-server:
   amqp:
-    queue-name: ${RAO_ADAPTER_SERVER_QUEUE_NAME:rao-runner-requests}
+    queue-name: rao-request-queue
 
 core-valid-server:
   requests:
@@ -25,5 +25,5 @@ core-valid-server:
   security:
     whitelist:
       - file:/
-      - http://${MINIO_HOST:localhost}:${MINIO_PORT:9000}
+      - http://localhost:9000/
       - http://minio:9000/

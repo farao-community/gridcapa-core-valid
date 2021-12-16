@@ -74,7 +74,7 @@ public class CoreValidHandler {
         String raoParametersUrl = saveRaoParameters();
         Crac crac = importCrac(coreValidRequest.getCbcora(), coreValidRequest.getTimestamp(), network);
         String jsonCracUrl = saveCracInJsonFormat(crac, coreValidRequest.getTimestamp());
-        studyPoints.forEach(studyPoint -> studyPointService.computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions, raoParametersUrl, jsonCracUrl));
+        studyPoints.forEach(studyPoint -> studyPointService.computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions, jsonCracUrl, raoParametersUrl));
         return new CoreValidResponse(coreValidRequest.getId());
     }
 

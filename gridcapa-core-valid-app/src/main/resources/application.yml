@@ -11,7 +11,7 @@ spring:
 
 rao-runner-server:
   amqp:
-    queue-name: ${RAO_ADAPTER_SERVER_QUEUE_NAME:rao-runner-requests}
+    queue-name: ${RAO_ADAPTER_SERVER_QUEUE_NAME:rao-request-queue}
 
 core-valid-server:
   requests:

@@ -25,7 +25,7 @@ class CoreValidServerPropertiesTest {
     void checkMinioConfiguration() {
         CoreValidServerProperties.MinioProperties minioProperties = coreValidServerProperties.getMinio();
         assertNotNull(minioProperties);
-        assertEquals("CORE/VALID/", minioProperties.getBasePath());
-        assertEquals("gridcapa", minioProperties.getBucket());
+        assertEquals("core-valid/", minioProperties.getBasePath());
+        assertEquals("core-valid-data", minioProperties.getBucket());
     }
 }
