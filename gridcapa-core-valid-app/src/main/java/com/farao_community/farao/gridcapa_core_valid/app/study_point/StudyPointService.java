@@ -11,7 +11,6 @@ import com.farao_community.farao.commons.CountryEICode;
 import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
 import com.farao_community.farao.core_valid.api.exception.CoreValidRaoException;
-import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.gridcapa_core_valid.app.CoreAreasId;
 import com.farao_community.farao.gridcapa_core_valid.app.MinioAdapter;
 import com.farao_community.farao.gridcapa_core_valid.app.NetworkHandler;
@@ -51,7 +50,7 @@ public class StudyPointService {
         this.raoRunnerClient = raoRunnerClient;
     }
 
-    public StudyPointResult computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, CoreValidRequest coreValidRequest, String raoParametersUrl) {
+    public StudyPointResult computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, String jsonCracUrl, String raoParametersUrl) {
         LOGGER.info("Running computation for study point {} ", studyPoint.getId());
         StudyPointResult result = new StudyPointResult(studyPoint.getId());
         String initialVariant = network.getVariantManager().getWorkingVariantId();
@@ -66,7 +65,7 @@ public class StudyPointService {
             result.setShiftedCgmUrl(shiftedCgmUrl);
             String raoRequestId = String.format("%s-%s", network.getNameOrId(), studyPoint.getId());
 
-            RaoResponse raoResponse = startRao(raoRequestId, shiftedCgmUrl, coreValidRequest.getCbcora().getUrl(), raoParametersUrl);
+            RaoResponse raoResponse = startRao(raoRequestId, shiftedCgmUrl, jsonCracUrl, raoParametersUrl);
 
             result.setStatus(StudyPointResult.Status.SUCCESS);
         } catch (CoreValidRaoException e) {
@@ -84,7 +83,7 @@ public class StudyPointService {
 
     private RaoResponse startRao(String raoRequestId, String networkUrl, String cracUrl, String raoParametersUrl) throws CoreValidRaoException {
         try {
-            RaoRequest raoRequest = new RaoRequest(raoRequestId, networkUrl, cracUrl, raoParametersUrl);
+            RaoRequest raoRequest = new RaoRequest(raoRequestId, networkUrl, cracUrl, raoParametersUrl); //todo add Glsk?
             return raoRunnerClient.runRao(raoRequest);
         } catch (Exception e) {
             throw new CoreValidRaoException(String.format("Error during RAO for request %s", raoRequestId), e);
