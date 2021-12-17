@@ -68,6 +68,8 @@ public class StudyPointService {
             RaoResponse raoResponse = startRao(raoRequestId, shiftedCgmUrl, jsonCracUrl, raoParametersUrl);
 
             result.setStatus(StudyPointResult.Status.SUCCESS);
+            result.setNetworkWithPraUrl(raoResponse.getNetworkWithPraFileUrl());
+            result.setRaoResultFileUrl(raoResponse.getRaoResultFileUrl());
         } catch (CoreValidRaoException e) {
             LOGGER.error("Error during RAO {}", studyPoint.getId(), e);
             result.setStatus(StudyPointResult.Status.ERROR);
@@ -83,7 +85,7 @@ public class StudyPointService {
 
     private RaoResponse startRao(String raoRequestId, String networkUrl, String cracUrl, String raoParametersUrl) throws CoreValidRaoException {
         try {
-            RaoRequest raoRequest = new RaoRequest(raoRequestId, networkUrl, cracUrl, raoParametersUrl); //todo add Glsk?
+            RaoRequest raoRequest = new RaoRequest(raoRequestId, networkUrl, cracUrl, raoParametersUrl);
             return raoRunnerClient.runRao(raoRequest);
         } catch (Exception e) {
             throw new CoreValidRaoException(String.format("Error during RAO for request %s", raoRequestId), e);

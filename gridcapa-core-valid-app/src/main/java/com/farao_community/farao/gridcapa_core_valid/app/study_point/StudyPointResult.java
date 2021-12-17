@@ -14,11 +14,15 @@ public class StudyPointResult {
     private String id;
     private Status status;
     private String shiftedCgmUrl;
+    private String networkWithPraUrl;
+    private String raoResultFileUrl;
 
     public StudyPointResult(String id) {
         this.id = id;
         this.status = Status.NOT_STARTED;
         this.shiftedCgmUrl = "";
+        this.networkWithPraUrl = "";
+        this.raoResultFileUrl = "";
     }
 
     public String getId() {
@@ -39,6 +43,22 @@ public class StudyPointResult {
 
     public void setShiftedCgmUrl(String shiftedCgmUrl) {
         this.shiftedCgmUrl = shiftedCgmUrl;
+    }
+
+    public String getNetworkWithPraUrl() {
+        return networkWithPraUrl;
+    }
+
+    public void setNetworkWithPraUrl(String networkWithPraUrl) {
+        this.networkWithPraUrl = networkWithPraUrl;
+    }
+
+    public String getRaoResultFileUrl() {
+        return raoResultFileUrl;
+    }
+
+    public void setRaoResultFileUrl(String raoResultFileUrl) {
+        this.raoResultFileUrl = raoResultFileUrl;
     }
 
     enum Status {

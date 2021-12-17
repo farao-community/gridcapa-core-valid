@@ -79,6 +79,8 @@ class StudyPointServiceTest {
         assertEquals("0_9", result.getId());
         assertEquals(StudyPointResult.Status.SUCCESS, result.getStatus());
         assertEquals("http://url", result.getShiftedCgmUrl());
+        assertEquals("praUrl", result.getNetworkWithPraUrl());
+        assertEquals("raoUrl", result.getRaoResultFileUrl());
     }
 
     @Test
