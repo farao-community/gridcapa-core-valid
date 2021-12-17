@@ -5,7 +5,7 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package com.farao_community.farao.gridcapa_core_valid.app.net_position;
+package com.farao_community.farao.gridcapa_core_valid.app.services;
 
 import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.data.glsk.api.GlskDocument;
@@ -49,10 +49,6 @@ class NetPositionsHandlerTest {
     void computeCoreNetPositionsTest() {
         OffsetDateTime dateTime = OffsetDateTime.parse("2021-07-22T22:30Z");
         ReferenceProgram referenceProgram = RefProgImporter.importRefProg(refProgStream, dateTime);
-        assertEquals(-50, referenceProgram.getGlobalNetPosition("10YFR-RTE------C"));
-        assertEquals(-450, referenceProgram.getGlobalNetPosition("10YCB-GERMANY--8"));
-        assertEquals(225, referenceProgram.getGlobalNetPosition("10YNL----------L"));
-        assertEquals(275, referenceProgram.getGlobalNetPosition("10YBE----------2"));
         Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
         assertEquals(4, coreNetPositions.size());
         assertEquals(-50, coreNetPositions.get("FR"));

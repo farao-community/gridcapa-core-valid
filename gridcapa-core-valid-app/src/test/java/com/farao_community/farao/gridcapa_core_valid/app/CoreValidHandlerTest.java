@@ -10,8 +10,7 @@ package com.farao_community.farao.gridcapa_core_valid.app;
 import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
-import com.farao_community.farao.data.glsk.api.GlskDocument;
-import com.farao_community.farao.data.glsk.ucte.UcteGlskDocument;
+import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
 import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
 import org.junit.jupiter.api.Test;
@@ -63,13 +62,5 @@ class CoreValidHandlerTest {
 
     private CoreValidFileResource createFileResource(String filename, URL resource) {
         return new CoreValidFileResource(filename, resource.toExternalForm());
-    }
-
-    @Test
-    void importGlskTest() {
-        CoreValidFileResource glskFile = createFileResource("glsk", getClass().getResource(testDirectory + "/20210723-F226-v1.xml"));
-        GlskDocument glskDocument = coreValidHandler.importGlskFile(glskFile);
-        assertEquals(4, ((UcteGlskDocument) glskDocument).getListGlskSeries().size());
-        assertEquals(1, glskDocument.getGlskPoints("10YFR-RTE------C").size());
     }
 }
