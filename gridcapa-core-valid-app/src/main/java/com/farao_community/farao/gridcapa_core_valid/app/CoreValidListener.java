@@ -19,11 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.*;
 import org.springframework.cloud.stream.function.StreamBridge;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
-import java.util.function.Function;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -32,7 +30,7 @@ import java.util.function.Function;
 public class CoreValidListener implements MessageListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CoreValidListener.class);
-    private static final String APPLICATION_ID = "core-valid-server";
+    private static final String APPLICATION_ID = "core-valid-runner";
     private static final String CONTENT_ENCODING = "UTF-8";
     private static final String CONTENT_TYPE = "application/vnd.api+json";
     private static final int PRIORITY = 1;
@@ -56,7 +54,24 @@ public class CoreValidListener implements MessageListener {
     public void onMessage(Message message) {
         String replyTo = message.getMessageProperties().getReplyTo();
         String correlationId = message.getMessageProperties().getCorrelationId();
-        CoreValidRequest coreValidRequest = jsonApiConverter.fromJsonMessage(message.getBody(), CoreValidRequest.class);
+        try {
+            CoreValidRequest coreValidRequest = jsonApiConverter.fromJsonMessage(message.getBody(), CoreValidRequest.class);
+            runCoreValidRequest(coreValidRequest, replyTo, correlationId);
+        } catch (AbstractCoreValidException e) {
+            LOGGER.error("Core valid exception occured", e);
+            sendRequestErrorResponse(e, replyTo, correlationId);
+        }
+    }
+
+    private void sendRequestErrorResponse(AbstractCoreValidException e, String replyTo, String correlationId) {
+        if (replyTo != null) {
+            amqpTemplate.send(replyTo, createErrorResponse(e, correlationId));
+        } else {
+            amqpTemplate.send(amqpMessagesConfiguration.coreValidResponseExchange().getName(), "", createErrorResponse(e, correlationId));
+        }
+    }
+
+    private void runCoreValidRequest(CoreValidRequest coreValidRequest, String replyTo, String correlationId) {
         try {
             streamBridge.send(TASK_STATUS_UPDATE, new TaskStatusUpdate(UUID.fromString(coreValidRequest.getId()), TaskStatus.RUNNING));
             LOGGER.info("Core valid request received: {}", coreValidRequest);

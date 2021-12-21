@@ -7,16 +7,14 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app;
 
-import com.farao_community.farao.gridcapa_core_valid.app.configuration.CoreValidServerProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
-
+@SuppressWarnings("HideUtilityClassConstructor")
 @SpringBootApplication
-@EnableConfigurationProperties(CoreValidServerProperties.class)
 public class CoreValidApplication {
     public static void main(String[] args) {
         SpringApplication.run(CoreValidApplication.class, args);

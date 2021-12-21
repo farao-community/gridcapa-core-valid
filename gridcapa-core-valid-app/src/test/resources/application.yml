@@ -4,21 +4,33 @@ spring:
     port: 1234
     username: guest-test
     password: guest-test
+  cloud:
+    stream:
+      bindings:
+        task-status-update:
+          binder: rabbit
+          destination: task-status-updated
 
-core-valid-server:
-  requests:
-    queue-name: core-valid-requests
-  responses:
-    exchange: core-valid-response
-    expiration: 60000
-  minio:
-    access:
-      name: minioadmin
-      secret: minioadmin
-    url: http://localhost:9000
-    bucket: core-valid-data
-    base-path: core-valid/
-  security:
-    whitelist:
-      - file:/
-      - http://${MINIO_HOST:localhost}:${MINIO_PORT:9000}
+core-valid-runner:
+  bindings:
+    request:
+      destination: core-valid-requests
+      routing-key: "#"
+    response:
+      destination: core-valid-response
+      expiration: 60000
+  whitelist:
+    - http://${MINIO_HOST:localhost}:${MINIO_PORT:9000}
+    - file:/
+    - http://minio:9000/
+
+minio:
+  access:
+    name: ${MINIO_USERNAME:minioadmin}
+    secret: ${MINIO_PASSWORD:minioadmin}
+  url: http://${MINIO_HOST:localhost}:${MINIO_PORT:9000}
+  bucket: ${MINIO_BUCKET:core-valid-data}
+  base-path: ${CORE_VALID_SERVER_MINIO_BASE_PATH:core-valid/}
+
+server:
+  port: ${CORE_VALID_SERVER_PORT:8080}
