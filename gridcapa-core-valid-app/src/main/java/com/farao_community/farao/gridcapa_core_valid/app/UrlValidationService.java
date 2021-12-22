@@ -31,13 +31,13 @@ public class UrlValidationService {
         if (urlWhitelistConfiguration.getWhitelist().stream().noneMatch(urlString::startsWith)) {
             StringJoiner sj = new StringJoiner(", ", "Whitelist: ", ".");
             urlWhitelistConfiguration.getWhitelist().forEach(sj::add);
-            throw new CoreValidInvalidDataException(String.format("URL '%s' is not part of application's whitelisted url's", urlString));
+            throw new CoreValidInvalidDataException(String.format("URL '%s' is not part of application's whitelisted url's %s", urlString, sj));
         }
         try {
             URL url = new URL(urlString);
             return url.openStream();
         } catch (IOException e) {
-            throw new CoreValidInvalidDataException(String.format("Cannot download networkFileResource file from URL '%s'", urlString), e);
+            throw new CoreValidInvalidDataException(String.format("Cannot download FileResource file from URL '%s'", urlString), e);
         }
     }
 }

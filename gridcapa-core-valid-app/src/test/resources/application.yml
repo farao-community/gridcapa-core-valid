@@ -18,9 +18,8 @@ core-valid-runner:
       routing-key: "#"
     response:
       destination: core-valid-response
-      expiration: 60000
+      expiration: 600000
   whitelist:
-    - http://${MINIO_HOST:localhost}:${MINIO_PORT:9000}
     - file:/
     - http://minio:9000/
 
