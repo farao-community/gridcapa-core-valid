@@ -73,10 +73,9 @@ public class CoreValidListener implements MessageListener {
 
     private void runCoreValidRequest(CoreValidRequest coreValidRequest, String replyTo, String correlationId) {
         try {
-            streamBridge.send(TASK_STATUS_UPDATE, new TaskStatusUpdate(UUID.fromString(coreValidRequest.getId()), TaskStatus.RUNNING));
             LOGGER.info("Core valid request received: {}", coreValidRequest);
+            streamBridge.send(TASK_STATUS_UPDATE, new TaskStatusUpdate(UUID.fromString(coreValidRequest.getId()), TaskStatus.RUNNING));
             CoreValidResponse coreValidResponse = coreValidHandler.handleCoreValidRequest(coreValidRequest);
-            LOGGER.info("Core valid response sent: {}", coreValidResponse);
             sendCoreValidResponse(coreValidResponse, replyTo, correlationId);
         } catch (AbstractCoreValidException e) {
             LOGGER.error("Core valid exception occured", e);
@@ -104,6 +103,7 @@ public class CoreValidListener implements MessageListener {
         } else {
             amqpTemplate.send(amqpMessagesConfiguration.coreValidResponseExchange().getName(), "", createMessageResponse(coreValidResponse, correlationId));
         }
+        LOGGER.info("Core valid response sent: {}", coreValidResponse);
     }
 
     private Message createMessageResponse(CoreValidResponse coreValidResponse, String correlationId) {
