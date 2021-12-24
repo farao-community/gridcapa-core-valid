@@ -13,6 +13,7 @@
     <name>GridCapa Core validation runner application</name>
     <description>Core validation runner application in GridCapa environment</description>
     <packaging>jar</packaging>
+    <version>0.0.1-SNAPSHOT</version>
 
     <build>
         <plugins>

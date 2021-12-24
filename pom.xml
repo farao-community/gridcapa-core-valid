@@ -16,6 +16,14 @@
 
     <name>GridCapa CORE VALID</name>
     <description>A full suite to perform CEP 70% validation on CORE zone</description>
+    <url>http://www.farao-community.com</url>
+
+    <licenses>
+        <license>
+            <name>Mozilla Public License, Version 2.0</name>
+            <url>https://www.mozilla.org/en-US/MPL/2.0/</url>
+        </license>
+    </licenses>
 
     <scm>
         <connection>scm:git:https://github.com/farao-community/gridcapa-core-valid.git</connection>
@@ -27,6 +35,18 @@
         <developer>
             <name>Ameni WALHA</name>
             <email>ameni.walha@rte-france.com</email>
+            <organization>RTE</organization>
+            <organizationUrl>http://www.rte-france.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Theo PASCOLI</name>
+            <email>theo.pascoli@rte-france.com</email>
+            <organization>RTE</organization>
+            <organizationUrl>http://www.rte-france.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Alexandre MONTIGNY</name>
+            <email>alexandre.montigny@rte-france.com</email>
             <organization>RTE</organization>
             <organizationUrl>http://www.rte-france.com</organizationUrl>
         </developer>
