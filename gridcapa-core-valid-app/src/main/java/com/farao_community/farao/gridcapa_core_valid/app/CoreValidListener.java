@@ -12,11 +12,16 @@ import com.farao_community.farao.core_valid.api.exception.AbstractCoreValidExcep
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
+import com.farao_community.farao.gridcapa.task_manager.api.TaskStatus;
+import com.farao_community.farao.gridcapa.task_manager.api.TaskStatusUpdate;
 import com.farao_community.farao.gridcapa_core_valid.app.configuration.AmqpMessagesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.*;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -25,17 +30,20 @@ import org.springframework.stereotype.Component;
 public class CoreValidListener implements MessageListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CoreValidListener.class);
-    private static final String APPLICATION_ID = "core-valid-server";
+    private static final String APPLICATION_ID = "core-valid-runner";
     private static final String CONTENT_ENCODING = "UTF-8";
     private static final String CONTENT_TYPE = "application/vnd.api+json";
     private static final int PRIORITY = 1;
+    private static final String TASK_STATUS_UPDATE = "task-status-update";
 
     private final JsonApiConverter jsonApiConverter;
     private final AmqpTemplate amqpTemplate;
     private final CoreValidHandler coreValidHandler;
     private final AmqpMessagesConfiguration amqpMessagesConfiguration;
+    private final StreamBridge streamBridge;
 
-    public CoreValidListener(CoreValidHandler coreValidHandler, AmqpTemplate amqpTemplate, AmqpMessagesConfiguration amqpMessagesConfiguration) {
+    public CoreValidListener(CoreValidHandler coreValidHandler, AmqpTemplate amqpTemplate, AmqpMessagesConfiguration amqpMessagesConfiguration, StreamBridge streamBridge) {
+        this.streamBridge = streamBridge;
         this.jsonApiConverter = new JsonApiConverter();
         this.coreValidHandler = coreValidHandler;
         this.amqpTemplate = amqpTemplate;
@@ -48,21 +56,39 @@ public class CoreValidListener implements MessageListener {
         String correlationId = message.getMessageProperties().getCorrelationId();
         try {
             CoreValidRequest coreValidRequest = jsonApiConverter.fromJsonMessage(message.getBody(), CoreValidRequest.class);
-            LOGGER.info("Core valid request received: {}", coreValidRequest);
-            CoreValidResponse coreValidResponse = coreValidHandler.handleCoreValidRequest(coreValidRequest);
-            LOGGER.info("Core valid response sent: {}", coreValidResponse);
-            sendCoreValidResponse(coreValidResponse, replyTo, correlationId);
+            runCoreValidRequest(coreValidRequest, replyTo, correlationId);
         } catch (AbstractCoreValidException e) {
             LOGGER.error("Core valid exception occured", e);
-            sendErrorResponse(e, replyTo, correlationId);
-        } catch (Exception e) {
-            LOGGER.error("Unknown exception occured", e);
-            AbstractCoreValidException wrappingException = new CoreValidInternalException("Unknown exception", e);
-            sendErrorResponse(wrappingException, replyTo, correlationId);
+            sendRequestErrorResponse(e, replyTo, correlationId);
         }
     }
 
-    private void sendErrorResponse(AbstractCoreValidException e, String replyTo, String correlationId) {
+    private void sendRequestErrorResponse(AbstractCoreValidException e, String replyTo, String correlationId) {
+        if (replyTo != null) {
+            amqpTemplate.send(replyTo, createErrorResponse(e, correlationId));
+        } else {
+            amqpTemplate.send(amqpMessagesConfiguration.coreValidResponseExchange().getName(), "", createErrorResponse(e, correlationId));
+        }
+    }
+
+    private void runCoreValidRequest(CoreValidRequest coreValidRequest, String replyTo, String correlationId) {
+        try {
+            LOGGER.info("Core valid request received: {}", coreValidRequest);
+            streamBridge.send(TASK_STATUS_UPDATE, new TaskStatusUpdate(UUID.fromString(coreValidRequest.getId()), TaskStatus.RUNNING));
+            CoreValidResponse coreValidResponse = coreValidHandler.handleCoreValidRequest(coreValidRequest);
+            sendCoreValidResponse(coreValidResponse, replyTo, correlationId);
+        } catch (AbstractCoreValidException e) {
+            LOGGER.error("Core valid exception occured", e);
+            sendErrorResponse(coreValidRequest.getId(), e, replyTo, correlationId);
+        } catch (Exception e) {
+            LOGGER.error("Unknown exception occured", e);
+            AbstractCoreValidException wrappingException = new CoreValidInternalException("Unknown exception", e);
+            sendErrorResponse(coreValidRequest.getId(), wrappingException, replyTo, correlationId);
+        }
+    }
+
+    private void sendErrorResponse(String requestId, AbstractCoreValidException e, String replyTo, String correlationId) {
+        streamBridge.send(TASK_STATUS_UPDATE, new TaskStatusUpdate(UUID.fromString(requestId), TaskStatus.ERROR));
         if (replyTo != null) {
             amqpTemplate.send(replyTo, createErrorResponse(e, correlationId));
         } else {
@@ -71,11 +97,13 @@ public class CoreValidListener implements MessageListener {
     }
 
     private void sendCoreValidResponse(CoreValidResponse coreValidResponse, String replyTo, String correlationId) {
+        streamBridge.send(TASK_STATUS_UPDATE, new TaskStatusUpdate(UUID.fromString(coreValidResponse.getId()), TaskStatus.SUCCESS));
         if (replyTo != null) {
             amqpTemplate.send(replyTo, createMessageResponse(coreValidResponse, correlationId));
         } else {
             amqpTemplate.send(amqpMessagesConfiguration.coreValidResponseExchange().getName(), "", createMessageResponse(coreValidResponse, correlationId));
         }
+        LOGGER.info("Core valid response sent: {}", coreValidResponse);
     }
 
     private Message createMessageResponse(CoreValidResponse coreValidResponse, String correlationId) {

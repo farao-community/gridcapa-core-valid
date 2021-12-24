@@ -17,15 +17,14 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
 @SpringBootTest
-class CoreValidServerPropertiesTest {
+class MinioConfigurationTest {
     @Autowired
-    private CoreValidServerProperties coreValidServerProperties;
+    private MinioConfiguration minioConfiguration;
 
     @Test
     void checkMinioConfiguration() {
-        CoreValidServerProperties.MinioProperties minioProperties = coreValidServerProperties.getMinio();
-        assertNotNull(minioProperties);
-        assertEquals("core-valid/", minioProperties.getBasePath());
-        assertEquals("core-valid-data", minioProperties.getBucket());
+        assertNotNull(minioConfiguration);
+        assertEquals("core-valid/", minioConfiguration.getBasePath());
+        assertEquals("core-valid-data", minioConfiguration.getBucket());
     }
 }

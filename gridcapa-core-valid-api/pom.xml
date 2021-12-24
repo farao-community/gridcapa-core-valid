@@ -23,6 +23,10 @@
     <dependencies>
         <!-- Compile dependencies -->
         <dependency>
+            <groupId>com.farao-community.farao</groupId>
+            <artifactId>gridcapa-task-manager-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.github.jasminb</groupId>
             <artifactId>jsonapi-converter</artifactId>
         </dependency>

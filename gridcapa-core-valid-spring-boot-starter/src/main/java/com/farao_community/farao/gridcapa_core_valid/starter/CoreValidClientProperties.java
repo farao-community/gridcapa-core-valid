@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
-@ConfigurationProperties("core-valid")
+@ConfigurationProperties("core-valid-runner")
 public class CoreValidClientProperties {
     private AmqpConfiguration amqp;
 

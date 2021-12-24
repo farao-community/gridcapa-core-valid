@@ -8,13 +8,12 @@
 package com.farao_community.farao.gridcapa_core_valid.app;
 
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
-import com.farao_community.farao.gridcapa_core_valid.app.configuration.CoreValidServerProperties;
+import com.farao_community.farao.gridcapa_core_valid.app.configuration.MinioConfiguration;
 import io.minio.*;
 import io.minio.http.Method;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 
@@ -33,21 +32,10 @@ public class MinioAdapter {
     private final String bucket;
     private final String basePath;
 
-    public MinioAdapter(CoreValidServerProperties serverProperties, MinioClient minioClient) {
+    public MinioAdapter(MinioConfiguration minioConfiguration, MinioClient minioClient) {
         this.client = minioClient;
-        this.bucket = serverProperties.getMinio().getBucket();
-        this.basePath = serverProperties.getMinio().getBasePath();
-    }
-
-    @Bean
-    public static MinioClient generateMinioClient(CoreValidServerProperties serverProperties) {
-        LOGGER.info("Generates MinioClient bean");
-        CoreValidServerProperties.MinioProperties minioProperties = serverProperties.getMinio();
-        try {
-            return MinioClient.builder().endpoint(minioProperties.getUrl()).credentials(minioProperties.getAccess().getName(), minioProperties.getAccess().getSecret()).build();
-        } catch (Exception e) {
-            throw new CoreValidInternalException("Exception in MinIO client generation", e);
-        }
+        this.bucket = minioConfiguration.getBucket();
+        this.basePath = minioConfiguration.getBasePath();
     }
 
     public void uploadFile(String filePath, InputStream sourceInputStream) {
