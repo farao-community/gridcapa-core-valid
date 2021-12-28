@@ -30,12 +30,6 @@
             <organization>RTE</organization>
             <organizationUrl>http://www.rte-france.com</organizationUrl>
         </developer>
-        <developer>
-            <name>Theo PASCOLI</name>
-            <email>theo.pascoli@rte-france.com</email>
-            <organization>RTE</organization>
-            <organizationUrl>http://www.rte-france.com</organizationUrl>
-        </developer>
     </developers>
 
     <modules>
@@ -47,7 +41,7 @@
     <properties>
         <!-- Dependencies versions -->
         <commons.lang.version>3.11</commons.lang.version>
-        <commons.io.version>2.5</commons.io.version>
+        <commons.io.version>2.7</commons.io.version>
         <maven.jaxb2.version>0.14.0</maven.jaxb2.version>
         <maven.jvnet.jaxb2-basics.version>1.11.1</maven.jvnet.jaxb2-basics.version>
 
@@ -57,8 +51,8 @@
         <opencsv.version>5.2</opencsv.version>
         <farao.bom.version>1.1.0</farao.bom.version>
         <farao.core.version>3.3.3</farao.core.version>
-        <farao.rte.core.version>2.3.3</farao.rte.core.version>
-        <gridcapa.rao.runner.starter.version>0.1.1</gridcapa.rao.runner.starter.version>
+        <spring-cloud.version>Hoxton.SR12</spring-cloud.version>
+        <task-manager.version>0.1.0</task-manager.version>
     </properties>
 
     <build>
@@ -108,23 +102,15 @@
             </dependency>
             <dependency>
                 <groupId>com.farao-community.farao</groupId>
-                <artifactId>farao-crac-creator-api</artifactId>
-                <version>${farao.core.version}</version>
+                <artifactId>gridcapa-task-manager-api</artifactId>
+                <version>${task-manager.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.rte-france.farao</groupId>
-                <artifactId>farao-data-fb-constraint</artifactId>
-                <version>${farao.rte.core.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.farao-community.farao</groupId>
-                <artifactId>gridcapa-rao-runner-spring-boot-starter</artifactId>
-                <version>${gridcapa.rao.runner.starter.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.farao-community.farao</groupId>
-                <artifactId>gridcapa-rao-runner-api</artifactId>
-                <version>${gridcapa.rao.runner.starter.version}</version>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <!-- RUNTIME -->
@@ -134,12 +120,7 @@
                 <version>${jaxb-runtime.version}</version>
                 <scope>runtime</scope>
             </dependency>
-            <dependency>
-                <groupId>com.farao-community.farao</groupId>
-                <artifactId>farao-crac-impl</artifactId>
-                <scope>runtime</scope>
-                <version>${farao.core.version}</version>
-            </dependency>
+
             <dependency>
                 <groupId>com.farao-community.farao</groupId>
                 <artifactId>farao-bom</artifactId>

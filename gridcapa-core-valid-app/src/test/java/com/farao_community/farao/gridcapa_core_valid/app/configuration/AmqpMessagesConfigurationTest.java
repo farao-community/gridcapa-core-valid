@@ -36,6 +36,6 @@ class AmqpMessagesConfigurationTest {
         assertEquals("core-valid-requests", requestQueue.getName());
         assertNotNull(responseExchange);
         assertEquals("core-valid-response", responseExchange.getName());
-        assertEquals("60000", amqpConfiguration.coreValidResponseExpiration());
+        assertEquals("600000", amqpConfiguration.coreValidResponseExpiration());
     }
 }
