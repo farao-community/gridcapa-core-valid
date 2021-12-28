@@ -30,6 +30,12 @@
             <organization>RTE</organization>
             <organizationUrl>http://www.rte-france.com</organizationUrl>
         </developer>
+        <developer>
+            <name>Theo PASCOLI</name>
+            <email>theo.pascoli@rte-france.com</email>
+            <organization>RTE</organization>
+            <organizationUrl>http://www.rte-france.com</organizationUrl>
+        </developer>
     </developers>
 
     <modules>
@@ -53,6 +59,8 @@
         <farao.core.version>3.3.3</farao.core.version>
         <spring-cloud.version>Hoxton.SR12</spring-cloud.version>
         <task-manager.version>0.1.0</task-manager.version>
+        <farao.rte.core.version>2.3.3</farao.rte.core.version>
+        <gridcapa.rao.runner.starter.version>0.1.1</gridcapa.rao.runner.starter.version>
     </properties>
 
     <build>
@@ -102,6 +110,26 @@
             </dependency>
             <dependency>
                 <groupId>com.farao-community.farao</groupId>
+                <artifactId>farao-crac-creator-api</artifactId>
+                <version>${farao.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.rte-france.farao</groupId>
+                <artifactId>farao-data-fb-constraint</artifactId>
+                <version>${farao.rte.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.farao-community.farao</groupId>
+                <artifactId>gridcapa-rao-runner-spring-boot-starter</artifactId>
+                <version>${gridcapa.rao.runner.starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.farao-community.farao</groupId>
+                <artifactId>gridcapa-rao-runner-api</artifactId>
+                <version>${gridcapa.rao.runner.starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.farao-community.farao</groupId>
                 <artifactId>gridcapa-task-manager-api</artifactId>
                 <version>${task-manager.version}</version>
             </dependency>
@@ -120,7 +148,12 @@
                 <version>${jaxb-runtime.version}</version>
                 <scope>runtime</scope>
             </dependency>
-
+            <dependency>
+                <groupId>com.farao-community.farao</groupId>
+                <artifactId>farao-crac-impl</artifactId>
+                <scope>runtime</scope>
+                <version>${farao.core.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.farao-community.farao</groupId>
                 <artifactId>farao-bom</artifactId>
