@@ -5,7 +5,7 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package com.farao_community.farao.gridcapa_core_valid.app;
+package com.farao_community.farao.gridcapa_core_valid.app.services;
 
 import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.*;

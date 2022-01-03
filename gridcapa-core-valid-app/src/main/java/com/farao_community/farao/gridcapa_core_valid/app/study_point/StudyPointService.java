@@ -11,11 +11,10 @@ import com.farao_community.farao.commons.CountryEICode;
 import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
 import com.farao_community.farao.core_valid.api.exception.CoreValidRaoException;
-import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.gridcapa_core_valid.app.CoreAreasId;
-import com.farao_community.farao.gridcapa_core_valid.app.MinioAdapter;
-import com.farao_community.farao.gridcapa_core_valid.app.NetworkHandler;
-import com.farao_community.farao.gridcapa_core_valid.app.net_position.NetPositionsHandler;
+import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
+import com.farao_community.farao.gridcapa_core_valid.app.services.NetworkHandler;
+import com.farao_community.farao.gridcapa_core_valid.app.services.NetPositionsHandler;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
 import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
@@ -51,7 +50,7 @@ public class StudyPointService {
         this.raoRunnerClient = raoRunnerClient;
     }
 
-    public StudyPointResult computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, CoreValidRequest coreValidRequest, String raoParameters) {
+    public StudyPointResult computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, String jsonCracUrl, String raoParametersUrl) {
         LOGGER.info("Running computation for study point {} ", studyPoint.getId());
         StudyPointResult result = new StudyPointResult(studyPoint.getId());
         String initialVariant = network.getVariantManager().getWorkingVariantId();
@@ -62,13 +61,15 @@ public class StudyPointService {
             Map<String, InitGenerator> initGenerators = setPminPmaxToDefaultValue(network, scalableZonalData);
             NetPositionsHandler.shiftNetPositionToStudyPoint(network, studyPoint, scalableZonalData, coreNetPositions);
             resetInitialPminPmax(network, scalableZonalData, initGenerators);
-            String url = saveShiftedCgm(network, studyPoint);
-            String raoRequestId = String.format("%s-%s", studyPoint.getId(), network.getNameOrId());
+            String shiftedCgmUrl = saveShiftedCgm(network, studyPoint);
+            result.setShiftedCgmUrl(shiftedCgmUrl);
+            String raoRequestId = String.format("%s-%s", network.getNameOrId(), studyPoint.getId());
 
-            startRao(raoRequestId, url, coreValidRequest.getCbcora().getUrl(), raoParameters);
+            RaoResponse raoResponse = startRao(raoRequestId, shiftedCgmUrl, jsonCracUrl, raoParametersUrl);
 
             result.setStatus(StudyPointResult.Status.SUCCESS);
-            result.setShiftedCgmUrl(url);
+            result.setNetworkWithPraUrl(raoResponse.getNetworkWithPraFileUrl());
+            result.setRaoResultFileUrl(raoResponse.getRaoResultFileUrl());
         } catch (CoreValidRaoException e) {
             LOGGER.error("Error during RAO {}", studyPoint.getId(), e);
             result.setStatus(StudyPointResult.Status.ERROR);
@@ -92,12 +93,12 @@ public class StudyPointService {
     }
 
     private String saveShiftedCgm(Network network, StudyPoint studyPoint) {
-        String fileName = network.getNameOrId() + "_" + studyPoint.getId() + ".uct";
+        String fileName = network.getNameOrId() + "_" + studyPoint.getId() + ".xiidm";
         String networkPath = String.format(ARTIFACTS_S, fileName);
         MemDataSource memDataSource = new MemDataSource();
         NetworkHandler.removeAlegroVirtualGeneratorsFromNetwork(network);
-        Exporters.export("UCTE", network, new Properties(), memDataSource);
-        try (InputStream is = memDataSource.newInputStream("", "uct")) {
+        Exporters.export("XIIDM", network, new Properties(), memDataSource);
+        try (InputStream is = memDataSource.newInputStream("", "xiidm")) {
             LOGGER.info("Uploading shifted cgm to {}", networkPath);
             minioAdapter.uploadFile(networkPath, is);
         } catch (IOException e) {
@@ -112,16 +113,16 @@ public class StudyPointService {
                 .filter(Generator.class::isInstance)
                 .map(Generator.class::cast)
                 .collect(Collectors.toList())).forEach(generators -> generators.forEach(generator -> {
-            if (Double.isNaN(generator.getTargetP())) {
-                generator.setTargetP(0.);
-            }
-            InitGenerator initGenerator = new InitGenerator();
-            initGenerator.setpMin(generator.getMinP());
-            initGenerator.setpMax(generator.getMaxP());
-            initGenerators.put(generator.getId(), initGenerator);
-            generator.setMinP(DEFAULT_PMIN);
-            generator.setMaxP(DEFAULT_PMAX);
-        }));
+                    if (Double.isNaN(generator.getTargetP())) {
+                        generator.setTargetP(0.);
+                    }
+                    InitGenerator initGenerator = new InitGenerator();
+                    initGenerator.setpMin(generator.getMinP());
+                    initGenerator.setpMax(generator.getMaxP());
+                    initGenerators.put(generator.getId(), initGenerator);
+                    generator.setMinP(DEFAULT_PMIN);
+                    generator.setMaxP(DEFAULT_PMAX);
+                }));
         LOGGER.info("Pmax and Pmin are set to default values for network {}", network.getNameOrId());
         return initGenerators;
     }

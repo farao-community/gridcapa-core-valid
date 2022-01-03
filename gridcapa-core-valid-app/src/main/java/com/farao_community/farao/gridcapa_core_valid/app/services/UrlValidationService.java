@@ -5,7 +5,7 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package com.farao_community.farao.gridcapa_core_valid.app;
+package com.farao_community.farao.gridcapa_core_valid.app.services;
 
 import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataException;
 import com.farao_community.farao.gridcapa_core_valid.app.configuration.UrlWhitelistConfiguration;

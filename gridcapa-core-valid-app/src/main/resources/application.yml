@@ -15,6 +15,10 @@ spring:
           binder: rabbit
           destination: task-status-updated
 
+rao-runner-server:
+  amqp:
+    queue-name: ${RAO_ADAPTER_SERVER_QUEUE_NAME:rao-request-queue}
+
 core-valid-runner:
   bindings:
     request:
