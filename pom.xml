@@ -11,11 +11,19 @@
     </parent>
 
     <artifactId>gridcapa-core-valid</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>GridCapa CORE VALID</name>
     <description>A full suite to perform CEP 70% validation on CORE zone</description>
+    <url>http://www.farao-community.com</url>
+
+    <licenses>
+        <license>
+            <name>Mozilla Public License, Version 2.0</name>
+            <url>https://www.mozilla.org/en-US/MPL/2.0/</url>
+        </license>
+    </licenses>
 
     <scm>
         <connection>scm:git:https://github.com/farao-community/gridcapa-core-valid.git</connection>
@@ -36,6 +44,12 @@
             <organization>RTE</organization>
             <organizationUrl>http://www.rte-france.com</organizationUrl>
         </developer>
+        <developer>
+            <name>Alexandre MONTIGNY</name>
+            <email>alexandre.montigny@rte-france.com</email>
+            <organization>RTE</organization>
+            <organizationUrl>http://www.rte-france.com</organizationUrl>
+        </developer>
     </developers>
 
     <modules>
@@ -47,7 +61,7 @@
     <properties>
         <!-- Dependencies versions -->
         <commons.lang.version>3.11</commons.lang.version>
-        <commons.io.version>2.5</commons.io.version>
+        <commons.io.version>2.7</commons.io.version>
         <maven.jaxb2.version>0.14.0</maven.jaxb2.version>
         <maven.jvnet.jaxb2-basics.version>1.11.1</maven.jvnet.jaxb2-basics.version>
 
@@ -57,6 +71,8 @@
         <opencsv.version>5.2</opencsv.version>
         <farao.bom.version>1.1.0</farao.bom.version>
         <farao.core.version>3.3.3</farao.core.version>
+        <spring-cloud.version>Hoxton.SR12</spring-cloud.version>
+        <task-manager.version>0.1.0</task-manager.version>
         <gridcapa.rao.runner.starter.version>0.1.1</gridcapa.rao.runner.starter.version>
     </properties>
 
@@ -104,6 +120,18 @@
                 <groupId>com.farao-community.farao</groupId>
                 <artifactId>farao-glsk-document-api</artifactId>
                 <version>${farao.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.farao-community.farao</groupId>
+                <artifactId>gridcapa-task-manager-api</artifactId>
+                <version>${task-manager.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>com.farao-community.farao</groupId>

@@ -7,13 +7,15 @@
 package com.farao_community.farao.gridcapa_core_valid.app.configuration;
 
 import com.farao_community.farao.gridcapa_core_valid.app.CoreValidListener;
-import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Optional;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -21,15 +23,28 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AmqpMessagesConfiguration {
 
-    private final CoreValidServerProperties serverProperties;
-
-    public AmqpMessagesConfiguration(CoreValidServerProperties serverProperties) {
-        this.serverProperties = serverProperties;
-    }
+    @Value("${core-valid-runner.bindings.response.destination}")
+    private String responseDestination;
+    @Value("${core-valid-runner.bindings.response.expiration}")
+    private String responseExpiration;
+    @Value("${core-valid-runner.bindings.request.destination}")
+    private String requestDestination;
+    @Value("${core-valid-runner.bindings.request.routing-key}")
+    private String requestRoutingKey;
 
     @Bean
     public Queue coreValidRequestQueue() {
-        return new Queue(serverProperties.getRequests().getQueueName());
+        return new Queue(requestDestination);
+    }
+
+    @Bean
+    public TopicExchange coreValidTopicExchange() {
+        return new TopicExchange(requestDestination);
+    }
+
+    @Bean
+    public Binding coreValidRequestBinding() {
+        return BindingBuilder.bind(coreValidRequestQueue()).to(coreValidTopicExchange()).with(Optional.ofNullable(requestRoutingKey).orElse("#"));
     }
 
     @Bean
@@ -45,10 +60,10 @@ public class AmqpMessagesConfiguration {
 
     @Bean
     public FanoutExchange coreValidResponseExchange() {
-        return new FanoutExchange(serverProperties.getResponses().getExchange());
+        return new FanoutExchange(responseDestination);
     }
 
     public String coreValidResponseExpiration() {
-        return serverProperties.getResponses().getExpiration();
+        return responseExpiration;
     }
 }
