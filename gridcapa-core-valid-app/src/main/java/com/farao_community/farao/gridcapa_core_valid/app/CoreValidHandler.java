@@ -21,7 +21,6 @@ import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointS
 import com.farao_community.farao.rao_api.json.JsonRaoParameters;
 import com.farao_community.farao.rao_api.parameters.RaoParameters;
 import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
-import com.farao_community.farao.search_tree_rao.SearchTreeRaoParameters;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.commons.datasource.MemDataSource;
 import com.powsybl.iidm.network.Network;
@@ -31,12 +30,12 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.time.OffsetDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
+ * @author Theo Pascoli {@literal <theo.pascoli at rte-france.com>}
  */
 @Component
 public class CoreValidHandler {
@@ -90,8 +89,6 @@ public class CoreValidHandler {
 
     private String saveRaoParameters() {
         RaoParameters raoParameters = RaoParameters.load();
-        SearchTreeRaoParameters searchTreeRaoParameters = getSearchTreeRaoParameters();
-        raoParameters.addExtension(SearchTreeRaoParameters.class, searchTreeRaoParameters);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         JsonRaoParameters.write(raoParameters, baos);
         String raoParametersDestinationPath = RAO_PARAMETERS_FILE_NAME;
@@ -99,15 +96,4 @@ public class CoreValidHandler {
         minioAdapter.uploadFile(raoParametersDestinationPath, bais);
         return minioAdapter.generatePreSignedUrl(raoParametersDestinationPath);
     }
-
-    private SearchTreeRaoParameters getSearchTreeRaoParameters() { //todo modify params in itools config file
-        SearchTreeRaoParameters searchTreeRaoParameters = new SearchTreeRaoParameters();
-        HashMap<String, Integer> mapParameters = new HashMap<>();
-        mapParameters.put("FR", 1);
-        searchTreeRaoParameters.setMaxCurativePstPerTso(mapParameters);
-        searchTreeRaoParameters.setMaxCurativeRaPerTso(mapParameters);
-        searchTreeRaoParameters.setMaxCurativeTopoPerTso(mapParameters);
-        return searchTreeRaoParameters;
-    }
-
 }

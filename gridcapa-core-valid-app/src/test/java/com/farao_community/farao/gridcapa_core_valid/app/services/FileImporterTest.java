@@ -36,7 +36,7 @@ class FileImporterTest {
     private FileImporter fileImporter;
 
     private final String testDirectory = "/20210723";
-    private OffsetDateTime dateTime = OffsetDateTime.parse("2021-07-22T22:30Z");
+    private final OffsetDateTime dateTime = OffsetDateTime.parse("2021-07-22T22:30Z");
 
     @Test
     void importGlskTest() {

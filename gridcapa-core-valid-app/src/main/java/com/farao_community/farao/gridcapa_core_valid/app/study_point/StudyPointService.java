@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
+ * @author Theo Pascoli {@literal <theo.pascoli at rte-france.com>}
  */
 @Component
 public class StudyPointService {
@@ -64,9 +65,7 @@ public class StudyPointService {
             String shiftedCgmUrl = saveShiftedCgm(network, studyPoint);
             result.setShiftedCgmUrl(shiftedCgmUrl);
             String raoRequestId = String.format("%s-%s", network.getNameOrId(), studyPoint.getId());
-
             RaoResponse raoResponse = startRao(raoRequestId, shiftedCgmUrl, jsonCracUrl, raoParametersUrl);
-
             result.setStatus(StudyPointResult.Status.SUCCESS);
             result.setNetworkWithPraUrl(raoResponse.getNetworkWithPraFileUrl());
             result.setRaoResultFileUrl(raoResponse.getRaoResultFileUrl());
