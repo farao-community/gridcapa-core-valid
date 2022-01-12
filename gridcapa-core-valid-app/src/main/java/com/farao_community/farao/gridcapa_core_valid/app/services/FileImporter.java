@@ -34,13 +34,17 @@ import java.util.List;
  */
 @Service
 public class FileImporter {
-
     private final UrlValidationService urlValidationService;
     private static final Logger LOGGER = LoggerFactory.getLogger(FileImporter.class);
     private static final String FLOW_BASED_CRAC_PROVIDER = "FlowBasedConstraintDocument";
 
     public FileImporter(UrlValidationService urlValidationService) {
         this.urlValidationService = urlValidationService;
+    }
+
+    public Network importNetwork(CoreValidFileResource networkFile) {
+        InputStream networkStream = urlValidationService.openUrlStream(networkFile.getUrl());
+        return NetworkHandler.loadNetwork(networkFile.getFilename(), networkStream);
     }
 
     public GlskDocument importGlskFile(CoreValidFileResource glskFileResource) {
@@ -56,7 +60,7 @@ public class FileImporter {
         try (InputStream refProgStream = urlValidationService.openUrlStream(refProgFile.getUrl())) {
             return RefProgImporter.importRefProg(refProgStream, timestamp);
         } catch (IOException e) {
-            throw new CoreValidInvalidDataException(String.format("Cannot download reference program file from URL '%s'", refProgFile.getUrl()), e);
+            throw new CoreValidInvalidDataException(String.format("Cannot download GLSK file from URL '%s'", refProgFile.getUrl()), e);
         }
     }
 

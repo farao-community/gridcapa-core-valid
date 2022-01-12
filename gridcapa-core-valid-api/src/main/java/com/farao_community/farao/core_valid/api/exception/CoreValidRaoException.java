@@ -12,7 +12,7 @@ package com.farao_community.farao.core_valid.api.exception;
  */
 public class CoreValidRaoException extends AbstractCoreValidException {
     private static final int STATUS = 500;
-    private static final String CODE = "500-InternalException";
+    private static final String CODE = "500-RaoException";
 
     public CoreValidRaoException(String message) {
         super(message);

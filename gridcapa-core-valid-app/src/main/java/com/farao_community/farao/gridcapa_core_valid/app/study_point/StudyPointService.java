@@ -13,8 +13,10 @@ import com.farao_community.farao.core_valid.api.exception.CoreValidInternalExcep
 import com.farao_community.farao.core_valid.api.exception.CoreValidRaoException;
 import com.farao_community.farao.gridcapa_core_valid.app.CoreAreasId;
 import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
-import com.farao_community.farao.gridcapa_core_valid.app.services.NetworkHandler;
 import com.farao_community.farao.gridcapa_core_valid.app.services.NetPositionsHandler;
+import com.farao_community.farao.gridcapa_core_valid.app.services.NetworkHandler;
+import com.farao_community.farao.rao_api.json.JsonRaoParameters;
+import com.farao_community.farao.rao_api.parameters.RaoParameters;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
 import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
@@ -28,6 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -40,6 +44,7 @@ import java.util.stream.Collectors;
 @Component
 public class StudyPointService {
     private static final Logger LOGGER = LoggerFactory.getLogger(StudyPointService.class);
+    private static final String RAO_PARAMETERS_FILE_NAME = "raoParameters.json";
     private static final double DEFAULT_PMAX = 9999.0;
     private static final double DEFAULT_PMIN = -9999.0;
     public static final String ARTIFACTS_S = "artifacts/%s";
@@ -51,7 +56,7 @@ public class StudyPointService {
         this.raoRunnerClient = raoRunnerClient;
     }
 
-    public StudyPointResult computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, String jsonCracUrl, String raoParametersUrl) {
+    public StudyPointResult computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, String jsonCracUrl) {
         LOGGER.info("Running computation for study point {} ", studyPoint.getId());
         StudyPointResult result = new StudyPointResult(studyPoint.getId());
         String initialVariant = network.getVariantManager().getWorkingVariantId();
@@ -65,7 +70,7 @@ public class StudyPointService {
             String shiftedCgmUrl = saveShiftedCgm(network, studyPoint);
             result.setShiftedCgmUrl(shiftedCgmUrl);
             String raoRequestId = String.format("%s-%s", network.getNameOrId(), studyPoint.getId());
-            RaoResponse raoResponse = startRao(raoRequestId, shiftedCgmUrl, jsonCracUrl, raoParametersUrl);
+            RaoResponse raoResponse = startRao(raoRequestId, shiftedCgmUrl, jsonCracUrl, saveRaoParametersAndGetUrl());
             result.setStatus(StudyPointResult.Status.SUCCESS);
             result.setNetworkWithPraUrl(raoResponse.getNetworkWithPraFileUrl());
             result.setRaoResultFileUrl(raoResponse.getRaoResultFileUrl());
@@ -143,6 +148,16 @@ public class StudyPointService {
             }
         });
         LOGGER.info("Pmax and Pmin are reset to initial values for network {}", network.getNameOrId());
+    }
+
+    private String saveRaoParametersAndGetUrl() {
+        RaoParameters raoParameters = RaoParameters.load();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        JsonRaoParameters.write(raoParameters, baos);
+        String raoParametersDestinationPath = RAO_PARAMETERS_FILE_NAME;
+        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+        minioAdapter.uploadFile(raoParametersDestinationPath, bais);
+        return minioAdapter.generatePreSignedUrl(raoParametersDestinationPath);
     }
 
     private static class InitGenerator {

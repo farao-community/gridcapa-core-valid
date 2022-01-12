@@ -18,8 +18,6 @@ import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram
 import com.farao_community.farao.gridcapa_core_valid.app.services.*;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointService;
-import com.farao_community.farao.rao_api.json.JsonRaoParameters;
-import com.farao_community.farao.rao_api.parameters.RaoParameters;
 import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.commons.datasource.MemDataSource;
@@ -28,7 +26,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +40,6 @@ import java.util.Map;
 @Component
 public class CoreValidHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(CoreValidHandler.class);
-    private static final String RAO_PARAMETERS_FILE_NAME = "raoParameters.json";
     private final UrlValidationService urlValidationService;
     private final MinioAdapter minioAdapter;
     private final RaoRunnerClient raoRunnerClient;
@@ -56,17 +55,15 @@ public class CoreValidHandler {
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
         StudyPointService studyPointService = new StudyPointService(minioAdapter, raoRunnerClient);
-        InputStream networkStream = urlValidationService.openUrlStream(coreValidRequest.getCgm().getUrl());
-        Network network = NetworkHandler.loadNetwork(coreValidRequest.getCgm().getFilename(), networkStream);
+        Network network = fileImporter.importNetwork(coreValidRequest.getCgm());
         ReferenceProgram referenceProgram = fileImporter.importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
         Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
         GlskDocument glskDocument = fileImporter.importGlskFile(coreValidRequest.getGlsk());
         List<StudyPoint> studyPoints = fileImporter.importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
         ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
-        String raoParametersUrl = saveRaoParameters();
         Crac crac = fileImporter.importCrac(coreValidRequest.getCbcora(), coreValidRequest.getTimestamp(), network);
         String jsonCracUrl = saveCracInJsonFormat(crac, coreValidRequest.getTimestamp());
-        studyPoints.forEach(studyPoint -> studyPointService.computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions, jsonCracUrl, raoParametersUrl));
+        studyPoints.forEach(studyPoint -> studyPointService.computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions, jsonCracUrl));
         return new CoreValidResponse(coreValidRequest.getId());
     }
 
@@ -85,15 +82,5 @@ public class CoreValidHandler {
             throw new CoreValidInternalException("Error while trying to upload converted CRAC file.", e);
         }
         return minioAdapter.generatePreSignedUrl(cracPath);
-    }
-
-    private String saveRaoParameters() {
-        RaoParameters raoParameters = RaoParameters.load();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        JsonRaoParameters.write(raoParameters, baos);
-        String raoParametersDestinationPath = RAO_PARAMETERS_FILE_NAME;
-        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-        minioAdapter.uploadFile(raoParametersDestinationPath, bais);
-        return minioAdapter.generatePreSignedUrl(raoParametersDestinationPath);
     }
 }
