@@ -8,6 +8,7 @@
 package com.farao_community.farao.gridcapa_core_valid.app;
 
 import com.farao_community.farao.commons.ZonalData;
+import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataException;
 import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
@@ -47,15 +48,19 @@ public class CoreValidHandler {
     }
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
-        InputStream networkStream = urlValidationService.openUrlStream(coreValidRequest.getCgm().getUrl());
-        Network network = NetworkHandler.loadNetwork(coreValidRequest.getCgm().getFilename(), networkStream);
-        ReferenceProgram referenceProgram = importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
-        Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
-        GlskDocument glskDocument = importGlskFile(coreValidRequest.getGlsk());
-        List<StudyPoint> studyPoints = importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
-        ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
-        studyPoints.forEach(studyPoint -> studyPointService.computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions));
-        return new CoreValidResponse(coreValidRequest.getId());
+        try {
+            InputStream networkStream = urlValidationService.openUrlStream(coreValidRequest.getCgm().getUrl());
+            Network network = NetworkHandler.loadNetwork(coreValidRequest.getCgm().getFilename(), networkStream);
+            ReferenceProgram referenceProgram = importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
+            Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
+            GlskDocument glskDocument = importGlskFile(coreValidRequest.getGlsk());
+            List<StudyPoint> studyPoints = importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
+            ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
+            studyPoints.forEach(studyPoint -> studyPointService.computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions));
+            return new CoreValidResponse(coreValidRequest.getId());
+        } catch (Exception e) {
+            throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
+        }
     }
 
     GlskDocument importGlskFile(CoreValidFileResource glskFileResource) {
