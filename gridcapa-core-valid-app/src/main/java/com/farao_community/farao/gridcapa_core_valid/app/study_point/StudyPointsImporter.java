@@ -7,6 +7,7 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.study_point;
 
+import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataException;
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
@@ -52,7 +53,7 @@ public final class StudyPointsImporter {
             return studyPoints;
         } catch (Exception e) {
             LOGGER.error("Exception occurred during parsing.", e);
-            return Collections.emptyList();
+            throw new CoreValidInvalidDataException("Exception occurred during parsing study point file", e);
         }
     }
 
