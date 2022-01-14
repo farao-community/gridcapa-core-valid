@@ -9,10 +9,8 @@ package com.farao_community.farao.core_valid.api;
 
 import com.farao_community.farao.core_valid.api.exception.AbstractCoreValidException;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
-import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataException;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -38,14 +36,6 @@ class JsonApiConverterTest {
         assertEquals("https://cbcora/file/url", coreValidRequest.getCbcora().getUrl());
         assertEquals("glsk.txt", coreValidRequest.getGlsk().getFilename());
         assertEquals("https://glsk/file/url", coreValidRequest.getGlsk().getUrl());
-    }
-
-    @Test
-    void checkExceptionThrownWhenInvalidJson() throws URISyntaxException, IOException {
-        JsonApiConverter jsonApiConverter = new JsonApiConverter();
-        String inputMessage = Files.readString(Paths.get(getClass().getResource("/invalidRequest.json").toURI()));
-        byte[] messageBytes = inputMessage.getBytes();
-        Assertions.assertThrows(CoreValidInvalidDataException.class, () -> jsonApiConverter.fromJsonMessage(messageBytes, CoreValidRequest.class));
     }
 
     @Test

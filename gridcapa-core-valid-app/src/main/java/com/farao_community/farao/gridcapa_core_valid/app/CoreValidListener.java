@@ -10,6 +10,7 @@ package com.farao_community.farao.gridcapa_core_valid.app;
 import com.farao_community.farao.core_valid.api.JsonApiConverter;
 import com.farao_community.farao.core_valid.api.exception.AbstractCoreValidException;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
+import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataException;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
 import com.farao_community.farao.gridcapa.task_manager.api.TaskStatus;
@@ -60,6 +61,9 @@ public class CoreValidListener implements MessageListener {
         } catch (AbstractCoreValidException e) {
             LOGGER.error("Core valid exception occured", e);
             sendRequestErrorResponse(e, replyTo, correlationId);
+        } catch (RuntimeException e) {
+            AbstractCoreValidException wrappingException = new CoreValidInvalidDataException("Unhandled exception: " + e.getMessage(), e);
+            sendRequestErrorResponse(wrappingException, replyTo, correlationId);
         }
     }
 
@@ -80,7 +84,7 @@ public class CoreValidListener implements MessageListener {
         } catch (AbstractCoreValidException e) {
             LOGGER.error("Core valid exception occured", e);
             sendErrorResponse(coreValidRequest.getId(), e, replyTo, correlationId);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             LOGGER.error("Unknown exception occured", e);
             AbstractCoreValidException wrappingException = new CoreValidInternalException("Unknown exception", e);
             sendErrorResponse(coreValidRequest.getId(), wrappingException, replyTo, correlationId);
