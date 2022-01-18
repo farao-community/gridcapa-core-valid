@@ -9,16 +9,15 @@ package com.farao_community.farao.gridcapa_core_valid.app;
 
 import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
-import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
-import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataException;
-import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
 import com.farao_community.farao.data.crac_api.Crac;
 import com.farao_community.farao.data.crac_io_api.CracExporters;
 import com.farao_community.farao.data.glsk.api.GlskDocument;
 import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
-import com.farao_community.farao.gridcapa_core_valid.app.services.*;
+import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
+import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
+import com.farao_community.farao.gridcapa_core_valid.app.services.NetPositionsHandler;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointService;
 import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
@@ -42,14 +41,12 @@ import java.util.Map;
 @Component
 public class CoreValidHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(CoreValidHandler.class);
-    private final UrlValidationService urlValidationService;
     private final MinioAdapter minioAdapter;
     private final RaoRunnerClient raoRunnerClient;
     private final FileImporter fileImporter;
     public static final String ARTIFACTS_S = "artifacts/%s";
 
-    public CoreValidHandler(UrlValidationService urlValidationService, MinioAdapter minioAdapter, RaoRunnerClient raoRunnerClient, FileImporter fileImporter) {
-        this.urlValidationService = urlValidationService;
+    public CoreValidHandler(MinioAdapter minioAdapter, RaoRunnerClient raoRunnerClient, FileImporter fileImporter) {
         this.minioAdapter = minioAdapter;
         this.raoRunnerClient = raoRunnerClient;
         this.fileImporter = fileImporter;
@@ -57,21 +54,21 @@ public class CoreValidHandler {
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
         try {
-        StudyPointService studyPointService = new StudyPointService(minioAdapter, raoRunnerClient);
-        Network network = fileImporter.importNetwork(coreValidRequest.getCgm());
-        ReferenceProgram referenceProgram = fileImporter.importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
-        Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
-        GlskDocument glskDocument = fileImporter.importGlskFile(coreValidRequest.getGlsk());
-        List<StudyPoint> studyPoints = fileImporter.importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
-        ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
-        Crac crac = fileImporter.importCrac(coreValidRequest.getCbcora(), coreValidRequest.getTimestamp(), network);
-        String jsonCracUrl = saveCracInJsonFormat(crac, coreValidRequest.getTimestamp());
-        studyPoints.forEach(studyPoint -> studyPointService.computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions, jsonCracUrl));
-        return new CoreValidResponse(coreValidRequest.getId());
+            StudyPointService studyPointService = new StudyPointService(minioAdapter, raoRunnerClient);
+            Network network = fileImporter.importNetwork(coreValidRequest.getCgm());
+            ReferenceProgram referenceProgram = fileImporter.importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
+            Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
+            GlskDocument glskDocument = fileImporter.importGlskFile(coreValidRequest.getGlsk());
+            List<StudyPoint> studyPoints = fileImporter.importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
+            ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
+            Crac crac = fileImporter.importCrac(coreValidRequest.getCbcora(), coreValidRequest.getTimestamp(), network);
+            String jsonCracUrl = saveCracInJsonFormat(crac, coreValidRequest.getTimestamp());
+            studyPoints.forEach(studyPoint -> studyPointService.computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions, jsonCracUrl));
+            return new CoreValidResponse(coreValidRequest.getId());
         } catch (Exception e) {
             throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
         }
-        }
+    }
 
     private String saveCracInJsonFormat(Crac crac, OffsetDateTime timestamp) {
         MemDataSource memDataSource = new MemDataSource();
