@@ -9,6 +9,9 @@ package com.farao_community.farao.gridcapa_core_valid.app;
 
 import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
+import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
+import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataException;
+import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
 import com.farao_community.farao.data.crac_api.Crac;
@@ -35,7 +38,6 @@ import java.util.Map;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
- * @author Theo Pascoli {@literal <theo.pascoli at rte-france.com>}
  */
 @Component
 public class CoreValidHandler {
@@ -54,6 +56,7 @@ public class CoreValidHandler {
     }
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
+        try {
         StudyPointService studyPointService = new StudyPointService(minioAdapter, raoRunnerClient);
         Network network = fileImporter.importNetwork(coreValidRequest.getCgm());
         ReferenceProgram referenceProgram = fileImporter.importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
@@ -65,7 +68,10 @@ public class CoreValidHandler {
         String jsonCracUrl = saveCracInJsonFormat(crac, coreValidRequest.getTimestamp());
         studyPoints.forEach(studyPoint -> studyPointService.computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions, jsonCracUrl));
         return new CoreValidResponse(coreValidRequest.getId());
-    }
+        } catch (Exception e) {
+            throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
+        }
+        }
 
     private String saveCracInJsonFormat(Crac crac, OffsetDateTime timestamp) {
         MemDataSource memDataSource = new MemDataSource();

@@ -15,7 +15,6 @@ import com.github.jasminb.jsonapi.exceptions.DocumentSerializationException;
 import com.github.jasminb.jsonapi.models.errors.Error;
 import com.farao_community.farao.core_valid.api.exception.AbstractCoreValidException;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
-import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataException;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
 
@@ -34,11 +33,7 @@ public class JsonApiConverter {
 
     public <T> T fromJsonMessage(byte[] jsonMessage, Class<T> tClass) {
         ResourceConverter converter = createConverter();
-        try {
-            return converter.readDocument(jsonMessage, tClass).get();
-        } catch (Exception e) {
-            throw new CoreValidInvalidDataException(String.format("Message cannot be converted to class %s", tClass.getName()), e);
-        }
+        return converter.readDocument(jsonMessage, tClass).get();
     }
 
     public <T> byte[] toJsonMessage(T jsonApiObject) {
