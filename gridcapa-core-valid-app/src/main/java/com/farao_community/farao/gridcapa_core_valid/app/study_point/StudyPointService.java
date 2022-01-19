@@ -20,6 +20,7 @@ import com.farao_community.farao.rao_api.parameters.RaoParameters;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
 import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
+import com.farao_community.farao.search_tree_rao.SearchTreeRaoParameters;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.commons.datasource.MemDataSource;
 import com.powsybl.iidm.export.Exporters;
@@ -152,6 +153,21 @@ public class StudyPointService {
 
     private String saveRaoParametersAndGetUrl() {
         RaoParameters raoParameters = RaoParameters.load();
+        SearchTreeRaoParameters searchTreeRaoParameters = new SearchTreeRaoParameters();
+
+        HashMap<String, Integer> mapMaxRa = new HashMap<>();
+        mapMaxRa.put("FR", 1);
+        HashMap<String, Integer> mapMaxTopo = new HashMap<>();
+        mapMaxTopo.put("FR", 1);
+        HashMap<String, Integer> mapMaxPST = new HashMap<>();
+        mapMaxPST.put("FR", 0);
+
+        searchTreeRaoParameters.setMaxCurativePstPerTso(mapMaxPST);
+        searchTreeRaoParameters.setMaxCurativeTopoPerTso(mapMaxTopo);
+        searchTreeRaoParameters.setMaxCurativeRaPerTso(mapMaxRa);
+
+        raoParameters.addExtension(SearchTreeRaoParameters.class, searchTreeRaoParameters);
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         JsonRaoParameters.write(raoParameters, baos);
         String raoParametersDestinationPath = RAO_PARAMETERS_FILE_NAME;
