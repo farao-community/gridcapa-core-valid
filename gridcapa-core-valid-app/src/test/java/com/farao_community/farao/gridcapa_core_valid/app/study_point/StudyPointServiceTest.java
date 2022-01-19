@@ -12,6 +12,7 @@ import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.data.glsk.api.GlskDocument;
 import com.farao_community.farao.data.glsk.api.io.GlskDocumentImporters;
+import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResultService;
 import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
 import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
@@ -41,6 +42,9 @@ class StudyPointServiceTest {
 
     @MockBean
     private MinioAdapter minioAdapter;
+
+    @MockBean
+    private LimitingBranchResultService limitingBranchResult;
 
     @MockBean
     private RaoRunnerClient raoRunnerClient;
@@ -74,7 +78,8 @@ class StudyPointServiceTest {
     @Test
     void checkStudyPointComputationSucceed() {
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("http://url");
-        Mockito.when(raoRunnerClient.runRao(Mockito.any())).thenReturn(new RaoResponse("id", "instant", "praUrl", "cracUrl", "raoUrl"));
+        Mockito.when(raoRunnerClient.runRao(Mockito.any())).thenReturn(new RaoResponse("id", "instant", "praUrl", " cracUrl", "raoUrl"));
+        Mockito.when(limitingBranchResult.importRaoResult(Mockito.any(RaoResponse.class))).thenReturn("");
         StudyPointResult result = studyPointService.computeStudyPoint(studyPoints.get(0), network, scalableZonalData, coreNetPositions, "");
         assertEquals("0_9", result.getId());
         assertEquals(StudyPointResult.Status.SUCCESS, result.getStatus());

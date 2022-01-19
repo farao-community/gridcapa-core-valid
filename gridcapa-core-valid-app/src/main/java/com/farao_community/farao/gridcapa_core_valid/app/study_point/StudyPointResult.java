@@ -7,15 +7,23 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.study_point;
 
+import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResult;
+import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResultService;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
 public class StudyPointResult {
-    private String id;
+    private final String id;
     private Status status;
     private String shiftedCgmUrl;
     private String networkWithPraUrl;
     private String raoResultFileUrl;
+    private String period;
+    private List<LimitingBranchResult> listLimitingBranchResult;
 
     public StudyPointResult(String id) {
         this.id = id;
@@ -23,6 +31,7 @@ public class StudyPointResult {
         this.shiftedCgmUrl = "";
         this.networkWithPraUrl = "";
         this.raoResultFileUrl = "";
+        this.listLimitingBranchResult = new ArrayList<>();
     }
 
     public String getId() {
@@ -59,6 +68,22 @@ public class StudyPointResult {
 
     public void setRaoResultFileUrl(String raoResultFileUrl) {
         this.raoResultFileUrl = raoResultFileUrl;
+    }
+
+    public List<LimitingBranchResult> getListLimitingBranchResult() {
+        return listLimitingBranchResult;
+    }
+
+    public void setListLimitingBranchResult(List<LimitingBranchResult> listLimitingBranchResult) {
+        this.listLimitingBranchResult = listLimitingBranchResult;
+    }
+
+    public String getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(String period) {
+        this.period = period;
     }
 
     enum Status {

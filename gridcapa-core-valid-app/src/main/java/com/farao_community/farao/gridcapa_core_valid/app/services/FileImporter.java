@@ -42,9 +42,9 @@ public class FileImporter {
         this.urlValidationService = urlValidationService;
     }
 
-    public Network importNetwork(CoreValidFileResource networkFile) {
-        InputStream networkStream = urlValidationService.openUrlStream(networkFile.getUrl());
-        return NetworkHandler.loadNetwork(networkFile.getFilename(), networkStream);
+    public Network importNetwork(String filename, String networkUrl) {
+        InputStream networkStream = urlValidationService.openUrlStream(networkUrl);
+        return NetworkHandler.loadNetwork(filename, networkStream);
     }
 
     public GlskDocument importGlskFile(CoreValidFileResource glskFileResource) {
@@ -73,12 +73,12 @@ public class FileImporter {
         }
     }
 
-    public Crac importCrac(CoreValidFileResource cbcoraFile, OffsetDateTime targetProcessDateTime, Network network) {
-        try (InputStream cracInputStream = urlValidationService.openUrlStream(cbcoraFile.getUrl())) {
+    public Crac importCrac(String cbcoraUrl, OffsetDateTime targetProcessDateTime, Network network) {
+        try (InputStream cracInputStream = urlValidationService.openUrlStream(cbcoraUrl)) {
             NativeCrac nativeCrac = NativeCracImporters.findImporter(FLOW_BASED_CRAC_PROVIDER).importNativeCrac(cracInputStream);
             return CracCreators.createCrac(nativeCrac, network, targetProcessDateTime).getCrac();
         } catch (Exception e) {
-            throw new CoreValidInvalidDataException(String.format("Cannot download cbcora file from URL '%s'", cbcoraFile.getUrl()), e);
+            throw new CoreValidInvalidDataException(String.format("Cannot download cbcora file from URL '%s'", cbcoraUrl), e);
         }
     }
 }

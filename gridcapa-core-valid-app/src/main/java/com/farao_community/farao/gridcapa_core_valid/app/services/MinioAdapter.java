@@ -8,6 +8,7 @@
 package com.farao_community.farao.gridcapa_core_valid.app.services;
 
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
+import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.gridcapa_core_valid.app.configuration.MinioConfiguration;
 import io.minio.*;
 import io.minio.http.Method;
@@ -15,7 +16,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;

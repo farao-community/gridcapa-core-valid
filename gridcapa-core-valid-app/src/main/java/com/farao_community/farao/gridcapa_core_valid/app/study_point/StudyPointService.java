@@ -12,6 +12,7 @@ import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
 import com.farao_community.farao.core_valid.api.exception.CoreValidRaoException;
 import com.farao_community.farao.gridcapa_core_valid.app.CoreAreasId;
+import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResultService;
 import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.NetPositionsHandler;
 import com.farao_community.farao.gridcapa_core_valid.app.services.NetworkHandler;
@@ -50,10 +51,12 @@ public class StudyPointService {
     public static final String ARTIFACTS_S = "artifacts/%s";
     private final MinioAdapter minioAdapter;
     private final RaoRunnerClient raoRunnerClient;
+    private final LimitingBranchResultService limitingBranchResult;
 
-    public StudyPointService(MinioAdapter minioAdapter, RaoRunnerClient raoRunnerClient) {
+    public StudyPointService(MinioAdapter minioAdapter, RaoRunnerClient raoRunnerClient, LimitingBranchResultService limitingBranchResult) {
         this.minioAdapter = minioAdapter;
         this.raoRunnerClient = raoRunnerClient;
+        this.limitingBranchResult = limitingBranchResult;
     }
 
     public StudyPointResult computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, String jsonCracUrl) {
@@ -71,6 +74,9 @@ public class StudyPointService {
             result.setShiftedCgmUrl(shiftedCgmUrl);
             String raoRequestId = String.format("%s-%s", network.getNameOrId(), studyPoint.getId());
             RaoResponse raoResponse = startRao(raoRequestId, shiftedCgmUrl, jsonCracUrl, saveRaoParametersAndGetUrl());
+
+            limitingBranchResult.importRaoResult(raoResponse); // mettre que les url
+
             result.setStatus(StudyPointResult.Status.SUCCESS);
             result.setNetworkWithPraUrl(raoResponse.getNetworkWithPraFileUrl());
             result.setRaoResultFileUrl(raoResponse.getRaoResultFileUrl());
