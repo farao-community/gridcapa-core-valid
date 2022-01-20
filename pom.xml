@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.farao-community.farao</groupId>
         <artifactId>farao-parent-ws</artifactId>
-        <version>1.0.10</version>
+        <version>1.3.0</version>
     </parent>
 
     <artifactId>gridcapa-core-valid</artifactId>
@@ -69,8 +69,7 @@
         <jaxb-runtime.version>2.4.0-b180830.0438</jaxb-runtime.version>
         <jsonapi.converter.version>0.10</jsonapi.converter.version>
         <opencsv.version>5.2</opencsv.version>
-        <farao.bom.version>1.1.0</farao.bom.version>
-        <farao.core.version>3.3.3</farao.core.version>
+        <farao.dependencies.version>1.0.0</farao.dependencies.version>
         <spring-cloud.version>Hoxton.SR12</spring-cloud.version>
         <task-manager.version>0.1.0</task-manager.version>
     </properties>
@@ -117,11 +116,6 @@
             </dependency>
             <dependency>
                 <groupId>com.farao-community.farao</groupId>
-                <artifactId>farao-glsk-document-api</artifactId>
-                <version>${farao.core.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.farao-community.farao</groupId>
                 <artifactId>gridcapa-task-manager-api</artifactId>
                 <version>${task-manager.version}</version>
             </dependency>
@@ -141,10 +135,11 @@
                 <scope>runtime</scope>
             </dependency>
 
+            <!-- IMPORTED DEPENDENCIES -->
             <dependency>
                 <groupId>com.farao-community.farao</groupId>
-                <artifactId>farao-bom</artifactId>
-                <version>${farao.bom.version}</version>
+                <artifactId>farao-dependencies</artifactId>
+                <version>${farao.dependencies.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
