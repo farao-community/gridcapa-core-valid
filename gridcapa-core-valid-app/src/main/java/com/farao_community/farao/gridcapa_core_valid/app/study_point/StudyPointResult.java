@@ -8,7 +8,6 @@
 package com.farao_community.farao.gridcapa_core_valid.app.study_point;
 
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResult;
-import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResultService;
 
 import java.util.ArrayList;
 import java.util.List;

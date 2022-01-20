@@ -79,7 +79,7 @@ class StudyPointServiceTest {
     void checkStudyPointComputationSucceed() {
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("http://url");
         Mockito.when(raoRunnerClient.runRao(Mockito.any())).thenReturn(new RaoResponse("id", "instant", "praUrl", " cracUrl", "raoUrl"));
-        Mockito.when(limitingBranchResult.importRaoResult(Mockito.any(RaoResponse.class))).thenReturn("");
+        Mockito.when(limitingBranchResult.importRaoResult(Mockito.any(RaoResponse.class))).thenReturn(null);
         StudyPointResult result = studyPointService.computeStudyPoint(studyPoints.get(0), network, scalableZonalData, coreNetPositions, "");
         assertEquals("0_9", result.getId());
         assertEquals(StudyPointResult.Status.SUCCESS, result.getStatus());

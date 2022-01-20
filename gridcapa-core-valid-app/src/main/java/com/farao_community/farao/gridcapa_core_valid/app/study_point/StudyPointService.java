@@ -51,12 +51,12 @@ public class StudyPointService {
     public static final String ARTIFACTS_S = "artifacts/%s";
     private final MinioAdapter minioAdapter;
     private final RaoRunnerClient raoRunnerClient;
-    private final LimitingBranchResultService limitingBranchResult;
+    private final LimitingBranchResultService limitingBranchResultService;
 
-    public StudyPointService(MinioAdapter minioAdapter, RaoRunnerClient raoRunnerClient, LimitingBranchResultService limitingBranchResult) {
+    public StudyPointService(MinioAdapter minioAdapter, RaoRunnerClient raoRunnerClient, LimitingBranchResultService limitingBranchResultService) {
         this.minioAdapter = minioAdapter;
         this.raoRunnerClient = raoRunnerClient;
-        this.limitingBranchResult = limitingBranchResult;
+        this.limitingBranchResultService = limitingBranchResultService;
     }
 
     public StudyPointResult computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, String jsonCracUrl) {
@@ -75,8 +75,7 @@ public class StudyPointService {
             String raoRequestId = String.format("%s-%s", network.getNameOrId(), studyPoint.getId());
             RaoResponse raoResponse = startRao(raoRequestId, shiftedCgmUrl, jsonCracUrl, saveRaoParametersAndGetUrl());
 
-            limitingBranchResult.importRaoResult(raoResponse); // mettre que les url
-
+            result.setListLimitingBranchResult(limitingBranchResultService.importRaoResult(raoResponse)); // mettre que les url des fichiers d'import
             result.setStatus(StudyPointResult.Status.SUCCESS);
             result.setNetworkWithPraUrl(raoResponse.getNetworkWithPraFileUrl());
             result.setRaoResultFileUrl(raoResponse.getRaoResultFileUrl());

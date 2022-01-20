@@ -7,7 +7,6 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.limiting_branch;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,9 +19,6 @@ public class LimitingBranchResultTest {
 
     @Autowired
     private LimitingBranchResultService limitingBranchResult;
-
-    @BeforeAll
-
 
     @Test
     void importRaoResultTest() {
