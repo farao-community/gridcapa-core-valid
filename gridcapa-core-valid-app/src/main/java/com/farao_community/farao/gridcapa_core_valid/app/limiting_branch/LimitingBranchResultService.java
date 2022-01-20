@@ -17,7 +17,6 @@ import com.farao_community.farao.data.rao_result_api.RaoResult;
 import com.farao_community.farao.data.rao_result_json.RaoResultImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.UrlValidationService;
-import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
 import com.powsybl.iidm.network.Network;
 import org.springframework.stereotype.Component;
 
@@ -42,10 +41,10 @@ public class LimitingBranchResultService {
         this.raoResultImporter = new RaoResultImporter();
     }
 
-    public List<LimitingBranchResult> importRaoResult(RaoResponse raoResponse) {
-        Network network = fileImporter.importNetwork("RaoResponseNetwork", raoResponse.getNetworkWithPraFileUrl());
-        Crac crac = fileImporter.importCrac(raoResponse.getCracFileUrl(), null, network);
-        RaoResult raoResult = raoResultImporter.importRaoResult(urlValidationService.openUrlStream(raoResponse.getRaoResultFileUrl()), crac);
+    public List<LimitingBranchResult> importRaoResult(String networkUrl, String cracUrl) {
+        Network network = fileImporter.importNetwork("RaoResponseNetwork", networkUrl);
+        Crac crac = fileImporter.importCrac(cracUrl, null, network);
+        RaoResult raoResult = raoResultImporter.importRaoResult(urlValidationService.openUrlStream(cracUrl), crac);
         List<LimitingBranchResult> listLimitingBranches = new ArrayList<>();
 
         crac.getFlowCnecs().forEach(cnec -> {

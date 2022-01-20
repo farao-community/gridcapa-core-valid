@@ -74,8 +74,7 @@ public class StudyPointService {
             result.setShiftedCgmUrl(shiftedCgmUrl);
             String raoRequestId = String.format("%s-%s", network.getNameOrId(), studyPoint.getId());
             RaoResponse raoResponse = startRao(raoRequestId, shiftedCgmUrl, jsonCracUrl, saveRaoParametersAndGetUrl());
-
-            result.setListLimitingBranchResult(limitingBranchResultService.importRaoResult(raoResponse)); // mettre que les url des fichiers d'import
+            result.setListLimitingBranchResult(limitingBranchResultService.importRaoResult(raoResponse.getNetworkWithPraFileUrl(), raoResponse.getCracFileUrl()));
             result.setStatus(StudyPointResult.Status.SUCCESS);
             result.setNetworkWithPraUrl(raoResponse.getNetworkWithPraFileUrl());
             result.setRaoResultFileUrl(raoResponse.getRaoResultFileUrl());
