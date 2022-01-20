@@ -15,6 +15,7 @@ import com.farao_community.farao.data.crac_api.Crac;
 import com.farao_community.farao.data.crac_io_api.CracExporters;
 import com.farao_community.farao.data.glsk.api.GlskDocument;
 import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
+import com.farao_community.farao.gridcapa_core_valid.app.configuration.SearchTreeRaoConfiguration;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.NetPositionsHandler;
@@ -45,16 +46,18 @@ public class CoreValidHandler {
     private final RaoRunnerClient raoRunnerClient;
     private final FileImporter fileImporter;
     public static final String ARTIFACTS_S = "artifacts/%s";
+    private final SearchTreeRaoConfiguration searchTreeRaoConfiguration;
 
-    public CoreValidHandler(MinioAdapter minioAdapter, RaoRunnerClient raoRunnerClient, FileImporter fileImporter) {
+    public CoreValidHandler(MinioAdapter minioAdapter, RaoRunnerClient raoRunnerClient, FileImporter fileImporter, SearchTreeRaoConfiguration searchTreeRaoConfiguration) {
         this.minioAdapter = minioAdapter;
         this.raoRunnerClient = raoRunnerClient;
         this.fileImporter = fileImporter;
+        this.searchTreeRaoConfiguration = searchTreeRaoConfiguration;
     }
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
         try {
-            StudyPointService studyPointService = new StudyPointService(minioAdapter, raoRunnerClient);
+            StudyPointService studyPointService = new StudyPointService(minioAdapter, raoRunnerClient, searchTreeRaoConfiguration);
             Network network = fileImporter.importNetwork(coreValidRequest.getCgm());
             ReferenceProgram referenceProgram = fileImporter.importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
             Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);

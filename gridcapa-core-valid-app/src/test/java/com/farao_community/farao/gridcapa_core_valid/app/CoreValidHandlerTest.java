@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.net.URL;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,7 +45,7 @@ class CoreValidHandlerTest {
     @Test
     void handleCoreValidRequestTest() {
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("http://url");
-        Mockito.when(raoRunnerClient.runRao(Mockito.any())).thenReturn(new RaoResponse("id", "instant", "praUrl", "cracUrl", "raoUrl"));
+        Mockito.when(raoRunnerClient.runRao(Mockito.any())).thenReturn(new RaoResponse("id", "instant", "praUrl", "cracUrl", "raoUrl", Instant.now(), Instant.now()));
         String requestId = "Test request";
         String networkFileName = "20210723_0030_2D5_CGM_limits.uct";
         CoreValidFileResource networkFile = createFileResource(networkFileName, getClass().getResource(testDirectory + "/" + networkFileName));

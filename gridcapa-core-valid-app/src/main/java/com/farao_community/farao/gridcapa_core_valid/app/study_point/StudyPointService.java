@@ -12,6 +12,7 @@ import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
 import com.farao_community.farao.core_valid.api.exception.CoreValidRaoException;
 import com.farao_community.farao.gridcapa_core_valid.app.CoreAreasId;
+import com.farao_community.farao.gridcapa_core_valid.app.configuration.SearchTreeRaoConfiguration;
 import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.NetPositionsHandler;
 import com.farao_community.farao.gridcapa_core_valid.app.services.NetworkHandler;
@@ -51,10 +52,12 @@ public class StudyPointService {
     public static final String ARTIFACTS_S = "artifacts/%s";
     private final MinioAdapter minioAdapter;
     private final RaoRunnerClient raoRunnerClient;
+    private final SearchTreeRaoConfiguration searchTreeRaoConfiguration;
 
-    public StudyPointService(MinioAdapter minioAdapter, RaoRunnerClient raoRunnerClient) {
+    public StudyPointService(MinioAdapter minioAdapter, RaoRunnerClient raoRunnerClient, SearchTreeRaoConfiguration searchTreeRaoConfiguration) {
         this.minioAdapter = minioAdapter;
         this.raoRunnerClient = raoRunnerClient;
+        this.searchTreeRaoConfiguration = searchTreeRaoConfiguration;
     }
 
     public StudyPointResult computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, String jsonCracUrl) {
@@ -153,24 +156,17 @@ public class StudyPointService {
 
     private String saveRaoParametersAndGetUrl() {
         RaoParameters raoParameters = RaoParameters.load();
-        SearchTreeRaoParameters searchTreeRaoParameters = new SearchTreeRaoParameters();
+        SearchTreeRaoParameters searchTreeRaoParameters = raoParameters.getExtension(SearchTreeRaoParameters.class);
 
-        HashMap<String, Integer> mapMaxRa = new HashMap<>();
-        mapMaxRa.put("FR", 1);
-        HashMap<String, Integer> mapMaxTopo = new HashMap<>();
-        mapMaxTopo.put("FR", 1);
-        HashMap<String, Integer> mapMaxPST = new HashMap<>();
-        mapMaxPST.put("FR", 0);
-
-        searchTreeRaoParameters.setMaxCurativePstPerTso(mapMaxPST);
-        searchTreeRaoParameters.setMaxCurativeTopoPerTso(mapMaxTopo);
-        searchTreeRaoParameters.setMaxCurativeRaPerTso(mapMaxRa);
+        searchTreeRaoParameters.setMaxCurativePstPerTso(searchTreeRaoConfiguration.getMaxCurativePstPerTso());
+        searchTreeRaoParameters.setMaxCurativeTopoPerTso(searchTreeRaoConfiguration.getMaxCurativeTopoPerTso());
+        searchTreeRaoParameters.setMaxCurativeRaPerTso(searchTreeRaoConfiguration.getMaxCurativeRaPerTso());
 
         raoParameters.addExtension(SearchTreeRaoParameters.class, searchTreeRaoParameters);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         JsonRaoParameters.write(raoParameters, baos);
-        String raoParametersDestinationPath = RAO_PARAMETERS_FILE_NAME;
+        String raoParametersDestinationPath = String.format(ARTIFACTS_S, RAO_PARAMETERS_FILE_NAME);
         ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
         minioAdapter.uploadFile(raoParametersDestinationPath, bais);
         return minioAdapter.generatePreSignedUrl(raoParametersDestinationPath);

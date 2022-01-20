@@ -29,6 +29,13 @@ core-valid-runner:
       expiration: 600000
   whitelist:
     - http://${MINIO_HOST:localhost}:${MINIO_PORT:9000}
+  search-tree-rao-parameters:
+    max-curative-topo-per-tso:
+      FR: 1
+    max-curative-pst-per-tso:
+      FR: 0
+    max-curative-ra-per-tso:
+      FR: 1
 
 minio:
   access:
