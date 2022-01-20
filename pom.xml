@@ -71,7 +71,7 @@
         <opencsv.version>5.2</opencsv.version>
         <farao.dependencies.version>1.0.0</farao.dependencies.version>
         <spring-cloud.version>Hoxton.SR12</spring-cloud.version>
-        <task-manager.version>0.1.0</task-manager.version>
+        <task-manager.version>0.3.0</task-manager.version>
     </properties>
 
     <build>
