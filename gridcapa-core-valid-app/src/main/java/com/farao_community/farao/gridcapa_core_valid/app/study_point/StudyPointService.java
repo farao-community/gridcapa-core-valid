@@ -59,8 +59,12 @@ public class StudyPointService {
         this.limitingBranchResultService = limitingBranchResultService;
     }
 
-    public StudyPointResult computeStudyPoint(StudyPoint studyPoint, Network network, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions, String jsonCracUrl) {
+    public StudyPointResult computeStudyPoint(StudyPoint studyPoint, StudyPointData studyPointData) {
         LOGGER.info("Running computation for study point {} ", studyPoint.getId());
+        Network network = studyPointData.getNetwork();
+        ZonalData<Scalable> scalableZonalData = studyPointData.getScalableZonalData();
+        Map<String, Double> coreNetPositions = studyPointData.getCoreNetPositions();
+        String jsonCracUrl = studyPointData.getJsonCracUrl();
         StudyPointResult result = new StudyPointResult(studyPoint.getId());
         String initialVariant = network.getVariantManager().getWorkingVariantId();
         String newVariant = initialVariant + "_" + studyPoint.getId();
@@ -74,7 +78,7 @@ public class StudyPointService {
             result.setShiftedCgmUrl(shiftedCgmUrl);
             String raoRequestId = String.format("%s-%s", network.getNameOrId(), studyPoint.getId());
             RaoResponse raoResponse = startRao(raoRequestId, shiftedCgmUrl, jsonCracUrl, saveRaoParametersAndGetUrl());
-            result.setListLimitingBranchResult(limitingBranchResultService.importRaoResult(raoResponse.getNetworkWithPraFileUrl(), raoResponse.getCracFileUrl()));
+            result.setListLimitingBranchResult(limitingBranchResultService.importRaoResult(studyPoint, studyPointData.getCrac(), raoResponse.getRaoResultFileUrl()));
             result.setStatus(StudyPointResult.Status.SUCCESS);
             result.setNetworkWithPraUrl(raoResponse.getNetworkWithPraFileUrl());
             result.setRaoResultFileUrl(raoResponse.getRaoResultFileUrl());

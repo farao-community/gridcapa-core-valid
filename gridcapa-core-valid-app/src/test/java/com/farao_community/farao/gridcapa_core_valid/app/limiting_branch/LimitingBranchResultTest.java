@@ -7,21 +7,42 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.limiting_branch;
 
+import com.farao_community.farao.data.crac_api.Crac;
+import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
+import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
+import com.powsybl.iidm.import_.Importers;
+import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.time.OffsetDateTime;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Theo Pascoli {@literal <theo.pascoli at rte-france.com>}
  */
 @SpringBootTest
-public class LimitingBranchResultTest {
+class LimitingBranchResultTest {
+
+    private final String raoDirectory = "/rao-result";
+    private final OffsetDateTime dateTime = OffsetDateTime.parse("2021-07-22T22:30Z");
 
     @Autowired
-    private LimitingBranchResultService limitingBranchResult;
+    private LimitingBranchResultService limitingBranchResultService;
+
+    @Autowired
+    private FileImporter fileImporter;
 
     @Test
     void importRaoResultTest() {
+        Network network = Importers.loadNetwork("network.uct", getClass().getResourceAsStream(raoDirectory + "/network.uct"));
+        Crac crac = fileImporter.importCrac(getClass().getResource(raoDirectory + "/crac.xml").toExternalForm(), dateTime, network);
+        List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(new StudyPoint(1, "id", null), crac, getClass().getResource(raoDirectory + "/raoResult.json").toExternalForm());
 
+        assertEquals(6, limitingBranchResults.size());
     }
+
 }

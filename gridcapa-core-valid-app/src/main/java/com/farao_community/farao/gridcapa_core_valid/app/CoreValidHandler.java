@@ -20,6 +20,7 @@ import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.NetPositionsHandler;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
+import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointData;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointService;
 import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
 import com.powsybl.action.util.Scalable;
@@ -66,7 +67,10 @@ public class CoreValidHandler {
             ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
             Crac crac = fileImporter.importCrac(coreValidRequest.getCbcora().getUrl(), coreValidRequest.getTimestamp(), network);
             String jsonCracUrl = saveCracInJsonFormat(crac, coreValidRequest.getTimestamp());
-            studyPoints.forEach(studyPoint -> studyPointService.computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions, jsonCracUrl));
+
+            StudyPointData studyPointData = new StudyPointData(network, coreNetPositions, scalableZonalData, crac, jsonCracUrl);
+
+            studyPoints.forEach(studyPoint -> studyPointService.computeStudyPoint(studyPoint, studyPointData));
             return new CoreValidResponse(coreValidRequest.getId());
         } catch (Exception e) {
             throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);

@@ -15,9 +15,8 @@ import com.farao_community.farao.data.crac_api.range_action.RangeAction;
 import com.farao_community.farao.data.rao_result_api.OptimizationState;
 import com.farao_community.farao.data.rao_result_api.RaoResult;
 import com.farao_community.farao.data.rao_result_json.RaoResultImporter;
-import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.UrlValidationService;
-import com.powsybl.iidm.network.Network;
+import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -31,25 +30,22 @@ import java.util.Set;
 @Component
 public class LimitingBranchResultService {
 
-    private final FileImporter fileImporter;
     private final UrlValidationService urlValidationService;
     private final RaoResultImporter raoResultImporter;
 
-    public LimitingBranchResultService(FileImporter fileImporter, UrlValidationService urlValidationService) {
-        this.fileImporter = fileImporter;
+    public LimitingBranchResultService(UrlValidationService urlValidationService) {
         this.urlValidationService = urlValidationService;
         this.raoResultImporter = new RaoResultImporter();
     }
 
-    public List<LimitingBranchResult> importRaoResult(String networkUrl, String cracUrl) {
-        Network network = fileImporter.importNetwork("RaoResponseNetwork", networkUrl);
-        Crac crac = fileImporter.importCrac(cracUrl, null, network);
-        RaoResult raoResult = raoResultImporter.importRaoResult(urlValidationService.openUrlStream(cracUrl), crac);
+    public List<LimitingBranchResult> importRaoResult(StudyPoint studyPoint, Crac crac, String raoResultUrl) {
+        RaoResult raoResult = raoResultImporter.importRaoResult(urlValidationService.openUrlStream(raoResultUrl), crac);
         List<LimitingBranchResult> listLimitingBranches = new ArrayList<>();
 
         crac.getFlowCnecs().forEach(cnec -> {
             LimitingBranchResult limitingBranch = new LimitingBranchResult(
-                    "",
+                    studyPoint.getPeriod(),
+                    studyPoint.getId(),
                     raoResult.getMargin(OptimizationState.INITIAL, cnec, Unit.MEGAWATT),
                     raoResult.getMargin(OptimizationState.AFTER_CRA, cnec, Unit.MEGAWATT),
                     raoResult.getFlow(OptimizationState.INITIAL, cnec, Unit.MEGAWATT),
