@@ -70,7 +70,6 @@
         <jsonapi.converter.version>0.10</jsonapi.converter.version>
         <opencsv.version>5.2</opencsv.version>
         <farao.dependencies.version>1.0.0</farao.dependencies.version>
-        <spring-cloud.version>Hoxton.SR12</spring-cloud.version>
         <task-manager.version>0.3.0</task-manager.version>
     </properties>
 
@@ -118,13 +117,6 @@
                 <groupId>com.farao-community.farao</groupId>
                 <artifactId>gridcapa-task-manager-api</artifactId>
                 <version>${task-manager.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
             </dependency>
 
             <!-- RUNTIME -->
