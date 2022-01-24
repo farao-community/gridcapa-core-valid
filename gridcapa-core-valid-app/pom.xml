@@ -168,6 +168,11 @@
             <groupId>com.farao-community.farao</groupId>
             <artifactId>farao-crac-impl</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.rte-france.powsybl</groupId>
+            <artifactId>powsybl-hades2-integration</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
         <!-- TEST DEPENDENCIES -->
         <dependency>

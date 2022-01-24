@@ -16,6 +16,7 @@ import com.farao_community.farao.data.crac_io_api.CracExporters;
 import com.farao_community.farao.data.glsk.api.GlskDocument;
 import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResultService;
+import com.farao_community.farao.gridcapa_core_valid.app.configuration.SearchTreeRaoConfiguration;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.NetPositionsHandler;
@@ -48,17 +49,19 @@ public class CoreValidHandler {
     private final FileImporter fileImporter;
     private final LimitingBranchResultService limitingBranchResult;
     public static final String ARTIFACTS_S = "artifacts/%s";
+    private final SearchTreeRaoConfiguration searchTreeRaoConfiguration;
 
-    public CoreValidHandler(MinioAdapter minioAdapter, RaoRunnerClient raoRunnerClient, FileImporter fileImporter, LimitingBranchResultService limitingBranchResult) {
+    public CoreValidHandler(MinioAdapter minioAdapter, RaoRunnerClient raoRunnerClient, FileImporter fileImporter, LimitingBranchResultService limitingBranchResult, SearchTreeRaoConfiguration searchTreeRaoConfiguration) {
         this.minioAdapter = minioAdapter;
         this.raoRunnerClient = raoRunnerClient;
         this.fileImporter = fileImporter;
         this.limitingBranchResult = limitingBranchResult;
+        this.searchTreeRaoConfiguration = searchTreeRaoConfiguration;
     }
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
         try {
-            StudyPointService studyPointService = new StudyPointService(minioAdapter, raoRunnerClient, limitingBranchResult);
+            StudyPointService studyPointService = new StudyPointService(minioAdapter, raoRunnerClient, limitingBranchResult, searchTreeRaoConfiguration);
             Network network = fileImporter.importNetwork(coreValidRequest.getCgm().getFilename(), coreValidRequest.getCgm().getUrl());
             ReferenceProgram referenceProgram = fileImporter.importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
             Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);

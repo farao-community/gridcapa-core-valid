@@ -27,6 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.io.InputStream;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -78,7 +79,7 @@ class StudyPointServiceTest {
     @Test
     void checkStudyPointComputationSucceed() {
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("http://url");
-        Mockito.when(raoRunnerClient.runRao(Mockito.any())).thenReturn(new RaoResponse("id", "instant", "praUrl", " cracUrl", "raoUrl"));
+        Mockito.when(raoRunnerClient.runRao(Mockito.any())).thenReturn(new RaoResponse("id", "instant", "praUrl", " cracUrl", "raoUrl", Instant.now(), Instant.now())));
         Mockito.when(limitingBranchResult.importRaoResult(Mockito.any(), Mockito.any(), Mockito.anyString())).thenReturn(null);
         StudyPointData studyPointData = new StudyPointData(network, coreNetPositions, scalableZonalData, null, "");
         StudyPointResult result = studyPointService.computeStudyPoint(studyPoints.get(0), studyPointData);

@@ -13,6 +13,7 @@ import com.farao_community.farao.core_valid.api.exception.CoreValidInternalExcep
 import com.farao_community.farao.core_valid.api.exception.CoreValidRaoException;
 import com.farao_community.farao.gridcapa_core_valid.app.CoreAreasId;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResultService;
+import com.farao_community.farao.gridcapa_core_valid.app.configuration.SearchTreeRaoConfiguration;
 import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.NetPositionsHandler;
 import com.farao_community.farao.gridcapa_core_valid.app.services.NetworkHandler;
@@ -21,6 +22,7 @@ import com.farao_community.farao.rao_api.parameters.RaoParameters;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
 import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
+import com.farao_community.farao.search_tree_rao.SearchTreeRaoParameters;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.commons.datasource.MemDataSource;
 import com.powsybl.iidm.export.Exporters;
@@ -52,11 +54,13 @@ public class StudyPointService {
     private final MinioAdapter minioAdapter;
     private final RaoRunnerClient raoRunnerClient;
     private final LimitingBranchResultService limitingBranchResultService;
+    private final SearchTreeRaoConfiguration searchTreeRaoConfiguration;
 
-    public StudyPointService(MinioAdapter minioAdapter, RaoRunnerClient raoRunnerClient, LimitingBranchResultService limitingBranchResultService) {
+    public StudyPointService(MinioAdapter minioAdapter, RaoRunnerClient raoRunnerClient, LimitingBranchResultService limitingBranchResultService, SearchTreeRaoConfiguration searchTreeRaoConfiguration) {
         this.minioAdapter = minioAdapter;
         this.raoRunnerClient = raoRunnerClient;
         this.limitingBranchResultService = limitingBranchResultService;
+        this.searchTreeRaoConfiguration = searchTreeRaoConfiguration;
     }
 
     public StudyPointResult computeStudyPoint(StudyPoint studyPoint, StudyPointData studyPointData) {
@@ -160,9 +164,17 @@ public class StudyPointService {
 
     private String saveRaoParametersAndGetUrl() {
         RaoParameters raoParameters = RaoParameters.load();
+        SearchTreeRaoParameters searchTreeRaoParameters = raoParameters.getExtension(SearchTreeRaoParameters.class);
+
+        searchTreeRaoParameters.setMaxCurativePstPerTso(searchTreeRaoConfiguration.getMaxCurativePstPerTso());
+        searchTreeRaoParameters.setMaxCurativeTopoPerTso(searchTreeRaoConfiguration.getMaxCurativeTopoPerTso());
+        searchTreeRaoParameters.setMaxCurativeRaPerTso(searchTreeRaoConfiguration.getMaxCurativeRaPerTso());
+
+        raoParameters.addExtension(SearchTreeRaoParameters.class, searchTreeRaoParameters);
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         JsonRaoParameters.write(raoParameters, baos);
-        String raoParametersDestinationPath = RAO_PARAMETERS_FILE_NAME;
+        String raoParametersDestinationPath = String.format(ARTIFACTS_S, RAO_PARAMETERS_FILE_NAME);
         ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
         minioAdapter.uploadFile(raoParametersDestinationPath, bais);
         return minioAdapter.generatePreSignedUrl(raoParametersDestinationPath);
