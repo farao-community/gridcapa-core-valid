@@ -64,7 +64,7 @@
         <commons.io.version>2.7</commons.io.version>
         <farao.dependencies.version>1.0.0</farao.dependencies.version>
         <farao.rte.core.version>2.5.0</farao.rte.core.version>
-        <gridcapa.rao.runner.starter.version>0.2.0-SNAPSHOT</gridcapa.rao.runner.starter.version>
+        <gridcapa.rao.runner.starter.version>0.2.0</gridcapa.rao.runner.starter.version>
         <jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
         <jaxb-runtime.version>2.4.0-b180830.0438</jaxb-runtime.version>
         <jsonapi.converter.version>0.10</jsonapi.converter.version>
