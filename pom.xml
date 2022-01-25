@@ -69,11 +69,9 @@
         <jaxb-runtime.version>2.4.0-b180830.0438</jaxb-runtime.version>
         <jsonapi.converter.version>0.10</jsonapi.converter.version>
         <opencsv.version>5.2</opencsv.version>
-        <farao.dependencies.version>1.0.0</farao.dependencies.version>
+        <farao.dependencies.version>1.1.0</farao.dependencies.version>
         <task-manager.version>0.3.0</task-manager.version>
-        <farao.core.version>3.3.3</farao.core.version>
-        <farao.rte.core.version>2.5.0</farao.rte.core.version>
-        <gridcapa.rao.runner.starter.version>0.2.0</gridcapa.rao.runner.starter.version>
+        <gridcapa.rao.runner.starter.version>0.3.0-SNAPSHOT</gridcapa.rao.runner.starter.version>
     </properties>
 
     <build>
@@ -117,19 +115,14 @@
                 <version>${opencsv.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.rte-france.farao</groupId>
-                <artifactId>farao-data-fb-constraint</artifactId>
-                <version>${farao.rte.core.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.farao-community.farao</groupId>
-                <artifactId>farao-glsk-document-api</artifactId>
-                <version>${farao.core.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.farao-community.farao</groupId>
                 <artifactId>gridcapa-task-manager-api</artifactId>
                 <version>${task-manager.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.farao-community.farao</groupId>
+                <artifactId>gridcapa-rao-runner-spring-boot-starter</artifactId>
+                <version>${gridcapa.rao.runner.starter.version}</version>
             </dependency>
 
             <!-- RUNTIME -->
