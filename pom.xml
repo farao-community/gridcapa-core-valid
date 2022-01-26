@@ -71,7 +71,7 @@
         <opencsv.version>5.2</opencsv.version>
         <farao.dependencies.version>1.1.0</farao.dependencies.version>
         <task-manager.version>0.3.0</task-manager.version>
-        <gridcapa.rao.runner.starter.version>0.3.0-SNAPSHOT</gridcapa.rao.runner.starter.version>
+        <gridcapa.rao.runner.starter.version>0.3.0</gridcapa.rao.runner.starter.version>
     </properties>
 
     <build>
