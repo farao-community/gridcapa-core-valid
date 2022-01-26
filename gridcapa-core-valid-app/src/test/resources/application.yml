@@ -1,9 +1,11 @@
 spring:
   rabbitmq:
-    host: localhost-test
-    port: 1234
-    username: guest-test
-    password: guest-test
+    host: localhost
+    port: 5672
+    username: gridcapa
+    password: gridcapa
+    template:
+      reply-timeout: 6000000
   cloud:
     stream:
       bindings:

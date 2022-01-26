@@ -60,7 +60,7 @@ public class LimitingBranchResultService {
         return listLimitingBranches;
     }
 
-    private Set<RemedialAction> addRemedialActions(Set<NetworkAction> networkActions, Set<RangeAction> rangeActions) {
+    private Set<RemedialAction> addRemedialActions(Set<NetworkAction> networkActions, Set<RangeAction<?>> rangeActions) {
         Set<RemedialAction> remedialActionsActivated = new HashSet<>();
         remedialActionsActivated.addAll(networkActions);
         remedialActionsActivated.addAll(rangeActions);

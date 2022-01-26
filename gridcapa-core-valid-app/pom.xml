@@ -5,7 +5,7 @@
     <parent>
         <artifactId>gridcapa-core-valid</artifactId>
         <groupId>com.farao-community.farao</groupId>
-        <version>0.2.0-SNAPSHOT</version>
+        <version>0.3.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,7 +13,7 @@
     <name>GridCapa Core validation runner application</name>
     <description>Core validation runner application in GridCapa environment</description>
     <packaging>jar</packaging>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.3.0-SNAPSHOT</version>
 
     <build>
         <plugins>
@@ -110,8 +110,8 @@
             <artifactId>farao-crac-creator-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.rte-france.farao</groupId>
-            <artifactId>farao-data-fb-constraint</artifactId>
+            <groupId>com.farao-community.farao</groupId>
+            <artifactId>farao-crac-creator-fb-constraint</artifactId>
         </dependency>
         <dependency>
             <groupId>io.minio</groupId>
@@ -140,7 +140,6 @@
         <dependency>
             <groupId>com.farao-community.farao</groupId>
             <artifactId>gridcapa-rao-runner-spring-boot-starter</artifactId>
-            <version>${gridcapa.rao.runner.starter.version}</version>
         </dependency>
 
         <!-- RUNTIME DEPENDENCIES -->
@@ -171,6 +170,11 @@
         <dependency>
             <groupId>com.rte-france.powsybl</groupId>
             <artifactId>powsybl-hades2-integration</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-open-loadflow</artifactId>
             <scope>runtime</scope>
         </dependency>
 
