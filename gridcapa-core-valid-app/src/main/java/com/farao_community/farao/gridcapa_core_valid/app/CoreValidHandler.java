@@ -9,19 +9,21 @@ package com.farao_community.farao.gridcapa_core_valid.app;
 
 import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
-import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataException;
-import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
+import com.farao_community.farao.data.crac_api.Crac;
+import com.farao_community.farao.data.crac_io_api.CracExporters;
 import com.farao_community.farao.data.glsk.api.GlskDocument;
-import com.farao_community.farao.data.glsk.api.io.GlskDocumentImporters;
 import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
-import com.farao_community.farao.data.refprog.refprog_xml_importer.RefProgImporter;
-import com.farao_community.farao.gridcapa_core_valid.app.net_position.NetPositionsHandler;
+import com.farao_community.farao.gridcapa_core_valid.app.configuration.SearchTreeRaoConfiguration;
+import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
+import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
+import com.farao_community.farao.gridcapa_core_valid.app.services.NetPositionsHandler;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointService;
-import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointsImporter;
+import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
 import com.powsybl.action.util.Scalable;
+import com.powsybl.commons.datasource.MemDataSource;
 import com.powsybl.iidm.network.Network;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
@@ -39,54 +42,51 @@ import java.util.Map;
 @Component
 public class CoreValidHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(CoreValidHandler.class);
-    private final UrlValidationService urlValidationService;
-    private final StudyPointService studyPointService;
+    private final MinioAdapter minioAdapter;
+    private final RaoRunnerClient raoRunnerClient;
+    private final FileImporter fileImporter;
+    public static final String ARTIFACTS_S = "artifacts/%s";
+    private final SearchTreeRaoConfiguration searchTreeRaoConfiguration;
 
-    public CoreValidHandler(UrlValidationService urlValidationService, StudyPointService studyPointService) {
-        this.urlValidationService = urlValidationService;
-        this.studyPointService = studyPointService;
+    public CoreValidHandler(MinioAdapter minioAdapter, RaoRunnerClient raoRunnerClient, FileImporter fileImporter, SearchTreeRaoConfiguration searchTreeRaoConfiguration) {
+        this.minioAdapter = minioAdapter;
+        this.raoRunnerClient = raoRunnerClient;
+        this.fileImporter = fileImporter;
+        this.searchTreeRaoConfiguration = searchTreeRaoConfiguration;
     }
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
         try {
-            InputStream networkStream = urlValidationService.openUrlStream(coreValidRequest.getCgm().getUrl());
-            Network network = NetworkHandler.loadNetwork(coreValidRequest.getCgm().getFilename(), networkStream);
-            ReferenceProgram referenceProgram = importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
+            StudyPointService studyPointService = new StudyPointService(minioAdapter, raoRunnerClient, searchTreeRaoConfiguration);
+            Network network = fileImporter.importNetwork(coreValidRequest.getCgm());
+            ReferenceProgram referenceProgram = fileImporter.importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
             Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
-            GlskDocument glskDocument = importGlskFile(coreValidRequest.getGlsk());
-            List<StudyPoint> studyPoints = importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
+            GlskDocument glskDocument = fileImporter.importGlskFile(coreValidRequest.getGlsk());
+            List<StudyPoint> studyPoints = fileImporter.importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
             ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
-            studyPoints.forEach(studyPoint -> studyPointService.computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions));
+            Crac crac = fileImporter.importCrac(coreValidRequest.getCbcora(), coreValidRequest.getTimestamp(), network);
+            String jsonCracUrl = saveCracInJsonFormat(crac, coreValidRequest.getTimestamp());
+            studyPoints.forEach(studyPoint -> studyPointService.computeStudyPoint(studyPoint, network, scalableZonalData, coreNetPositions, jsonCracUrl));
             return new CoreValidResponse(coreValidRequest.getId());
         } catch (Exception e) {
             throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
         }
     }
 
-    GlskDocument importGlskFile(CoreValidFileResource glskFileResource) {
-        try (InputStream glskStream = urlValidationService.openUrlStream(glskFileResource.getUrl())) {
-            LOGGER.info("Import of Glsk file {} ", glskFileResource.getFilename());
-            return GlskDocumentImporters.importGlsk(glskStream);
+    private String saveCracInJsonFormat(Crac crac, OffsetDateTime timestamp) {
+        MemDataSource memDataSource = new MemDataSource();
+        String jsonCracFileName = String.format("crac_%s.json", timestamp.toString());
+        try (OutputStream os = memDataSource.newOutputStream(jsonCracFileName, false)) {
+            CracExporters.exportCrac(crac, "Json", os);
         } catch (IOException e) {
-            throw new CoreValidInvalidDataException(String.format("Cannot download reference program file from URL '%s'", glskFileResource.getUrl()), e);
+            throw new CoreValidInternalException("Error while trying to save converted CRAC file.", e);
         }
-    }
-
-    ReferenceProgram importReferenceProgram(CoreValidFileResource refProgFile, OffsetDateTime timestamp) {
-        try (InputStream refProgStream = urlValidationService.openUrlStream(refProgFile.getUrl())) {
-            return RefProgImporter.importRefProg(refProgStream, timestamp);
+        String cracPath = String.format(ARTIFACTS_S, jsonCracFileName);
+        try (InputStream is = memDataSource.newInputStream(jsonCracFileName)) {
+            minioAdapter.uploadFile(cracPath, is);
         } catch (IOException e) {
-            throw new CoreValidInvalidDataException(String.format("Cannot download reference program file from URL '%s'", refProgFile.getUrl()), e);
+            throw new CoreValidInternalException("Error while trying to upload converted CRAC file.", e);
         }
+        return minioAdapter.generatePreSignedUrl(cracPath);
     }
-
-    private List<StudyPoint> importStudyPoints(CoreValidFileResource studyPointsFileResource, OffsetDateTime timestamp) {
-        try (InputStream studyPointsStream = urlValidationService.openUrlStream(studyPointsFileResource.getUrl())) {
-            LOGGER.info("Import of study points from {} file for timestamp {} ", studyPointsFileResource.getFilename(), timestamp);
-            return StudyPointsImporter.importStudyPoints(studyPointsStream, timestamp);
-        } catch (Exception e) {
-            throw new CoreValidInvalidDataException(String.format("Cannot download study points file from URL '%s'", studyPointsFileResource.getUrl()), e);
-        }
-    }
-
 }

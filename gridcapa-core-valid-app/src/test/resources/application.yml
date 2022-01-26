@@ -1,15 +1,21 @@
 spring:
   rabbitmq:
-    host: localhost-test
-    port: 1234
-    username: guest-test
-    password: guest-test
+    host: localhost
+    port: 5672
+    username: gridcapa
+    password: gridcapa
+    template:
+      reply-timeout: 6000000
   cloud:
     stream:
       bindings:
         task-status-update:
           binder: rabbit
           destination: task-status-updated
+
+rao-runner-server:
+  amqp:
+    queue-name: rao-request-queue
 
 core-valid-runner:
   bindings:
@@ -22,6 +28,13 @@ core-valid-runner:
   whitelist:
     - file:/
     - http://minio:9000/
+  search-tree-rao-parameters:
+    max-curative-topo-per-tso:
+      FR: 1
+    max-curative-pst-per-tso:
+      FR: 0
+    max-curative-ra-per-tso:
+      FR: 1
 
 minio:
   access:

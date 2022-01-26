@@ -5,7 +5,7 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package com.farao_community.farao.gridcapa_core_valid.app.net_position;
+package com.farao_community.farao.gridcapa_core_valid.app.services;
 
 import com.farao_community.farao.commons.CountryEICode;
 import com.farao_community.farao.commons.ZonalData;
@@ -24,6 +24,10 @@ import java.util.*;
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
 public final class NetPositionsHandler {
+
+    private NetPositionsHandler() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static Map<String, Double> computeCoreReferenceNetPositions(ReferenceProgram referenceProgram) {
         Map<String, Double> coreNetPositions = new TreeMap<>();

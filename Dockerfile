@@ -1,4 +1,4 @@
-FROM openjdk:11.0-jre-slim
+FROM farao/farao-computation-base:1.2.0
 
 ARG JAR_FILE=gridcapa-core-valid-app/target/*.jar
 COPY ${JAR_FILE} app.jar

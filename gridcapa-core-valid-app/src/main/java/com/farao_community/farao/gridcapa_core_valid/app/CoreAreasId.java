@@ -34,6 +34,10 @@ public final class CoreAreasId {
             entry("NP_DE_ALEGrO", "22Y201903145---4")
     );
 
+    private CoreAreasId() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static List<String> getCountriesId() {
         List<String> ids = new ArrayList<>(ID_MAPPING.values());
         ids.removeIf(id -> id.equals("22Y201903144---9") || id.equals("22Y201903145---4"));

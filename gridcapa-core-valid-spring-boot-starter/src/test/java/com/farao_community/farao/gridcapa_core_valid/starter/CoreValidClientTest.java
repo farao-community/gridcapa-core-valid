@@ -11,9 +11,9 @@ import com.farao_community.farao.core_valid.api.JsonApiConverter;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Message;
-import org.mockito.Mockito;
 
 import java.io.IOException;
 

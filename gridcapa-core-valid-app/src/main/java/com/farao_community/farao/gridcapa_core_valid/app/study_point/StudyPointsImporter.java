@@ -29,6 +29,10 @@ import java.util.stream.Collectors;
 public final class StudyPointsImporter {
     private static final Logger LOGGER = LoggerFactory.getLogger(StudyPointsImporter.class);
 
+    private StudyPointsImporter() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static List<StudyPoint> importStudyPoints(InputStream inputStream) {
         return importStudyPoints(new InputStreamReader(inputStream));
     }
