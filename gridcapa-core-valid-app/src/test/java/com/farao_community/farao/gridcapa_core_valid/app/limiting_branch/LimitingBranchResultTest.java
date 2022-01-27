@@ -43,6 +43,14 @@ class LimitingBranchResultTest {
         List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(new StudyPoint(1, "id", null), crac, getClass().getResource(raoDirectory + "/raoResult.json").toExternalForm());
 
         assertEquals(6, limitingBranchResults.size());
+        assertEquals("BE_CBCO_000003 - curative", limitingBranchResults.get(0).getCnecId());
+        assertEquals("BE_CO_00001 - curative", limitingBranchResults.get(0).getState().getId());
+        assertEquals(0, limitingBranchResults.get(0).getRemedialActions().size());
+        assertEquals("id", limitingBranchResults.get(0).getVerticeID());
+        assertEquals(-1564, Math.floor(limitingBranchResults.get(0).getRamAfter()));
+        assertEquals(-1564, Math.floor(limitingBranchResults.get(0).getRamBefore()));
+        assertEquals(1939, Math.floor(limitingBranchResults.get(0).getFlowAfter()));
+        assertEquals(1939, Math.floor(limitingBranchResults.get(0).getFlowBefore()));
     }
 
 }
