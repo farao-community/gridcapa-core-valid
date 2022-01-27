@@ -34,7 +34,7 @@ public class FileExporter {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         try {
-            final CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(baos), CSVFormat.DEFAULT
+            final CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(baos), CSVFormat.EXCEL.withDelimiter(';')
                     .withHeader("Period", "Vertice ID", "Branch ID", "Branch Status", "RAM before", "RAM after"));
             studyPointResults.forEach(studyPointResult -> addStudyPointResultToOutputFile(studyPointResult, csvPrinter));
             csvPrinter.flush();
@@ -47,7 +47,6 @@ public class FileExporter {
             e.printStackTrace();
         }
         return SAMPLE_CSV_FILE;
-
     }
 
     private void addStudyPointResultToOutputFile(StudyPointResult studyPointResult, CSVPrinter csvPrinter) {
