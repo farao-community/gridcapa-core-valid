@@ -18,18 +18,16 @@ import java.util.Set;
  */
 public class LimitingBranchResult {
 
-    private final int period;
     private final String verticeID;
     private final Double ramBefore;
     private final Double ramAfter;
     private final Double flowBefore;
     private final Double flowAfter;
-    private final Set<RemedialAction> remedialActions;
+    private final Set<RemedialAction<?>> remedialActions;
     private final String cnecId;
     private final State state;
 
-    public LimitingBranchResult(int period, String verticeID, Double ramBefore, Double ramAfter, Double flowBefore, Double flowAfter, Set<RemedialAction> remedialActions, String cnecId, State state) {
-        this.period = period;
+    public LimitingBranchResult(String verticeID, Double ramBefore, Double ramAfter, Double flowBefore, Double flowAfter, Set<RemedialAction<?>> remedialActions, String cnecId, State state) {
         this.verticeID = verticeID;
         this.ramBefore = ramBefore;
         this.ramAfter = ramAfter;
@@ -38,10 +36,6 @@ public class LimitingBranchResult {
         this.remedialActions = remedialActions;
         this.cnecId = cnecId;
         this.state = state;
-    }
-
-    public int getPeriod() {
-        return period;
     }
 
     public String getVerticeID() {
@@ -64,7 +58,7 @@ public class LimitingBranchResult {
         return flowAfter;
     }
 
-    public Set<RemedialAction> getRemedialActions() {
+    public Set<RemedialAction<?>> getRemedialActions() {
         return remedialActions;
     }
 

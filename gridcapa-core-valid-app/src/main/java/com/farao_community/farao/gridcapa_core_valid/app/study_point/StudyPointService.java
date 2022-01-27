@@ -12,6 +12,7 @@ import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
 import com.farao_community.farao.core_valid.api.exception.CoreValidRaoException;
 import com.farao_community.farao.gridcapa_core_valid.app.CoreAreasId;
+import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResult;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResultService;
 import com.farao_community.farao.gridcapa_core_valid.app.configuration.SearchTreeRaoConfiguration;
 import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
@@ -82,10 +83,8 @@ public class StudyPointService {
             result.setShiftedCgmUrl(shiftedCgmUrl);
             String raoRequestId = String.format("%s-%s", network.getNameOrId(), studyPoint.getId());
             RaoResponse raoResponse = startRao(raoRequestId, shiftedCgmUrl, jsonCracUrl, saveRaoParametersAndGetUrl());
-            result.setListLimitingBranchResult(limitingBranchResultService.importRaoResult(studyPoint, studyPointData.getCrac(), raoResponse.getRaoResultFileUrl()));
-            result.setStatus(StudyPointResult.Status.SUCCESS);
-            result.setNetworkWithPraUrl(raoResponse.getNetworkWithPraFileUrl());
-            result.setRaoResultFileUrl(raoResponse.getRaoResultFileUrl());
+            List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(studyPoint, studyPointData.getCrac(), raoResponse.getRaoResultFileUrl());
+            setSuccessResult(studyPoint, result, raoResponse, limitingBranchResults);
         } catch (CoreValidRaoException e) {
             LOGGER.error("Error during RAO {}", studyPoint.getId(), e);
             result.setStatus(StudyPointResult.Status.ERROR);
@@ -178,6 +177,14 @@ public class StudyPointService {
         ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
         minioAdapter.uploadFile(raoParametersDestinationPath, bais);
         return minioAdapter.generatePreSignedUrl(raoParametersDestinationPath);
+    }
+
+    private void setSuccessResult(StudyPoint studyPoint, StudyPointResult result, RaoResponse raoResponse, List<LimitingBranchResult> limitingBranchResults) {
+        result.setListLimitingBranchResult(limitingBranchResults);
+        result.setStatus(StudyPointResult.Status.SUCCESS);
+        result.setNetworkWithPraUrl(raoResponse.getNetworkWithPraFileUrl());
+        result.setRaoResultFileUrl(raoResponse.getRaoResultFileUrl());
+        result.setPeriod(String.valueOf(studyPoint.getPeriod()));
     }
 
     private static class InitGenerator {

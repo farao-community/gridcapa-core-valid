@@ -44,7 +44,6 @@ public class LimitingBranchResultService {
 
         crac.getFlowCnecs().forEach(cnec -> {
             LimitingBranchResult limitingBranch = new LimitingBranchResult(
-                    studyPoint.getPeriod(),
                     studyPoint.getId(),
                     raoResult.getMargin(OptimizationState.INITIAL, cnec, Unit.MEGAWATT),
                     raoResult.getMargin(OptimizationState.AFTER_CRA, cnec, Unit.MEGAWATT),
@@ -60,8 +59,8 @@ public class LimitingBranchResultService {
         return listLimitingBranches;
     }
 
-    private Set<RemedialAction> addRemedialActions(Set<NetworkAction> networkActions, Set<RangeAction<?>> rangeActions) {
-        Set<RemedialAction> remedialActionsActivated = new HashSet<>();
+    private Set<RemedialAction<?>> addRemedialActions(Set<NetworkAction> networkActions, Set<RangeAction<?>> rangeActions) {
+        Set<RemedialAction<?>> remedialActionsActivated = new HashSet<>();
         remedialActionsActivated.addAll(networkActions);
         remedialActionsActivated.addAll(rangeActions);
         return remedialActionsActivated;
