@@ -40,33 +40,28 @@ public class FileExporter {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         String filePath;
         try {
-            final CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(baos), CSVFormat.EXCEL.withDelimiter(';')
+            CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(baos), CSVFormat.EXCEL.withDelimiter(';')
                     .withHeader("Period", "Vertice ID", "Branch ID", "Branch Status", "RAM before", "RAM after"));
-            studyPointResults.forEach(studyPointResult -> addStudyPointResultToOutputFile(studyPointResult, csvPrinter));
+            for (StudyPointResult studyPointResult : studyPointResults) {
+                addStudyPointResultToOutputFile(studyPointResult, csvPrinter);
+            }
             csvPrinter.flush();
             csvPrinter.close();
-            byte[] barray = baos.toByteArray();
-            InputStream is = new ByteArrayInputStream(barray);
-            filePath = String.format(SAMPLE_CSV_FILE, timestamp.atZoneSameInstant(ZoneId.of("Europe/Paris")).format(DateTimeFormatter.ofPattern("yyyyMMdd-HH")));
-            minioAdapter.uploadFile(filePath, is);
-            LOGGER.info("Result file was successfully uploaded on minIO");
         } catch (IOException e) {
-            e.printStackTrace();
             throw new CoreValidInvalidDataException("Error during export of studypoint results on Minio", e);
         }
+        byte[] barray = baos.toByteArray();
+        InputStream is = new ByteArrayInputStream(barray);
+        filePath = String.format(SAMPLE_CSV_FILE, timestamp.atZoneSameInstant(ZoneId.of("Europe/Paris")).format(DateTimeFormatter.ofPattern("yyyyMMdd-HH")));
+        minioAdapter.uploadFile(filePath, is);
+        LOGGER.info("Result file was successfully uploaded on minIO");
         return minioAdapter.generatePreSignedUrl(filePath);
     }
 
-    private void addStudyPointResultToOutputFile(StudyPointResult studyPointResult, CSVPrinter csvPrinter) {
-        studyPointResult.getListLimitingBranchResult().forEach(
-            limitingBranchResult -> {
-                try {
-                    addLimitingBranchResultToOutputFile(limitingBranchResult, studyPointResult, csvPrinter);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        );
+    private void addStudyPointResultToOutputFile(StudyPointResult studyPointResult, CSVPrinter csvPrinter) throws IOException {
+        for (LimitingBranchResult limitingBranchResult : studyPointResult.getListLimitingBranchResult()) {
+            addLimitingBranchResultToOutputFile(limitingBranchResult, studyPointResult, csvPrinter);
+        }
     }
 
     private void addLimitingBranchResultToOutputFile(LimitingBranchResult limitingBranchResult, StudyPointResult studyPointResult, CSVPrinter csvPrinter) throws IOException {
