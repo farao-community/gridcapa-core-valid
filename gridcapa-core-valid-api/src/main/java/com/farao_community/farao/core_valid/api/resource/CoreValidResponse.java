@@ -22,13 +22,20 @@ public class CoreValidResponse {
     @Id
     private final String id;
 
+    private final String resultFileUrl;
+
     @JsonCreator
-    public CoreValidResponse(@JsonProperty("id") String id) {
+    public CoreValidResponse(@JsonProperty("id") String id, @JsonProperty("result-file-url") String resultFileUrl) {
         this.id = id;
+        this.resultFileUrl = resultFileUrl;
     }
 
     public String getId() {
         return id;
+    }
+
+    public String getResultFileUrl() {
+        return resultFileUrl;
     }
 
     @Override

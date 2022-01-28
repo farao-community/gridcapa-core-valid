@@ -66,7 +66,8 @@ class CoreValidListenerTest {
     void checkThatCorrectMessageIsHandledCorrectly() throws URISyntaxException, IOException {
         byte[] correctMessage = Files.readAllBytes(Paths.get(getClass().getResource("/validRequest.json").toURI()));
         Message message = MessageBuilder.withBody(correctMessage).build();
-        CoreValidResponse coreValidResponse = new CoreValidResponse("c7fc89da-dcd7-40d2-8d63-b8aef0a1ecdf");
+        String resultFileUrl = "fileUrl";
+        CoreValidResponse coreValidResponse = new CoreValidResponse("c7fc89da-dcd7-40d2-8d63-b8aef0a1ecdf", resultFileUrl);
         Mockito.when(coreValidHandler.handleCoreValidRequest(Mockito.any(CoreValidRequest.class))).thenReturn(coreValidResponse);
         coreValidListener.onMessage(message);
         Mockito.verify(streamBridge, Mockito.times(2)).send(Mockito.anyString(), Mockito.any());

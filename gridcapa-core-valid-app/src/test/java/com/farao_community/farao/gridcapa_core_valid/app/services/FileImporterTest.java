@@ -61,7 +61,7 @@ class FileImporterTest {
         InputStream networkStream = getClass().getResourceAsStream(testDirectory + "/20210723_0030_2D5_CGM.uct");
         Network network = Importers.loadNetwork("20210723_0030_2D5_CGM.uct", networkStream);
         CoreValidFileResource cbcoraFile = createFileResource("cbcora",  getClass().getResource(testDirectory + "/20210723-F301_CBCORA_hvdcvh-outage.xml"));
-        Crac crac = fileImporter.importCrac(cbcoraFile, dateTime, network);
+        Crac crac = fileImporter.importCrac(cbcoraFile.getUrl(), dateTime, network);
         Assertions.assertNotNull(crac);
         assertEquals("17XTSO-CS------W-20190108-F301v1", crac.getId());
     }

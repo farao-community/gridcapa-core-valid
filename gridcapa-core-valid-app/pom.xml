@@ -91,6 +91,10 @@
         </dependency>
         <dependency>
             <groupId>com.farao-community.farao</groupId>
+            <artifactId>farao-rao-result-json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.farao-community.farao</groupId>
             <artifactId>farao-reference-program</artifactId>
         </dependency>
         <dependency>
@@ -136,6 +140,10 @@
         <dependency>
             <groupId>com.farao-community.farao</groupId>
             <artifactId>gridcapa-rao-runner-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
         </dependency>
 
         <!-- RUNTIME DEPENDENCIES -->
