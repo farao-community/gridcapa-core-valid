@@ -46,9 +46,9 @@ public class LimitingBranchResultService {
             LimitingBranchResult limitingBranch = new LimitingBranchResult(
                     studyPoint.getId(),
                     raoResult.getMargin(OptimizationState.INITIAL, cnec, Unit.MEGAWATT),
-                    raoResult.getMargin(OptimizationState.AFTER_CRA, cnec, Unit.MEGAWATT),
+                    raoResult.getMargin(OptimizationState.afterOptimizing(cnec.getState()), cnec, Unit.MEGAWATT),
                     raoResult.getFlow(OptimizationState.INITIAL, cnec, Unit.MEGAWATT),
-                    raoResult.getFlow(OptimizationState.AFTER_CRA, cnec, Unit.MEGAWATT),
+                    raoResult.getFlow(OptimizationState.afterOptimizing(cnec.getState()), cnec, Unit.MEGAWATT),
                     addRemedialActions(raoResult.getActivatedNetworkActionsDuringState(cnec.getState()), raoResult.getActivatedRangeActionsDuringState(cnec.getState())),
                     cnec.getId(),
                     cnec.getState()

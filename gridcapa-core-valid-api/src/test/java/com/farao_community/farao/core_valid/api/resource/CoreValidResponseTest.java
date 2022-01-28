@@ -18,9 +18,10 @@ class CoreValidResponseTest {
 
     @Test
     void checkDCoreValidResponse() {
-        CoreValidResponse coreValidResponse = new CoreValidResponse("id");
+        String resultFileUrl = "testUrl";
+        CoreValidResponse coreValidResponse = new CoreValidResponse("id", resultFileUrl);
         assertNotNull(coreValidResponse);
         assertEquals("id", coreValidResponse.getId());
-        //todo complete test when result files added
+        assertEquals(resultFileUrl, coreValidResponse.getResultFileUrl());
     }
 }

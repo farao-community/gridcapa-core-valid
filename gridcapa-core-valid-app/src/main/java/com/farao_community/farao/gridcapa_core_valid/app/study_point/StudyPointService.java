@@ -82,7 +82,9 @@ public class StudyPointService {
             String shiftedCgmUrl = saveShiftedCgm(network, studyPoint);
             result.setShiftedCgmUrl(shiftedCgmUrl);
             String raoRequestId = String.format("%s-%s", network.getNameOrId(), studyPoint.getId());
+            LOGGER.info("Running RAO for studypoint {} ...", studyPoint.getId());
             RaoResponse raoResponse = startRao(raoRequestId, shiftedCgmUrl, jsonCracUrl, saveRaoParametersAndGetUrl());
+            LOGGER.info("End of RAO computation for studypoint {} .", studyPoint.getId());
             List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(studyPoint, studyPointData.getCrac(), raoResponse.getRaoResultFileUrl());
             setSuccessResult(studyPoint, result, raoResponse, limitingBranchResults);
         } catch (CoreValidRaoException e) {

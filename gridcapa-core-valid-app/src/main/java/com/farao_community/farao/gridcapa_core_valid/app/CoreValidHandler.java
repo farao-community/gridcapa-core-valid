@@ -15,8 +15,8 @@ import com.farao_community.farao.data.crac_api.Crac;
 import com.farao_community.farao.data.crac_io_api.CracExporters;
 import com.farao_community.farao.data.glsk.api.GlskDocument;
 import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
-import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResultService;
 import com.farao_community.farao.gridcapa_core_valid.app.configuration.SearchTreeRaoConfiguration;
+import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResultService;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
@@ -29,8 +29,6 @@ import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.commons.datasource.MemDataSource;
 import com.powsybl.iidm.network.Network;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -46,7 +44,7 @@ import java.util.Map;
  */
 @Component
 public class CoreValidHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CoreValidHandler.class);
+
     private final MinioAdapter minioAdapter;
     private final RaoRunnerClient raoRunnerClient;
     private final FileImporter fileImporter;
@@ -79,15 +77,15 @@ public class CoreValidHandler {
             StudyPointData studyPointData = new StudyPointData(network, coreNetPositions, scalableZonalData, crac, jsonCracUrl);
             List<StudyPointResult> studyPointResults = new ArrayList<>();
             studyPoints.forEach(studyPoint -> studyPointResults.add(studyPointService.computeStudyPoint(studyPoint, studyPointData)));
-            saveProcessOutputs(studyPointResults);
-            return new CoreValidResponse(coreValidRequest.getId());
+            String resultFileUrl = saveProcessOutputs(studyPointResults, coreValidRequest.getTimestamp());
+            return new CoreValidResponse(coreValidRequest.getId(), resultFileUrl);
         } catch (Exception e) {
             throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
         }
     }
 
-    private void saveProcessOutputs(List<StudyPointResult> studyPointResults) {
-        fileExporter.exportStudyPointResult(studyPointResults);
+    private String saveProcessOutputs(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp) {
+        return fileExporter.exportStudyPointResult(studyPointResults, timestamp);
     }
 
     private String saveCracInJsonFormat(Crac crac, OffsetDateTime timestamp) {

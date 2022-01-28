@@ -144,7 +144,6 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
-            <version>${apache.commons.version}</version>
         </dependency>
 
         <!-- RUNTIME DEPENDENCIES -->

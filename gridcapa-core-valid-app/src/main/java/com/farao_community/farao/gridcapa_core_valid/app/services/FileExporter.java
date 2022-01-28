@@ -12,9 +12,14 @@ import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.Limitin
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -23,16 +28,17 @@ import java.util.List;
 @Service
 public class FileExporter {
 
-    private static final String SAMPLE_CSV_FILE = "StudyPointResult.csv";
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileExporter.class);
+    private static final String SAMPLE_CSV_FILE = "outputs/%s-ValidationCORE-v0.csv";
     private final MinioAdapter minioAdapter;
 
     public FileExporter(MinioAdapter minioAdapter) {
         this.minioAdapter = minioAdapter;
     }
 
-    public String exportStudyPointResult(List<StudyPointResult> studyPointResults) {
+    public String exportStudyPointResult(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
+        String filePath;
         try {
             final CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(baos), CSVFormat.EXCEL.withDelimiter(';')
                     .withHeader("Period", "Vertice ID", "Branch ID", "Branch Status", "RAM before", "RAM after"));
@@ -41,12 +47,14 @@ public class FileExporter {
             csvPrinter.close();
             byte[] barray = baos.toByteArray();
             InputStream is = new ByteArrayInputStream(barray);
-            minioAdapter.uploadFile(SAMPLE_CSV_FILE, is);
-
+            filePath = String.format(SAMPLE_CSV_FILE, timestamp.atZoneSameInstant(ZoneId.of("Europe/Paris")).format(DateTimeFormatter.ofPattern("yyyyMMdd-HH")));
+            minioAdapter.uploadFile(filePath, is);
+            LOGGER.info("Result file was successfully uploaded on minIO");
         } catch (IOException e) {
             e.printStackTrace();
+            throw new CoreValidInvalidDataException("Error during export of studypoint results on Minio", e);
         }
-        return SAMPLE_CSV_FILE;
+        return filePath;
     }
 
     private void addStudyPointResultToOutputFile(StudyPointResult studyPointResult, CSVPrinter csvPrinter) {
