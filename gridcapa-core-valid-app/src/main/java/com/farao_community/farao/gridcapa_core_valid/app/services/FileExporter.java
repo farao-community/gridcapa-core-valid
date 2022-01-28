@@ -54,7 +54,7 @@ public class FileExporter {
             e.printStackTrace();
             throw new CoreValidInvalidDataException("Error during export of studypoint results on Minio", e);
         }
-        return filePath;
+        return minioAdapter.generatePreSignedUrl(filePath);
     }
 
     private void addStudyPointResultToOutputFile(StudyPointResult studyPointResult, CSVPrinter csvPrinter) {
