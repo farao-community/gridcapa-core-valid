@@ -12,6 +12,7 @@ import com.farao_community.farao.core_valid.api.exception.CoreValidInternalExcep
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
 import com.farao_community.farao.data.crac_api.Crac;
+import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_creator.FbConstraintCreationContext;
 import com.farao_community.farao.data.crac_io_api.CracExporters;
 import com.farao_community.farao.data.glsk.api.GlskDocument;
 import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
@@ -73,9 +74,9 @@ public class CoreValidHandler {
                 Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
                 GlskDocument glskDocument = fileImporter.importGlskFile(coreValidRequest.getGlsk());
                 ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
-                Crac crac = fileImporter.importCrac(coreValidRequest.getCbcora().getUrl(), coreValidRequest.getTimestamp(), network);
-                String jsonCracUrl = saveCracInJsonFormat(crac, coreValidRequest.getTimestamp());
-                StudyPointData studyPointData = new StudyPointData(network, coreNetPositions, scalableZonalData, crac, jsonCracUrl);
+                FbConstraintCreationContext cracCreationContext = fileImporter.importCrac(coreValidRequest.getCbcora().getUrl(), coreValidRequest.getTimestamp(), network);
+                String jsonCracUrl = saveCracInJsonFormat(cracCreationContext.getCrac(), coreValidRequest.getTimestamp());
+                StudyPointData studyPointData = new StudyPointData(network, coreNetPositions, scalableZonalData, cracCreationContext, jsonCracUrl);
                 studyPoints.forEach(studyPoint -> studyPointResults.add(studyPointService.computeStudyPoint(studyPoint, studyPointData)));
             }
             String resultFileUrl = saveProcessOutputs(studyPointResults, coreValidRequest.getTimestamp());

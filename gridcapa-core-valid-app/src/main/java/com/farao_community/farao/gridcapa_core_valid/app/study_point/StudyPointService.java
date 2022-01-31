@@ -85,7 +85,7 @@ public class StudyPointService {
             LOGGER.info("Running RAO for studypoint {} ...", studyPoint.getId());
             RaoResponse raoResponse = startRao(raoRequestId, shiftedCgmUrl, jsonCracUrl, saveRaoParametersAndGetUrl());
             LOGGER.info("End of RAO computation for studypoint {} .", studyPoint.getId());
-            List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(studyPoint, studyPointData.getCrac(), raoResponse.getRaoResultFileUrl());
+            List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(studyPoint, studyPointData.getFbConstraintCreationContext(), raoResponse.getRaoResultFileUrl());
             setSuccessResult(studyPoint, result, raoResponse, limitingBranchResults);
         } catch (CoreValidRaoException e) {
             LOGGER.error("Error during RAO {}", studyPoint.getId(), e);

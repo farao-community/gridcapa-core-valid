@@ -8,10 +8,10 @@
 package com.farao_community.farao.gridcapa_core_valid.app.limiting_branch;
 
 import com.farao_community.farao.commons.Unit;
-import com.farao_community.farao.data.crac_api.Crac;
 import com.farao_community.farao.data.crac_api.RemedialAction;
 import com.farao_community.farao.data.crac_api.network_action.NetworkAction;
 import com.farao_community.farao.data.crac_api.range_action.RangeAction;
+import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_creator.FbConstraintCreationContext;
 import com.farao_community.farao.data.rao_result_api.OptimizationState;
 import com.farao_community.farao.data.rao_result_api.RaoResult;
 import com.farao_community.farao.data.rao_result_json.RaoResultImporter;
@@ -38,11 +38,12 @@ public class LimitingBranchResultService {
         this.raoResultImporter = new RaoResultImporter();
     }
 
-    public List<LimitingBranchResult> importRaoResult(StudyPoint studyPoint, Crac crac, String raoResultUrl) {
-        RaoResult raoResult = raoResultImporter.importRaoResult(urlValidationService.openUrlStream(raoResultUrl), crac);
+    public List<LimitingBranchResult> importRaoResult(StudyPoint studyPoint, FbConstraintCreationContext cracCreationContext, String raoResultUrl) {
+        RaoResult raoResult = raoResultImporter.importRaoResult(urlValidationService.openUrlStream(raoResultUrl), cracCreationContext.getCrac());
         List<LimitingBranchResult> listLimitingBranches = new ArrayList<>();
 
-        crac.getFlowCnecs().forEach(cnec -> {
+        cracCreationContext.getCrac().getFlowCnecs().forEach(cnec -> {
+            String criticalBranchId = cracCreationContext.getBranchCnecCreationContexts().stream().filter(branchCnecCreationContext -> branchCnecCreationContext.getCreatedCnecsIds().containsValue(cnec.getId())).findFirst().get().getNativeId();
             LimitingBranchResult limitingBranch = new LimitingBranchResult(
                     studyPoint.getId(),
                     raoResult.getMargin(OptimizationState.INITIAL, cnec, Unit.MEGAWATT),
@@ -50,7 +51,7 @@ public class LimitingBranchResultService {
                     raoResult.getFlow(OptimizationState.INITIAL, cnec, Unit.MEGAWATT),
                     raoResult.getFlow(OptimizationState.afterOptimizing(cnec.getState()), cnec, Unit.MEGAWATT),
                     addRemedialActions(raoResult.getActivatedNetworkActionsDuringState(cnec.getState()), raoResult.getActivatedRangeActionsDuringState(cnec.getState())),
-                    cnec.getId(),
+                    criticalBranchId,
                     cnec.getState()
             );
             listLimitingBranches.add(limitingBranch);

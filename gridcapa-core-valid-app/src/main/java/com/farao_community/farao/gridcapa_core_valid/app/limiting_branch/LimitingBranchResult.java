@@ -24,17 +24,17 @@ public class LimitingBranchResult {
     private final Double flowBefore;
     private final Double flowAfter;
     private final Set<RemedialAction<?>> remedialActions;
-    private final String cnecId;
+    private final String criticalBranchId;
     private final State state;
 
-    public LimitingBranchResult(String verticeID, Double ramBefore, Double ramAfter, Double flowBefore, Double flowAfter, Set<RemedialAction<?>> remedialActions, String cnecId, State state) {
+    public LimitingBranchResult(String verticeID, Double ramBefore, Double ramAfter, Double flowBefore, Double flowAfter, Set<RemedialAction<?>> remedialActions, String criticalBranchId, State state) {
         this.verticeID = verticeID;
         this.ramBefore = ramBefore;
         this.ramAfter = ramAfter;
         this.flowBefore = flowBefore;
         this.flowAfter = flowAfter;
         this.remedialActions = remedialActions;
-        this.cnecId = cnecId;
+        this.criticalBranchId = criticalBranchId;
         this.state = state;
     }
 
@@ -62,8 +62,8 @@ public class LimitingBranchResult {
         return remedialActions;
     }
 
-    public String getCnecId() {
-        return cnecId;
+    public String getCriticalBranchId() {
+        return criticalBranchId;
     }
 
     public State getState() {

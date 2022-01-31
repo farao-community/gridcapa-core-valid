@@ -67,7 +67,7 @@ public class FileExporter {
     private void addLimitingBranchResultToOutputFile(LimitingBranchResult limitingBranchResult, StudyPointResult studyPointResult, CSVPrinter csvPrinter) throws IOException {
         String period = studyPointResult.getPeriod();
         String verticeId = studyPointResult.getId();
-        String branchId = limitingBranchResult.getCnecId();
+        String branchId = limitingBranchResult.getCriticalBranchId();
         String branchStatus;
         switch (limitingBranchResult.getState().getInstant()) {
             case PREVENTIVE:
