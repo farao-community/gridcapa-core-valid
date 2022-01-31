@@ -29,11 +29,14 @@ import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.commons.datasource.MemDataSource;
 import com.powsybl.iidm.network.Network;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +47,7 @@ import java.util.Map;
  */
 @Component
 public class CoreValidHandler {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoreValidHandler.class);
     private final MinioAdapter minioAdapter;
     private final RaoRunnerClient raoRunnerClient;
     private final FileImporter fileImporter;
@@ -64,6 +67,7 @@ public class CoreValidHandler {
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
         try {
+            Instant computationStartInstant = Instant.now();
             List<StudyPoint> studyPoints = fileImporter.importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
             List<StudyPointResult> studyPointResults = new ArrayList<>();
             if (!studyPoints.isEmpty()) {
@@ -79,7 +83,8 @@ public class CoreValidHandler {
                 studyPoints.forEach(studyPoint -> studyPointResults.add(studyPointService.computeStudyPoint(studyPoint, studyPointData)));
             }
             String resultFileUrl = saveProcessOutputs(studyPointResults, coreValidRequest.getTimestamp());
-            return new CoreValidResponse(coreValidRequest.getId(), resultFileUrl);
+            Instant computationEndInstant = Instant.now();
+            return new CoreValidResponse(coreValidRequest.getId(), resultFileUrl, computationStartInstant, computationEndInstant);
         } catch (Exception e) {
             throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
         }

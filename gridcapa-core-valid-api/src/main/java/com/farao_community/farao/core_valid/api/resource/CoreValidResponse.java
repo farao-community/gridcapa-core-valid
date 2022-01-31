@@ -13,6 +13,8 @@ import com.github.jasminb.jsonapi.annotations.Id;
 import com.github.jasminb.jsonapi.annotations.Type;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.time.Instant;
+
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
@@ -21,13 +23,16 @@ public class CoreValidResponse {
 
     @Id
     private final String id;
-
     private final String resultFileUrl;
+    private Instant computationStartInstant;
+    private Instant computationEndInstant;
 
     @JsonCreator
-    public CoreValidResponse(@JsonProperty("id") String id, @JsonProperty("result-file-url") String resultFileUrl) {
+    public CoreValidResponse(@JsonProperty("id") String id, @JsonProperty("result-file-url") String resultFileUrl, @JsonProperty("computationStartInstant") Instant computationStartInstant, @JsonProperty("computationEndInstant") Instant computationEndInstant) {
         this.id = id;
         this.resultFileUrl = resultFileUrl;
+        this.computationStartInstant = computationStartInstant;
+        this.computationEndInstant = computationEndInstant;
     }
 
     public String getId() {
@@ -36,6 +41,14 @@ public class CoreValidResponse {
 
     public String getResultFileUrl() {
         return resultFileUrl;
+    }
+
+    public Instant getComputationStartInstant() {
+        return computationStartInstant;
+    }
+
+    public Instant getComputationEndInstant() {
+        return computationEndInstant;
     }
 
     @Override

@@ -9,6 +9,8 @@ package com.farao_community.farao.core_valid.api.resource;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -18,10 +20,14 @@ class CoreValidResponseTest {
 
     @Test
     void checkDCoreValidResponse() {
+        Instant computationStartInstant = Instant.parse("2021-01-01T00:30:00Z");
+        Instant computationEndInstant = Instant.parse("2021-01-01T00:35:00Z");
         String resultFileUrl = "testUrl";
-        CoreValidResponse coreValidResponse = new CoreValidResponse("id", resultFileUrl);
+        CoreValidResponse coreValidResponse = new CoreValidResponse("id", resultFileUrl, computationStartInstant, computationEndInstant);
         assertNotNull(coreValidResponse);
         assertEquals("id", coreValidResponse.getId());
         assertEquals(resultFileUrl, coreValidResponse.getResultFileUrl());
+        assertEquals("2021-01-01T00:30:00Z", coreValidResponse.getComputationStartInstant().toString());
+        assertEquals("2021-01-01T00:35:00Z", coreValidResponse.getComputationEndInstant().toString());
     }
 }
