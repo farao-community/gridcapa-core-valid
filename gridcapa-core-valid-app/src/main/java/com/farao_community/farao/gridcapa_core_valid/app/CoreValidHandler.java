@@ -47,7 +47,6 @@ import java.util.Map;
  */
 @Component
 public class CoreValidHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CoreValidHandler.class);
     private final MinioAdapter minioAdapter;
     private final RaoRunnerClient raoRunnerClient;
     private final FileImporter fileImporter;
