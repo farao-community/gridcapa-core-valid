@@ -39,8 +39,8 @@ class LimitingBranchResultTest {
     @Test
     void importRaoResultTest() {
         Network network = Importers.loadNetwork("network.uct", getClass().getResourceAsStream(raoDirectory + "/network.uct"));
-        FbConstraintCreationContext crac = fileImporter.importCrac(getClass().getResource(raoDirectory + "/crac.xml").toExternalForm(), dateTime, network);
-        List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(new StudyPoint(1, "id", null), crac, getClass().getResource(raoDirectory + "/raoResult.json").toExternalForm());
+        FbConstraintCreationContext fbConstraintCreationContext = fileImporter.importCrac(getClass().getResource(raoDirectory + "/crac.xml").toExternalForm(), dateTime, network);
+        List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(new StudyPoint(1, "id", null), fbConstraintCreationContext, getClass().getResource(raoDirectory + "/raoResult.json").toExternalForm());
 
         assertEquals(6, limitingBranchResults.size());
         assertEquals("BE_CBCO_000003", limitingBranchResults.get(4).getCriticalBranchId());
