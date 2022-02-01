@@ -8,9 +8,17 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.limiting_branch;
 
+import com.farao_community.farao.commons.Unit;
 import com.farao_community.farao.data.crac_api.RemedialAction;
 import com.farao_community.farao.data.crac_api.State;
+import com.farao_community.farao.data.crac_api.cnec.Cnec;
+import com.farao_community.farao.data.crac_api.cnec.FlowCnec;
+import com.farao_community.farao.data.crac_api.network_action.NetworkAction;
+import com.farao_community.farao.data.crac_api.range_action.RangeAction;
+import com.farao_community.farao.data.rao_result_api.OptimizationState;
+import com.farao_community.farao.data.rao_result_api.RaoResult;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -27,15 +35,15 @@ public class LimitingBranchResult {
     private final String criticalBranchId;
     private final State state;
 
-    public LimitingBranchResult(String verticeID, Double ramBefore, Double ramAfter, Double flowBefore, Double flowAfter, Set<RemedialAction<?>> remedialActions, String criticalBranchId, State state) {
+    public LimitingBranchResult(String verticeID, String criticalBranchId, RaoResult raoResult, FlowCnec cnec) {
         this.verticeID = verticeID;
-        this.ramBefore = ramBefore;
-        this.ramAfter = ramAfter;
-        this.flowBefore = flowBefore;
-        this.flowAfter = flowAfter;
-        this.remedialActions = remedialActions;
+        this.ramBefore = raoResult.getMargin(OptimizationState.INITIAL, cnec, Unit.MEGAWATT);
+        this.ramAfter = raoResult.getMargin(OptimizationState.afterOptimizing(cnec.getState()), cnec, Unit.MEGAWATT);
+        this.flowBefore = raoResult.getFlow(OptimizationState.INITIAL, cnec, Unit.MEGAWATT);
+        this.flowAfter = raoResult.getFlow(OptimizationState.afterOptimizing(cnec.getState()), cnec, Unit.MEGAWATT);
+        this.remedialActions = getRemedialActions(raoResult, cnec);
         this.criticalBranchId = criticalBranchId;
-        this.state = state;
+        this.state = cnec.getState();
     }
 
     public String getVerticeID() {
@@ -68,5 +76,14 @@ public class LimitingBranchResult {
 
     public State getState() {
         return state;
+    }
+
+    private Set<RemedialAction<?>> getRemedialActions(RaoResult raoResult, Cnec cnec) {
+        Set<NetworkAction> networkActions = raoResult.getActivatedNetworkActionsDuringState(cnec.getState());
+        Set<RangeAction<?>> rangeActions = raoResult.getActivatedRangeActionsDuringState(cnec.getState());
+        Set<RemedialAction<?>> remedialActionsActivated = new HashSet<>();
+        remedialActionsActivated.addAll(networkActions);
+        remedialActionsActivated.addAll(rangeActions);
+        return remedialActionsActivated;
     }
 }

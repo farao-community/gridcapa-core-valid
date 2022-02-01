@@ -43,14 +43,14 @@ class LimitingBranchResultTest {
         List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(new StudyPoint(1, "id", null), crac, getClass().getResource(raoDirectory + "/raoResult.json").toExternalForm());
 
         assertEquals(6, limitingBranchResults.size());
-        assertEquals("BE_CBCO_000003", limitingBranchResults.get(0).getCriticalBranchId());
-        assertEquals("BE_CO_00001 - curative", limitingBranchResults.get(0).getState().getId());
-        assertEquals(0, limitingBranchResults.get(0).getRemedialActions().size());
-        assertEquals("id", limitingBranchResults.get(0).getVerticeID());
-        assertEquals(-1564, Math.floor(limitingBranchResults.get(0).getRamAfter()));
-        assertEquals(-1564, Math.floor(limitingBranchResults.get(0).getRamBefore()));
-        assertEquals(1939, Math.floor(limitingBranchResults.get(0).getFlowAfter()));
-        assertEquals(1939, Math.floor(limitingBranchResults.get(0).getFlowBefore()));
+        assertEquals("BE_CBCO_000003", limitingBranchResults.get(4).getCriticalBranchId());
+        assertEquals("BE_CO_00001 - curative", limitingBranchResults.get(4).getState().getId());
+        assertEquals(0, limitingBranchResults.get(4).getRemedialActions().size());
+        assertEquals("id", limitingBranchResults.get(4).getVerticeID());
+        assertEquals(-1564, Math.floor(limitingBranchResults.get(4).getRamAfter()));
+        assertEquals(-1564, Math.floor(limitingBranchResults.get(4).getRamBefore()));
+        assertEquals(1939, Math.floor(limitingBranchResults.get(4).getFlowAfter()));
+        assertEquals(1939, Math.floor(limitingBranchResults.get(4).getFlowBefore()));
     }
 
 }
