@@ -29,8 +29,6 @@ import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.commons.datasource.MemDataSource;
 import com.powsybl.iidm.network.Network;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
