@@ -37,7 +37,6 @@ import java.util.List;
 public class FileImporter {
     private final UrlValidationService urlValidationService;
     private static final Logger LOGGER = LoggerFactory.getLogger(FileImporter.class);
-    private static final String FLOW_BASED_CRAC_PROVIDER = "FlowBasedConstraintDocument";
 
     public FileImporter(UrlValidationService urlValidationService) {
         this.urlValidationService = urlValidationService;
@@ -78,8 +77,7 @@ public class FileImporter {
         CracCreationParameters cracCreationParameters = new CracCreationParameters();
         try (InputStream cracInputStream = urlValidationService.openUrlStream(cbcoraUrl)) {
             FbConstraint nativeCrac = new FbConstraintImporter().importNativeCrac(cracInputStream);
-            FbConstraintCreationContext creationContext = new FbConstraintCracCreator().createCrac(nativeCrac, network, targetProcessDateTime, cracCreationParameters);
-            return creationContext;
+            return new FbConstraintCracCreator().createCrac(nativeCrac, network, targetProcessDateTime, cracCreationParameters);
         } catch (Exception e) {
             throw new CoreValidInvalidDataException(String.format("Cannot download cbcora file from URL '%s'", cbcoraUrl), e);
         }
