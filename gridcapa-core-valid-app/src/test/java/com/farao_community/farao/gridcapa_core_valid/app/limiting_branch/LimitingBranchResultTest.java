@@ -46,7 +46,7 @@ class LimitingBranchResultTest {
         assertEquals("BE_CBCO_000003", limitingBranchResults.get(4).getCriticalBranchId());
         assertEquals("BE_CO_00001 - curative", limitingBranchResults.get(4).getState().getId());
         assertEquals(0, limitingBranchResults.get(4).getRemedialActions().size());
-        assertEquals("id", limitingBranchResults.get(4).getVerticeID());
+        assertEquals("id", limitingBranchResults.get(4).getVerticeId());
         assertEquals(-1564, Math.floor(limitingBranchResults.get(4).getRamAfter()));
         assertEquals(-1564, Math.floor(limitingBranchResults.get(4).getRamBefore()));
         assertEquals(1939, Math.floor(limitingBranchResults.get(4).getFlowAfter()));

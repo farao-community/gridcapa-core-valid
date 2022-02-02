@@ -65,14 +65,14 @@ public class StudyPointService {
     }
 
     public StudyPointResult computeStudyPoint(StudyPoint studyPoint, StudyPointData studyPointData) {
-        LOGGER.info("Running computation for study point {} ", studyPoint.getId());
+        LOGGER.info("Running computation for study point {} ", studyPoint.getVerticeId());
         Network network = studyPointData.getNetwork();
         ZonalData<Scalable> scalableZonalData = studyPointData.getScalableZonalData();
         Map<String, Double> coreNetPositions = studyPointData.getCoreNetPositions();
         String jsonCracUrl = studyPointData.getJsonCracUrl();
-        StudyPointResult result = new StudyPointResult(studyPoint.getId());
+        StudyPointResult result = new StudyPointResult(studyPoint.getVerticeId());
         String initialVariant = network.getVariantManager().getWorkingVariantId();
-        String newVariant = initialVariant + "_" + studyPoint.getId();
+        String newVariant = initialVariant + "_" + studyPoint.getVerticeId();
         network.getVariantManager().cloneVariant(initialVariant, newVariant);
         network.getVariantManager().setWorkingVariant(newVariant);
         try {
@@ -81,17 +81,17 @@ public class StudyPointService {
             resetInitialPminPmax(network, scalableZonalData, initGenerators);
             String shiftedCgmUrl = saveShiftedCgm(network, studyPoint);
             result.setShiftedCgmUrl(shiftedCgmUrl);
-            String raoRequestId = String.format("%s-%s", network.getNameOrId(), studyPoint.getId());
-            LOGGER.info("Running RAO for studypoint {} ...", studyPoint.getId());
+            String raoRequestId = String.format("%s-%s", network.getNameOrId(), studyPoint.getVerticeId());
+            LOGGER.info("Running RAO for studypoint {} ...", studyPoint.getVerticeId());
             RaoResponse raoResponse = startRao(raoRequestId, shiftedCgmUrl, jsonCracUrl, saveRaoParametersAndGetUrl());
-            LOGGER.info("End of RAO computation for studypoint {} .", studyPoint.getId());
+            LOGGER.info("End of RAO computation for studypoint {} .", studyPoint.getVerticeId());
             List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(studyPoint, studyPointData.getFbConstraintCreationContext(), raoResponse.getRaoResultFileUrl());
             setSuccessResult(studyPoint, result, raoResponse, limitingBranchResults);
         } catch (CoreValidRaoException e) {
-            LOGGER.error("Error during RAO {}", studyPoint.getId(), e);
+            LOGGER.error("Error during RAO {}", studyPoint.getVerticeId(), e);
             result.setStatus(StudyPointResult.Status.ERROR);
         } catch (Exception e) {
-            LOGGER.error("Error during study point {} computation", studyPoint.getId(), e);
+            LOGGER.error("Error during study point {} computation", studyPoint.getVerticeId(), e);
             result.setStatus(StudyPointResult.Status.ERROR);
         } finally {
             network.getVariantManager().setWorkingVariant(initialVariant);
@@ -110,7 +110,7 @@ public class StudyPointService {
     }
 
     private String saveShiftedCgm(Network network, StudyPoint studyPoint) {
-        String fileName = network.getNameOrId() + "_" + studyPoint.getId() + ".xiidm";
+        String fileName = network.getNameOrId() + "_" + studyPoint.getVerticeId() + ".xiidm";
         String networkPath = String.format(ARTIFACTS_S, fileName);
         MemDataSource memDataSource = new MemDataSource();
         NetworkHandler.removeAlegroVirtualGeneratorsFromNetwork(network);
