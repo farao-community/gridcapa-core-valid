@@ -14,12 +14,12 @@ import java.util.Map;
  */
 public class StudyPoint {
     private int period;
-    private String id;
+    private String verticeId;
     private Map<String, Double> positions;
 
-    public StudyPoint(int period, String id, Map<String, Double> positions) {
+    public StudyPoint(int period, String verticeId, Map<String, Double> positions) {
         this.period = period;
-        this.id = id;
+        this.verticeId = verticeId;
         this.positions = positions;
     }
 
@@ -27,8 +27,8 @@ public class StudyPoint {
         return period;
     }
 
-    public String getId() {
-        return id;
+    public String getVerticeId() {
+        return verticeId;
     }
 
     public Map<String, Double> getPositions() {

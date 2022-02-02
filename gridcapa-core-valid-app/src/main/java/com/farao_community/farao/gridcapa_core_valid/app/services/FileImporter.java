@@ -9,12 +9,13 @@ package com.farao_community.farao.gridcapa_core_valid.app.services;
 
 import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataException;
 import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
-import com.farao_community.farao.data.crac_api.Crac;
-import com.farao_community.farao.data.crac_creation.creator.api.CracCreators;
+import com.farao_community.farao.data.crac_creation.creator.api.parameters.CracCreationParameters;
+import com.farao_community.farao.data.crac_creation.creator.fb_constraint.FbConstraint;
+import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_creator.FbConstraintCracCreator;
+import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_creator.FbConstraintCreationContext;
+import com.farao_community.farao.data.crac_creation.creator.fb_constraint.importer.FbConstraintImporter;
 import com.farao_community.farao.data.glsk.api.GlskDocument;
 import com.farao_community.farao.data.glsk.api.io.GlskDocumentImporters;
-import com.farao_community.farao.data.native_crac_api.NativeCrac;
-import com.farao_community.farao.data.native_crac_io_api.NativeCracImporters;
 import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
 import com.farao_community.farao.data.refprog.refprog_xml_importer.RefProgImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
@@ -36,7 +37,6 @@ import java.util.List;
 public class FileImporter {
     private final UrlValidationService urlValidationService;
     private static final Logger LOGGER = LoggerFactory.getLogger(FileImporter.class);
-    private static final String FLOW_BASED_CRAC_PROVIDER = "FlowBasedConstraintDocument";
 
     public FileImporter(UrlValidationService urlValidationService) {
         this.urlValidationService = urlValidationService;
@@ -73,10 +73,11 @@ public class FileImporter {
         }
     }
 
-    public Crac importCrac(String cbcoraUrl, OffsetDateTime targetProcessDateTime, Network network) {
+    public FbConstraintCreationContext importCrac(String cbcoraUrl, OffsetDateTime targetProcessDateTime, Network network) {
+        CracCreationParameters cracCreationParameters = new CracCreationParameters();
         try (InputStream cracInputStream = urlValidationService.openUrlStream(cbcoraUrl)) {
-            NativeCrac nativeCrac = NativeCracImporters.findImporter(FLOW_BASED_CRAC_PROVIDER).importNativeCrac(cracInputStream);
-            return CracCreators.createCrac(nativeCrac, network, targetProcessDateTime).getCrac();
+            FbConstraint nativeCrac = new FbConstraintImporter().importNativeCrac(cracInputStream);
+            return new FbConstraintCracCreator().createCrac(nativeCrac, network, targetProcessDateTime, cracCreationParameters);
         } catch (Exception e) {
             throw new CoreValidInvalidDataException(String.format("Cannot download cbcora file from URL '%s'", cbcoraUrl), e);
         }

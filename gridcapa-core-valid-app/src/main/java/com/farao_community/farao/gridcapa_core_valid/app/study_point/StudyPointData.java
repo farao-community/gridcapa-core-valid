@@ -9,7 +9,7 @@
 package com.farao_community.farao.gridcapa_core_valid.app.study_point;
 
 import com.farao_community.farao.commons.ZonalData;
-import com.farao_community.farao.data.crac_api.Crac;
+import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_creator.FbConstraintCreationContext;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.iidm.network.Network;
 
@@ -23,14 +23,14 @@ public class StudyPointData {
     private Network network;
     private Map<String, Double> coreNetPositions;
     private ZonalData<Scalable> scalableZonalData;
-    private Crac crac;
+    private FbConstraintCreationContext fbConstraintCreationContext;
     private String jsonCracUrl;
 
-    public StudyPointData(Network network, Map<String, Double> coreNetPositions, ZonalData<Scalable> scalableZonalData, Crac crac, String jsonCracUrl) {
+    public StudyPointData(Network network, Map<String, Double> coreNetPositions, ZonalData<Scalable> scalableZonalData, FbConstraintCreationContext cracCreationContext, String jsonCracUrl) {
         this.network = network;
         this.coreNetPositions = coreNetPositions;
         this.scalableZonalData = scalableZonalData;
-        this.crac = crac;
+        this.fbConstraintCreationContext = cracCreationContext;
         this.jsonCracUrl = jsonCracUrl;
     }
 
@@ -46,11 +46,11 @@ public class StudyPointData {
         return scalableZonalData;
     }
 
-    public Crac getCrac() {
-        return crac;
-    }
-
     public String getJsonCracUrl() {
         return jsonCracUrl;
+    }
+
+    public FbConstraintCreationContext getFbConstraintCreationContext() {
+        return fbConstraintCreationContext;
     }
 }

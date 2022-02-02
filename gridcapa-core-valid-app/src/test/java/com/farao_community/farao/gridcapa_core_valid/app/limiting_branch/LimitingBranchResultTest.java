@@ -7,7 +7,7 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.limiting_branch;
 
-import com.farao_community.farao.data.crac_api.Crac;
+import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_creator.FbConstraintCreationContext;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.powsybl.iidm.import_.Importers;
@@ -39,18 +39,18 @@ class LimitingBranchResultTest {
     @Test
     void importRaoResultTest() {
         Network network = Importers.loadNetwork("network.uct", getClass().getResourceAsStream(raoDirectory + "/network.uct"));
-        Crac crac = fileImporter.importCrac(getClass().getResource(raoDirectory + "/crac.xml").toExternalForm(), dateTime, network);
-        List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(new StudyPoint(1, "id", null), crac, getClass().getResource(raoDirectory + "/raoResult.json").toExternalForm());
+        FbConstraintCreationContext fbConstraintCreationContext = fileImporter.importCrac(getClass().getResource(raoDirectory + "/crac.xml").toExternalForm(), dateTime, network);
+        List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(new StudyPoint(1, "id", null), fbConstraintCreationContext, getClass().getResource(raoDirectory + "/raoResult.json").toExternalForm());
 
         assertEquals(6, limitingBranchResults.size());
-        assertEquals("BE_CBCO_000003 - curative", limitingBranchResults.get(0).getCnecId());
-        assertEquals("BE_CO_00001 - curative", limitingBranchResults.get(0).getState().getId());
-        assertEquals(0, limitingBranchResults.get(0).getRemedialActions().size());
-        assertEquals("id", limitingBranchResults.get(0).getVerticeID());
-        assertEquals(-1564, Math.floor(limitingBranchResults.get(0).getRamAfter()));
-        assertEquals(-1564, Math.floor(limitingBranchResults.get(0).getRamBefore()));
-        assertEquals(1939, Math.floor(limitingBranchResults.get(0).getFlowAfter()));
-        assertEquals(1939, Math.floor(limitingBranchResults.get(0).getFlowBefore()));
+        assertEquals("BE_CBCO_000003", limitingBranchResults.get(4).getCriticalBranchId());
+        assertEquals("BE_CO_00001 - curative", limitingBranchResults.get(4).getState().getId());
+        assertEquals(0, limitingBranchResults.get(4).getRemedialActions().size());
+        assertEquals("id", limitingBranchResults.get(4).getVerticeId());
+        assertEquals(-1564, Math.floor(limitingBranchResults.get(4).getRamAfter()));
+        assertEquals(-1564, Math.floor(limitingBranchResults.get(4).getRamBefore()));
+        assertEquals(1939, Math.floor(limitingBranchResults.get(4).getFlowAfter()));
+        assertEquals(1939, Math.floor(limitingBranchResults.get(4).getFlowBefore()));
     }
 
 }
