@@ -27,6 +27,7 @@ import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointD
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointService;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
+import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
 import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.commons.datasource.MemDataSource;
@@ -75,7 +76,14 @@ public class CoreValidHandler {
                 StudyPointService studyPointService = new StudyPointService(minioAdapter, raoRunnerClient, limitingBranchResult, searchTreeRaoConfiguration);
                 StudyPointData studyPointData = fillStudyPointData(coreValidRequest);
                 studyPoints.forEach(studyPoint -> studyPointRaoRequests.put(studyPoint, studyPointService.computeStudyPointShift(studyPoint, studyPointData)));
-                studyPointRaoRequests.forEach((studyPoint, raoRequest) -> studyPointResults.add(studyPointService.computeStudyPointRao(studyPoint, studyPointData, raoRequest)));
+                studyPointRaoRequests.forEach((studyPoint, raoRequest) -> {
+                    try {
+                        RaoResponse raoResponse = studyPointService.computeStudyPointRao(studyPoint, raoRequest);
+                        studyPointResults.add(studyPointService.postTreatRaoResult(studyPoint, studyPointData, raoResponse));
+                    } catch (Exception e) {
+                        studyPoint.getStudyPointResult().setStatusToError();
+                    }
+                });
             }
             String resultFileUrl = saveProcessOutputs(studyPointResults, coreValidRequest.getTimestamp());
             Instant computationEndInstant = Instant.now();

@@ -10,6 +10,7 @@ package com.farao_community.farao.gridcapa_core_valid.app.study_point;
 import com.farao_community.farao.commons.CountryEICode;
 import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
+import com.farao_community.farao.core_valid.api.exception.CoreValidRaoException;
 import com.farao_community.farao.gridcapa_core_valid.app.CoreAreasId;
 import com.farao_community.farao.gridcapa_core_valid.app.configuration.SearchTreeRaoConfiguration;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResult;
@@ -92,17 +93,21 @@ public class StudyPointService {
         return raoRequest;
     }
 
-    public StudyPointResult computeStudyPointRao(StudyPoint studyPoint, StudyPointData studyPointData, RaoRequest raoRequest) {
+    public RaoResponse computeStudyPointRao(StudyPoint studyPoint, RaoRequest raoRequest) {
         LOGGER.info("Running RAO for studypoint {} ...", studyPoint.getVerticeId());
         try {
             RaoResponse raoResponse = raoRunnerClient.runRao(raoRequest);
             LOGGER.info("End of RAO computation for studypoint {} .", studyPoint.getVerticeId());
-            List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(studyPoint, studyPointData.getFbConstraintCreationContext(), raoResponse.getRaoResultFileUrl());
-            setSuccessResult(studyPoint, raoResponse, limitingBranchResults);
+            return raoResponse;
         } catch (Exception e) {
             LOGGER.error("Error during RAO {}", studyPoint.getVerticeId(), e);
-            studyPoint.getStudyPointResult().setStatus(StudyPointResult.Status.ERROR);
+            throw new CoreValidRaoException(e.getMessage());
         }
+    }
+
+    public StudyPointResult postTreatRaoResult(StudyPoint studyPoint, StudyPointData studyPointData, RaoResponse raoResponse) {
+        List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(studyPoint, studyPointData.getFbConstraintCreationContext(), raoResponse.getRaoResultFileUrl());
+        setSuccessResult(studyPoint, raoResponse, limitingBranchResults);
         return studyPoint.getStudyPointResult();
     }
 

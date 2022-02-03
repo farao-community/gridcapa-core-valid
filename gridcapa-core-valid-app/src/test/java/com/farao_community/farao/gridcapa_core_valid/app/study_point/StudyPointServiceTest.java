@@ -84,7 +84,8 @@ class StudyPointServiceTest {
         Mockito.when(limitingBranchResult.importRaoResult(Mockito.any(), Mockito.any(), Mockito.anyString())).thenReturn(null);
         StudyPointData studyPointData = new StudyPointData(network, coreNetPositions, scalableZonalData, null, "");
         RaoRequest raoRequest = studyPointService.computeStudyPointShift(studyPoints.get(0), studyPointData);
-        studyPointService.computeStudyPointRao(studyPoints.get(0), studyPointData, raoRequest);
+        RaoResponse raoResponse = studyPointService.computeStudyPointRao(studyPoints.get(0), raoRequest);
+        studyPointService.postTreatRaoResult(studyPoints.get(0), studyPointData, raoResponse);
         StudyPointResult result = studyPoints.get(0).getStudyPointResult();
         assertEquals("0_9", result.getId());
         assertEquals(StudyPointResult.Status.SUCCESS, result.getStatus());
@@ -97,8 +98,7 @@ class StudyPointServiceTest {
     void checkStudyPointComputationFailed() {
         scalableZonalData = null;
         StudyPointData studyPointData = new StudyPointData(network, coreNetPositions, scalableZonalData, null, "");
-        RaoRequest raoRequest = studyPointService.computeStudyPointShift(studyPoints.get(0), studyPointData);
-        studyPointService.computeStudyPointRao(studyPoints.get(0), studyPointData, raoRequest);
+        studyPointService.computeStudyPointShift(studyPoints.get(0), studyPointData);
         StudyPointResult result = studyPoints.get(0).getStudyPointResult();
         assertEquals("0_9", result.getId());
         assertEquals(StudyPointResult.Status.ERROR, result.getStatus());

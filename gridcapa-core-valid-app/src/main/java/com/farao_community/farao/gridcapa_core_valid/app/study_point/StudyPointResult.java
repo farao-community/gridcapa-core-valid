@@ -45,6 +45,10 @@ public class StudyPointResult {
         this.status = status;
     }
 
+    public void setStatusToError() {
+        setStatus(Status.ERROR);
+    }
+
     public String getShiftedCgmUrl() {
         return shiftedCgmUrl;
     }
