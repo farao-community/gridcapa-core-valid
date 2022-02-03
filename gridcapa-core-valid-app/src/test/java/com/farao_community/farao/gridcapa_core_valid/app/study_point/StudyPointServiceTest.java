@@ -14,6 +14,7 @@ import com.farao_community.farao.data.glsk.api.GlskDocument;
 import com.farao_community.farao.data.glsk.api.io.GlskDocumentImporters;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResultService;
 import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
+import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
 import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
 import com.powsybl.action.util.Scalable;
@@ -82,7 +83,9 @@ class StudyPointServiceTest {
         Mockito.when(raoRunnerClient.runRao(Mockito.any())).thenReturn(new RaoResponse("id", "instant", "praUrl", " cracUrl", "raoUrl", Instant.now(), Instant.now()));
         Mockito.when(limitingBranchResult.importRaoResult(Mockito.any(), Mockito.any(), Mockito.anyString())).thenReturn(null);
         StudyPointData studyPointData = new StudyPointData(network, coreNetPositions, scalableZonalData, null, "");
-        StudyPointResult result = studyPointService.computeStudyPoint(studyPoints.get(0), studyPointData);
+        RaoRequest raoRequest = studyPointService.computeStudyPointShift(studyPoints.get(0), studyPointData);
+        studyPointService.computeStudyPointRao(studyPoints.get(0), studyPointData, raoRequest);
+        StudyPointResult result = studyPoints.get(0).getStudyPointResult();
         assertEquals("0_9", result.getId());
         assertEquals(StudyPointResult.Status.SUCCESS, result.getStatus());
         assertEquals("http://url", result.getShiftedCgmUrl());
@@ -94,7 +97,9 @@ class StudyPointServiceTest {
     void checkStudyPointComputationFailed() {
         scalableZonalData = null;
         StudyPointData studyPointData = new StudyPointData(network, coreNetPositions, scalableZonalData, null, "");
-        StudyPointResult result = studyPointService.computeStudyPoint(studyPoints.get(0), studyPointData);
+        RaoRequest raoRequest = studyPointService.computeStudyPointShift(studyPoints.get(0), studyPointData);
+        studyPointService.computeStudyPointRao(studyPoints.get(0), studyPointData, raoRequest);
+        StudyPointResult result = studyPoints.get(0).getStudyPointResult();
         assertEquals("0_9", result.getId());
         assertEquals(StudyPointResult.Status.ERROR, result.getStatus());
         assertEquals("", result.getShiftedCgmUrl());

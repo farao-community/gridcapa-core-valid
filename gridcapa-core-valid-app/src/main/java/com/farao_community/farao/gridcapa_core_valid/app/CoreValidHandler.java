@@ -26,6 +26,7 @@ import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointData;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointService;
+import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.commons.datasource.MemDataSource;
@@ -38,6 +39,7 @@ import java.io.OutputStream;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,18 +69,13 @@ public class CoreValidHandler {
         try {
             Instant computationStartInstant = Instant.now();
             List<StudyPoint> studyPoints = fileImporter.importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
+            Map<StudyPoint, RaoRequest> studyPointRaoRequests = new HashMap<>();
             List<StudyPointResult> studyPointResults = new ArrayList<>();
             if (!studyPoints.isEmpty()) {
                 StudyPointService studyPointService = new StudyPointService(minioAdapter, raoRunnerClient, limitingBranchResult, searchTreeRaoConfiguration);
-                Network network = fileImporter.importNetwork(coreValidRequest.getCgm().getFilename(), coreValidRequest.getCgm().getUrl());
-                ReferenceProgram referenceProgram = fileImporter.importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
-                Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
-                GlskDocument glskDocument = fileImporter.importGlskFile(coreValidRequest.getGlsk());
-                ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
-                FbConstraintCreationContext cracCreationContext = fileImporter.importCrac(coreValidRequest.getCbcora().getUrl(), coreValidRequest.getTimestamp(), network);
-                String jsonCracUrl = saveCracInJsonFormat(cracCreationContext.getCrac(), coreValidRequest.getTimestamp());
-                StudyPointData studyPointData = new StudyPointData(network, coreNetPositions, scalableZonalData, cracCreationContext, jsonCracUrl);
-                studyPoints.forEach(studyPoint -> studyPointResults.add(studyPointService.computeStudyPoint(studyPoint, studyPointData)));
+                StudyPointData studyPointData = getStudyPointData(coreValidRequest);
+                studyPoints.forEach(studyPoint -> studyPointRaoRequests.put(studyPoint, studyPointService.computeStudyPointShift(studyPoint, studyPointData)));
+                studyPointRaoRequests.forEach((studyPoint, raoRequest) -> studyPointResults.add(studyPointService.computeStudyPointRao(studyPoint, studyPointData, raoRequest)));
             }
             String resultFileUrl = saveProcessOutputs(studyPointResults, coreValidRequest.getTimestamp());
             Instant computationEndInstant = Instant.now();
@@ -86,6 +83,17 @@ public class CoreValidHandler {
         } catch (Exception e) {
             throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
         }
+    }
+
+    private StudyPointData getStudyPointData(CoreValidRequest coreValidRequest) {
+        Network network = fileImporter.importNetwork(coreValidRequest.getCgm().getFilename(), coreValidRequest.getCgm().getUrl());
+        ReferenceProgram referenceProgram = fileImporter.importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
+        Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
+        GlskDocument glskDocument = fileImporter.importGlskFile(coreValidRequest.getGlsk());
+        ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
+        FbConstraintCreationContext cracCreationContext = fileImporter.importCrac(coreValidRequest.getCbcora().getUrl(), coreValidRequest.getTimestamp(), network);
+        String jsonCracUrl = saveCracInJsonFormat(cracCreationContext.getCrac(), coreValidRequest.getTimestamp());
+        return new StudyPointData(network, coreNetPositions, scalableZonalData, cracCreationContext, jsonCracUrl);
     }
 
     private String saveProcessOutputs(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp) {

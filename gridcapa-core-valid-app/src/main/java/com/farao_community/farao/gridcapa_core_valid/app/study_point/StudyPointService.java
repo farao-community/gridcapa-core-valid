@@ -10,11 +10,10 @@ package com.farao_community.farao.gridcapa_core_valid.app.study_point;
 import com.farao_community.farao.commons.CountryEICode;
 import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
-import com.farao_community.farao.core_valid.api.exception.CoreValidRaoException;
 import com.farao_community.farao.gridcapa_core_valid.app.CoreAreasId;
+import com.farao_community.farao.gridcapa_core_valid.app.configuration.SearchTreeRaoConfiguration;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResult;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResultService;
-import com.farao_community.farao.gridcapa_core_valid.app.configuration.SearchTreeRaoConfiguration;
 import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.NetPositionsHandler;
 import com.farao_community.farao.gridcapa_core_valid.app.services.NetworkHandler;
@@ -64,13 +63,13 @@ public class StudyPointService {
         this.searchTreeRaoConfiguration = searchTreeRaoConfiguration;
     }
 
-    public StudyPointResult computeStudyPoint(StudyPoint studyPoint, StudyPointData studyPointData) {
+    public RaoRequest computeStudyPointShift(StudyPoint studyPoint, StudyPointData studyPointData) {
         LOGGER.info("Running computation for study point {} ", studyPoint.getVerticeId());
         Network network = studyPointData.getNetwork();
         ZonalData<Scalable> scalableZonalData = studyPointData.getScalableZonalData();
         Map<String, Double> coreNetPositions = studyPointData.getCoreNetPositions();
         String jsonCracUrl = studyPointData.getJsonCracUrl();
-        StudyPointResult result = new StudyPointResult(studyPoint.getVerticeId());
+        RaoRequest raoRequest = null;
         String initialVariant = network.getVariantManager().getWorkingVariantId();
         String newVariant = initialVariant + "_" + studyPoint.getVerticeId();
         network.getVariantManager().cloneVariant(initialVariant, newVariant);
@@ -80,33 +79,31 @@ public class StudyPointService {
             NetPositionsHandler.shiftNetPositionToStudyPoint(network, studyPoint, scalableZonalData, coreNetPositions);
             resetInitialPminPmax(network, scalableZonalData, initGenerators);
             String shiftedCgmUrl = saveShiftedCgm(network, studyPoint);
-            result.setShiftedCgmUrl(shiftedCgmUrl);
+            studyPoint.getStudyPointResult().setShiftedCgmUrl(shiftedCgmUrl);
             String raoRequestId = String.format("%s-%s", network.getNameOrId(), studyPoint.getVerticeId());
-            LOGGER.info("Running RAO for studypoint {} ...", studyPoint.getVerticeId());
-            RaoResponse raoResponse = startRao(raoRequestId, shiftedCgmUrl, jsonCracUrl, saveRaoParametersAndGetUrl());
-            LOGGER.info("End of RAO computation for studypoint {} .", studyPoint.getVerticeId());
-            List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(studyPoint, studyPointData.getFbConstraintCreationContext(), raoResponse.getRaoResultFileUrl());
-            setSuccessResult(studyPoint, result, raoResponse, limitingBranchResults);
-        } catch (CoreValidRaoException e) {
-            LOGGER.error("Error during RAO {}", studyPoint.getVerticeId(), e);
-            result.setStatus(StudyPointResult.Status.ERROR);
+            raoRequest = new RaoRequest(raoRequestId, shiftedCgmUrl, jsonCracUrl, saveRaoParametersAndGetUrl());
         } catch (Exception e) {
             LOGGER.error("Error during study point {} computation", studyPoint.getVerticeId(), e);
-            result.setStatus(StudyPointResult.Status.ERROR);
+            studyPoint.getStudyPointResult().setStatus(StudyPointResult.Status.ERROR);
         } finally {
             network.getVariantManager().setWorkingVariant(initialVariant);
             network.getVariantManager().removeVariant(newVariant);
         }
-        return result;
+        return raoRequest;
     }
 
-    private RaoResponse startRao(String raoRequestId, String networkUrl, String cracUrl, String raoParametersUrl) throws CoreValidRaoException {
+    public StudyPointResult computeStudyPointRao(StudyPoint studyPoint, StudyPointData studyPointData, RaoRequest raoRequest) {
+        LOGGER.info("Running RAO for studypoint {} ...", studyPoint.getVerticeId());
         try {
-            RaoRequest raoRequest = new RaoRequest(raoRequestId, networkUrl, cracUrl, raoParametersUrl);
-            return raoRunnerClient.runRao(raoRequest);
+            RaoResponse raoResponse = raoRunnerClient.runRao(raoRequest);
+            LOGGER.info("End of RAO computation for studypoint {} .", studyPoint.getVerticeId());
+            List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(studyPoint, studyPointData.getFbConstraintCreationContext(), raoResponse.getRaoResultFileUrl());
+            setSuccessResult(studyPoint, raoResponse, limitingBranchResults);
         } catch (Exception e) {
-            throw new CoreValidRaoException(String.format("Error during RAO for request %s", raoRequestId), e);
+            LOGGER.error("Error during RAO {}", studyPoint.getVerticeId(), e);
+            studyPoint.getStudyPointResult().setStatus(StudyPointResult.Status.ERROR);
         }
+        return studyPoint.getStudyPointResult();
     }
 
     private String saveShiftedCgm(Network network, StudyPoint studyPoint) {
@@ -181,7 +178,8 @@ public class StudyPointService {
         return minioAdapter.generatePreSignedUrl(raoParametersDestinationPath);
     }
 
-    private void setSuccessResult(StudyPoint studyPoint, StudyPointResult result, RaoResponse raoResponse, List<LimitingBranchResult> limitingBranchResults) {
+    private void setSuccessResult(StudyPoint studyPoint, RaoResponse raoResponse, List<LimitingBranchResult> limitingBranchResults) {
+        StudyPointResult result = studyPoint.getStudyPointResult();
         result.setListLimitingBranchResult(limitingBranchResults);
         result.setStatus(StudyPointResult.Status.SUCCESS);
         result.setNetworkWithPraUrl(raoResponse.getNetworkWithPraFileUrl());
