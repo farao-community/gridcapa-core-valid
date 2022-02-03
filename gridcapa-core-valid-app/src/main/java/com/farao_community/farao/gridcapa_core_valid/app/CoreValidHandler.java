@@ -73,7 +73,7 @@ public class CoreValidHandler {
             List<StudyPointResult> studyPointResults = new ArrayList<>();
             if (!studyPoints.isEmpty()) {
                 StudyPointService studyPointService = new StudyPointService(minioAdapter, raoRunnerClient, limitingBranchResult, searchTreeRaoConfiguration);
-                StudyPointData studyPointData = getStudyPointData(coreValidRequest);
+                StudyPointData studyPointData = fillStudyPointData(coreValidRequest);
                 studyPoints.forEach(studyPoint -> studyPointRaoRequests.put(studyPoint, studyPointService.computeStudyPointShift(studyPoint, studyPointData)));
                 studyPointRaoRequests.forEach((studyPoint, raoRequest) -> studyPointResults.add(studyPointService.computeStudyPointRao(studyPoint, studyPointData, raoRequest)));
             }
@@ -85,7 +85,7 @@ public class CoreValidHandler {
         }
     }
 
-    private StudyPointData getStudyPointData(CoreValidRequest coreValidRequest) {
+    private StudyPointData fillStudyPointData(CoreValidRequest coreValidRequest) {
         Network network = fileImporter.importNetwork(coreValidRequest.getCgm().getFilename(), coreValidRequest.getCgm().getUrl());
         ReferenceProgram referenceProgram = fileImporter.importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
         Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
