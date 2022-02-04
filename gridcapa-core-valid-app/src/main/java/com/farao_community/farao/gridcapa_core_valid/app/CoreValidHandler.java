@@ -16,8 +16,6 @@ import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_c
 import com.farao_community.farao.data.crac_io_api.CracExporters;
 import com.farao_community.farao.data.glsk.api.GlskDocument;
 import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
-import com.farao_community.farao.gridcapa_core_valid.app.configuration.SearchTreeRaoConfiguration;
-import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResultService;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
@@ -28,7 +26,6 @@ import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointR
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointService;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
-import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.commons.datasource.MemDataSource;
 import com.powsybl.iidm.network.Network;
@@ -50,20 +47,17 @@ import java.util.Map;
 @Component
 public class CoreValidHandler {
     private final MinioAdapter minioAdapter;
-    private final RaoRunnerClient raoRunnerClient;
+    private final StudyPointService studyPointService;
     private final FileImporter fileImporter;
     private final FileExporter fileExporter;
-    private final LimitingBranchResultService limitingBranchResult;
-    public static final String ARTIFACTS_S = "artifacts/%s";
-    private final SearchTreeRaoConfiguration searchTreeRaoConfiguration;
 
-    public CoreValidHandler(MinioAdapter minioAdapter, RaoRunnerClient raoRunnerClient, FileImporter fileImporter, FileExporter fileExporter, LimitingBranchResultService limitingBranchResult, SearchTreeRaoConfiguration searchTreeRaoConfiguration) {
+    public static final String ARTIFACTS_S = "artifacts/%s";
+
+    public CoreValidHandler(MinioAdapter minioAdapter, StudyPointService studyPointService, FileImporter fileImporter, FileExporter fileExporter) {
         this.minioAdapter = minioAdapter;
-        this.raoRunnerClient = raoRunnerClient;
+        this.studyPointService = studyPointService;
         this.fileImporter = fileImporter;
         this.fileExporter = fileExporter;
-        this.limitingBranchResult = limitingBranchResult;
-        this.searchTreeRaoConfiguration = searchTreeRaoConfiguration;
     }
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
@@ -73,7 +67,6 @@ public class CoreValidHandler {
             Map<StudyPoint, RaoRequest> studyPointRaoRequests = new HashMap<>();
             List<StudyPointResult> studyPointResults = new ArrayList<>();
             if (!studyPoints.isEmpty()) {
-                StudyPointService studyPointService = new StudyPointService(minioAdapter, raoRunnerClient, limitingBranchResult, searchTreeRaoConfiguration);
                 StudyPointData studyPointData = fillStudyPointData(coreValidRequest);
                 studyPoints.forEach(studyPoint -> studyPointRaoRequests.put(studyPoint, studyPointService.computeStudyPointShift(studyPoint, studyPointData)));
                 studyPointRaoRequests.forEach((studyPoint, raoRequest) -> {
