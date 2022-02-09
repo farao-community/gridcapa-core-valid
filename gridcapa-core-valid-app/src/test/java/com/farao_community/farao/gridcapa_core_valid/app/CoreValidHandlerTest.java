@@ -24,6 +24,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.net.URL;
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -52,7 +53,10 @@ class CoreValidHandlerTest {
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("http://url");
         RaoRequest raoRequest = Mockito.mock(RaoRequest.class);
         Mockito.when(studyPointService.computeStudyPointShift(Mockito.any(), Mockito.any())).thenReturn(raoRequest);
-        Mockito.when(studyPointService.computeStudyPointRao(Mockito.any(), Mockito.any())).thenReturn(new RaoResponse("id", "instant", "praUrl", "cracUrl", "raoUrl", Instant.now(), Instant.now()));
+        CompletableFuture<RaoResponse> future = new CompletableFuture<>();
+        RaoResponse raoResponse = new RaoResponse("id", "instant", "praUrl", "cracUrl", "raoUrl", Instant.now(), Instant.now());
+        Mockito.when(studyPointService.computeStudyPointRao(Mockito.any(), Mockito.any())).thenReturn(future);
+        future.complete(raoResponse);
         Mockito.when(fileExporter.exportStudyPointResult(Mockito.any(), Mockito.any())).thenReturn("");
         String requestId = "Test request";
         String networkFileName = "20210723_0030_2D5_CGM_limits.uct";

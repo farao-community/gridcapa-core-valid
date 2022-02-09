@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -70,12 +71,18 @@ public class CoreValidHandler {
                 StudyPointData studyPointData = fillStudyPointData(coreValidRequest);
                 studyPoints.forEach(studyPoint -> studyPointRaoRequests.put(studyPoint, studyPointService.computeStudyPointShift(studyPoint, studyPointData)));
                 studyPointRaoRequests.forEach((studyPoint, raoRequest) -> {
-                    try {
-                        RaoResponse raoResponse = studyPointService.computeStudyPointRao(studyPoint, raoRequest);
-                        studyPointResults.add(studyPointService.postTreatRaoResult(studyPoint, studyPointData, raoResponse));
-                    } catch (Exception e) {
-                        studyPoint.getStudyPointResult().setStatusToError();
+                    CompletableFuture<RaoResponse> raoResponse = studyPointService.computeStudyPointRao(studyPoint, raoRequest);
+                    raoResponse.thenApply(raoResponse1 -> {
+                        synchronized (this) {
+                            studyPointResults.add(studyPointService.postTreatRaoResult(studyPoint, studyPointData, raoResponse1));
+                        }
+                        return null;
                     }
+                    )
+                            .exceptionally(exception -> {
+                                studyPoint.getStudyPointResult().setStatusToError();
+                                return null;
+                            });
                 });
             }
             String resultFileUrl = saveProcessOutputs(studyPointResults, coreValidRequest.getTimestamp());

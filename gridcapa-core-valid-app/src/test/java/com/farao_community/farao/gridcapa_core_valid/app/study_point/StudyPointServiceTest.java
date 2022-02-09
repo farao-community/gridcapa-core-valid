@@ -16,7 +16,7 @@ import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.Limitin
 import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
-import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
+import com.farao_community.farao.rao_runner.starter.AsynchronousRaoRunnerClient;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
@@ -33,6 +33,7 @@ import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -49,7 +50,7 @@ class StudyPointServiceTest {
     private LimitingBranchResultService limitingBranchResult;
 
     @MockBean
-    private RaoRunnerClient raoRunnerClient;
+    private AsynchronousRaoRunnerClient asynchronousRaoRunnerClient;
 
     @Autowired StudyPointService studyPointService;
 
@@ -80,11 +81,14 @@ class StudyPointServiceTest {
     @Test
     void checkStudyPointComputationSucceed() {
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("http://url");
-        Mockito.when(raoRunnerClient.runRao(Mockito.any())).thenReturn(new RaoResponse("id", "instant", "praUrl", " cracUrl", "raoUrl", Instant.now(), Instant.now()));
+        CompletableFuture<RaoResponse> future = new CompletableFuture<>();
+        Mockito.when(asynchronousRaoRunnerClient.runRaoAsynchronously(Mockito.any())).thenReturn(future);
         Mockito.when(limitingBranchResult.importRaoResult(Mockito.any(), Mockito.any(), Mockito.anyString())).thenReturn(null);
         StudyPointData studyPointData = new StudyPointData(network, coreNetPositions, scalableZonalData, null, "");
         RaoRequest raoRequest = studyPointService.computeStudyPointShift(studyPoints.get(0), studyPointData);
-        RaoResponse raoResponse = studyPointService.computeStudyPointRao(studyPoints.get(0), raoRequest);
+        CompletableFuture<RaoResponse> raoResponseCompletableFuture = studyPointService.computeStudyPointRao(studyPoints.get(0), raoRequest);
+        RaoResponse raoResponse = new RaoResponse("id", "instant", "praUrl", " cracUrl", "raoUrl", Instant.now(), Instant.now());
+        raoResponseCompletableFuture.complete(raoResponse);
         studyPointService.postTreatRaoResult(studyPoints.get(0), studyPointData, raoResponse);
         StudyPointResult result = studyPoints.get(0).getStudyPointResult();
         assertEquals("0_9", result.getId());

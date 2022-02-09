@@ -22,7 +22,7 @@ import com.farao_community.farao.rao_api.json.JsonRaoParameters;
 import com.farao_community.farao.rao_api.parameters.RaoParameters;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
-import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
+import com.farao_community.farao.rao_runner.starter.AsynchronousRaoRunnerClient;
 import com.farao_community.farao.search_tree_rao.SearchTreeRaoParameters;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.commons.datasource.MemDataSource;
@@ -39,6 +39,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
@@ -53,13 +54,13 @@ public class StudyPointService {
     private static final double DEFAULT_PMIN = -9999.0;
     public static final String ARTIFACTS_S = "artifacts/%s";
     private final MinioAdapter minioAdapter;
-    private final RaoRunnerClient raoRunnerClient;
+    private final AsynchronousRaoRunnerClient asynchronousRaoRunnerClient;
     private final LimitingBranchResultService limitingBranchResultService;
     private final SearchTreeRaoConfiguration searchTreeRaoConfiguration;
 
-    public StudyPointService(MinioAdapter minioAdapter, RaoRunnerClient raoRunnerClient, LimitingBranchResultService limitingBranchResultService, SearchTreeRaoConfiguration searchTreeRaoConfiguration) {
+    public StudyPointService(MinioAdapter minioAdapter, AsynchronousRaoRunnerClient asynchronousRaoRunnerClient, LimitingBranchResultService limitingBranchResultService, SearchTreeRaoConfiguration searchTreeRaoConfiguration) {
         this.minioAdapter = minioAdapter;
-        this.raoRunnerClient = raoRunnerClient;
+        this.asynchronousRaoRunnerClient = asynchronousRaoRunnerClient;
         this.limitingBranchResultService = limitingBranchResultService;
         this.searchTreeRaoConfiguration = searchTreeRaoConfiguration;
     }
@@ -93,10 +94,10 @@ public class StudyPointService {
         return raoRequest;
     }
 
-    public RaoResponse computeStudyPointRao(StudyPoint studyPoint, RaoRequest raoRequest) {
+    public CompletableFuture<RaoResponse> computeStudyPointRao(StudyPoint studyPoint, RaoRequest raoRequest) {
         LOGGER.info("Running RAO for studypoint {} ...", studyPoint.getVerticeId());
         try {
-            RaoResponse raoResponse = raoRunnerClient.runRao(raoRequest);
+            CompletableFuture<RaoResponse> raoResponse = asynchronousRaoRunnerClient.runRaoAsynchronously(raoRequest);
             LOGGER.info("End of RAO computation for studypoint {} .", studyPoint.getVerticeId());
             return raoResponse;
         } catch (Exception e) {

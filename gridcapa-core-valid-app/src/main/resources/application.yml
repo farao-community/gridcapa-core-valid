@@ -20,6 +20,7 @@ rao-runner-server:
     queue-name: ${RAO_ADAPTER_SERVER_QUEUE_NAME:rao-request-queue}
 
 core-valid-runner:
+  async-time-out: 600000 # 10min (10*60*1000)
   bindings:
     request:
       destination: core-valid-requests
