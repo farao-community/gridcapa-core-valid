@@ -97,9 +97,7 @@ public class StudyPointService {
     public CompletableFuture<RaoResponse> computeStudyPointRao(StudyPoint studyPoint, RaoRequest raoRequest) {
         LOGGER.info("Running RAO for studypoint {} ...", studyPoint.getVerticeId());
         try {
-            CompletableFuture<RaoResponse> raoResponse = asynchronousRaoRunnerClient.runRaoAsynchronously(raoRequest);
-            LOGGER.info("End of RAO computation for studypoint {} .", studyPoint.getVerticeId());
-            return raoResponse;
+            return asynchronousRaoRunnerClient.runRaoAsynchronously(raoRequest);
         } catch (Exception e) {
             LOGGER.error("Error during RAO {}", studyPoint.getVerticeId(), e);
             throw new CoreValidRaoException(e.getMessage());

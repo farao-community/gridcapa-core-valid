@@ -9,6 +9,7 @@ package com.farao_community.farao.gridcapa_core_valid.app;
 
 import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
+import com.farao_community.farao.core_valid.api.exception.CoreValidRaoException;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
 import com.farao_community.farao.data.crac_api.Crac;
@@ -29,6 +30,8 @@ import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.commons.datasource.MemDataSource;
 import com.powsybl.iidm.network.Network;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -47,6 +50,7 @@ import java.util.concurrent.CompletableFuture;
  */
 @Component
 public class CoreValidHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoreValidHandler.class);
     private final MinioAdapter minioAdapter;
     private final StudyPointService studyPointService;
     private final FileImporter fileImporter;
@@ -63,6 +67,7 @@ public class CoreValidHandler {
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
         try {
+            Map<StudyPoint, CompletableFuture<RaoResponse>> studyPointCompletableFutures = new HashMap<>();
             Instant computationStartInstant = Instant.now();
             List<StudyPoint> studyPoints = fileImporter.importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
             Map<StudyPoint, RaoRequest> studyPointRaoRequests = new HashMap<>();
@@ -72,21 +77,26 @@ public class CoreValidHandler {
                 studyPoints.forEach(studyPoint -> studyPointRaoRequests.put(studyPoint, studyPointService.computeStudyPointShift(studyPoint, studyPointData)));
                 studyPointRaoRequests.forEach((studyPoint, raoRequest) -> {
                     CompletableFuture<RaoResponse> raoResponse = studyPointService.computeStudyPointRao(studyPoint, raoRequest);
+                    studyPointCompletableFutures.put(studyPoint, raoResponse);
                     raoResponse.thenApply(raoResponse1 -> {
-                        synchronized (this) {
-                            studyPointResults.add(studyPointService.postTreatRaoResult(studyPoint, studyPointData, raoResponse1));
-                        }
+                        LOGGER.info("End of RAO computation for studypoint {} .", studyPoint.getVerticeId());
                         return null;
                     }
                     )
                             .exceptionally(exception -> {
                                 studyPoint.getStudyPointResult().setStatusToError();
-                                return null;
+                                throw new CoreValidRaoException(String.format("Error during RAO computation for studypoint %s .", studyPoint.getVerticeId()));
                             });
                 });
+                CompletableFuture.allOf(studyPointCompletableFutures.values().toArray(new CompletableFuture[0])).get();
+                for (Map.Entry<StudyPoint, CompletableFuture<RaoResponse>> entry : studyPointCompletableFutures.entrySet()) {
+                    StudyPoint studyPoint = entry.getKey();
+                    RaoResponse raoResponse = entry.getValue().get();
+                    studyPointResults.add(studyPointService.postTreatRaoResult(studyPoint, studyPointData, raoResponse));
+                }
             }
-            String resultFileUrl = saveProcessOutputs(studyPointResults, coreValidRequest.getTimestamp());
             Instant computationEndInstant = Instant.now();
+            String resultFileUrl = saveProcessOutputs(studyPointResults, coreValidRequest.getTimestamp());
             return new CoreValidResponse(coreValidRequest.getId(), resultFileUrl, computationStartInstant, computationEndInstant);
         } catch (Exception e) {
             throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
