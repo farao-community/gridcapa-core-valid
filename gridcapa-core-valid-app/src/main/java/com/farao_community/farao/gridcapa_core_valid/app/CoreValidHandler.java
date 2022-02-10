@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -98,7 +99,10 @@ public class CoreValidHandler {
             Instant computationEndInstant = Instant.now();
             String resultFileUrl = saveProcessOutputs(studyPointResults, coreValidRequest.getTimestamp());
             return new CoreValidResponse(coreValidRequest.getId(), resultFileUrl, computationStartInstant, computationEndInstant);
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
+        } catch (ExecutionException e) {
             throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
         }
     }
