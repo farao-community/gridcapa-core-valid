@@ -22,6 +22,7 @@ import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -107,5 +108,21 @@ class StudyPointServiceTest {
         assertEquals("0_9", result.getId());
         assertEquals(StudyPointResult.Status.ERROR, result.getStatus());
         assertEquals("", result.getShiftedCgmUrl());
+    }
+
+    @Test
+    void exceptionCaughtWhenRaoFails() {
+        String exceptionMessage = "exceptionMessage";
+        Mockito.when(asynchronousRaoRunnerClient.runRaoAsynchronously(Mockito.any())).thenThrow(new RuntimeException(exceptionMessage));
+        StudyPoint studyPoint = Mockito.mock(StudyPoint.class);
+        String verticeId = "verticeId";
+        Mockito.when(studyPoint.getVerticeId()).thenReturn(verticeId);
+        RaoRequest raoRequest = Mockito.mock(RaoRequest.class);
+        try {
+            studyPointService.computeStudyPointRao(studyPoint, raoRequest);
+            fail();
+        } catch (Exception e) {
+            assertEquals(exceptionMessage, e.getMessage());
+        }
     }
 }
