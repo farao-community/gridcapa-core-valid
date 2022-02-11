@@ -14,8 +14,9 @@ import com.farao_community.farao.data.glsk.api.GlskDocument;
 import com.farao_community.farao.data.glsk.api.io.GlskDocumentImporters;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResultService;
 import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
+import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
-import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
+import com.farao_community.farao.rao_runner.starter.AsynchronousRaoRunnerClient;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
@@ -32,8 +33,10 @@ import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -48,7 +51,7 @@ class StudyPointServiceTest {
     private LimitingBranchResultService limitingBranchResult;
 
     @MockBean
-    private RaoRunnerClient raoRunnerClient;
+    private AsynchronousRaoRunnerClient asynchronousRaoRunnerClient;
 
     @Autowired StudyPointService studyPointService;
 
@@ -79,10 +82,16 @@ class StudyPointServiceTest {
     @Test
     void checkStudyPointComputationSucceed() {
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("http://url");
-        Mockito.when(raoRunnerClient.runRao(Mockito.any())).thenReturn(new RaoResponse("id", "instant", "praUrl", " cracUrl", "raoUrl", Instant.now(), Instant.now()));
+        CompletableFuture<RaoResponse> future = new CompletableFuture<>();
+        Mockito.when(asynchronousRaoRunnerClient.runRaoAsynchronously(Mockito.any())).thenReturn(future);
         Mockito.when(limitingBranchResult.importRaoResult(Mockito.any(), Mockito.any(), Mockito.anyString())).thenReturn(null);
         StudyPointData studyPointData = new StudyPointData(network, coreNetPositions, scalableZonalData, null, "");
-        StudyPointResult result = studyPointService.computeStudyPoint(studyPoints.get(0), studyPointData);
+        RaoRequest raoRequest = studyPointService.computeStudyPointShift(studyPoints.get(0), studyPointData);
+        CompletableFuture<RaoResponse> raoResponseCompletableFuture = studyPointService.computeStudyPointRao(studyPoints.get(0), raoRequest);
+        RaoResponse raoResponse = new RaoResponse("id", "instant", "praUrl", " cracUrl", "raoUrl", Instant.now(), Instant.now());
+        raoResponseCompletableFuture.complete(raoResponse);
+        studyPointService.postTreatRaoResult(studyPoints.get(0), studyPointData, raoResponse);
+        StudyPointResult result = studyPoints.get(0).getStudyPointResult();
         assertEquals("0_9", result.getId());
         assertEquals(StudyPointResult.Status.SUCCESS, result.getStatus());
         assertEquals("http://url", result.getShiftedCgmUrl());
@@ -94,9 +103,26 @@ class StudyPointServiceTest {
     void checkStudyPointComputationFailed() {
         scalableZonalData = null;
         StudyPointData studyPointData = new StudyPointData(network, coreNetPositions, scalableZonalData, null, "");
-        StudyPointResult result = studyPointService.computeStudyPoint(studyPoints.get(0), studyPointData);
+        studyPointService.computeStudyPointShift(studyPoints.get(0), studyPointData);
+        StudyPointResult result = studyPoints.get(0).getStudyPointResult();
         assertEquals("0_9", result.getId());
         assertEquals(StudyPointResult.Status.ERROR, result.getStatus());
         assertEquals("", result.getShiftedCgmUrl());
+    }
+
+    @Test
+    void exceptionCaughtWhenRaoFails() {
+        String exceptionMessage = "exceptionMessage";
+        Mockito.when(asynchronousRaoRunnerClient.runRaoAsynchronously(Mockito.any())).thenThrow(new RuntimeException(exceptionMessage));
+        StudyPoint studyPoint = Mockito.mock(StudyPoint.class);
+        String verticeId = "verticeId";
+        Mockito.when(studyPoint.getVerticeId()).thenReturn(verticeId);
+        RaoRequest raoRequest = Mockito.mock(RaoRequest.class);
+        try {
+            studyPointService.computeStudyPointRao(studyPoint, raoRequest);
+            fail();
+        } catch (Exception e) {
+            assertEquals(exceptionMessage, e.getMessage());
+        }
     }
 }

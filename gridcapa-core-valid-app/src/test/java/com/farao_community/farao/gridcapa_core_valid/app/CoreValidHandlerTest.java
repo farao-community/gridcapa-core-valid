@@ -10,9 +10,11 @@ package com.farao_community.farao.gridcapa_core_valid.app;
 import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
+import com.farao_community.farao.gridcapa_core_valid.app.services.FileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
+import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointService;
+import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
-import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.net.URL;
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -38,14 +41,23 @@ class CoreValidHandlerTest {
     private MinioAdapter minioAdapter;
 
     @MockBean
-    private RaoRunnerClient raoRunnerClient;
+    private StudyPointService studyPointService;
+
+    @MockBean
+    private FileExporter fileExporter;
 
     private final String testDirectory = "/20210723";
 
     @Test
     void handleCoreValidRequestTest() {
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("http://url");
-        Mockito.when(raoRunnerClient.runRao(Mockito.any())).thenReturn(new RaoResponse("id", "instant", "praUrl", "cracUrl", "raoUrl", Instant.now(), Instant.now()));
+        RaoRequest raoRequest = Mockito.mock(RaoRequest.class);
+        Mockito.when(studyPointService.computeStudyPointShift(Mockito.any(), Mockito.any())).thenReturn(raoRequest);
+        CompletableFuture<RaoResponse> future = new CompletableFuture<>();
+        RaoResponse raoResponse = new RaoResponse("id", "instant", "praUrl", "cracUrl", "raoUrl", Instant.now(), Instant.now());
+        Mockito.when(studyPointService.computeStudyPointRao(Mockito.any(), Mockito.any())).thenReturn(future);
+        future.complete(raoResponse);
+        Mockito.when(fileExporter.exportStudyPointResult(Mockito.any(), Mockito.any())).thenReturn("");
         String requestId = "Test request";
         String networkFileName = "20210723_0030_2D5_CGM_limits.uct";
         CoreValidFileResource networkFile = createFileResource(networkFileName, getClass().getResource(testDirectory + "/" + networkFileName));

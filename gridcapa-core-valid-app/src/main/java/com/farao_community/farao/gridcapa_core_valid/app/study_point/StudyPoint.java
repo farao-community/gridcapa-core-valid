@@ -16,11 +16,13 @@ public class StudyPoint {
     private int period;
     private String verticeId;
     private Map<String, Double> positions;
+    private StudyPointResult studyPointResult;
 
     public StudyPoint(int period, String verticeId, Map<String, Double> positions) {
         this.period = period;
         this.verticeId = verticeId;
         this.positions = positions;
+        this.studyPointResult = new StudyPointResult(verticeId);
     }
 
     public int getPeriod() {
@@ -33,5 +35,9 @@ public class StudyPoint {
 
     public Map<String, Double> getPositions() {
         return positions;
+    }
+
+    public StudyPointResult getStudyPointResult() {
+        return this.studyPointResult;
     }
 }

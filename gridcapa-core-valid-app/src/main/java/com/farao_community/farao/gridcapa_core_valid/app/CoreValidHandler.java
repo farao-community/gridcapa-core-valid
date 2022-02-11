@@ -9,6 +9,7 @@ package com.farao_community.farao.gridcapa_core_valid.app;
 
 import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
+import com.farao_community.farao.core_valid.api.exception.CoreValidRaoException;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
 import com.farao_community.farao.data.crac_api.Crac;
@@ -16,8 +17,6 @@ import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_c
 import com.farao_community.farao.data.crac_io_api.CracExporters;
 import com.farao_community.farao.data.glsk.api.GlskDocument;
 import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
-import com.farao_community.farao.gridcapa_core_valid.app.configuration.SearchTreeRaoConfiguration;
-import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResultService;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
@@ -26,10 +25,13 @@ import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointData;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointService;
-import com.farao_community.farao.rao_runner.starter.RaoRunnerClient;
+import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
+import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.commons.datasource.MemDataSource;
 import com.powsybl.iidm.network.Network;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -38,54 +40,82 @@ import java.io.OutputStream;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
 @Component
 public class CoreValidHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoreValidHandler.class);
     private final MinioAdapter minioAdapter;
-    private final RaoRunnerClient raoRunnerClient;
+    private final StudyPointService studyPointService;
     private final FileImporter fileImporter;
     private final FileExporter fileExporter;
-    private final LimitingBranchResultService limitingBranchResult;
-    public static final String ARTIFACTS_S = "artifacts/%s";
-    private final SearchTreeRaoConfiguration searchTreeRaoConfiguration;
 
-    public CoreValidHandler(MinioAdapter minioAdapter, RaoRunnerClient raoRunnerClient, FileImporter fileImporter, FileExporter fileExporter, LimitingBranchResultService limitingBranchResult, SearchTreeRaoConfiguration searchTreeRaoConfiguration) {
+    public static final String ARTIFACTS_S = "artifacts/%s";
+
+    public CoreValidHandler(MinioAdapter minioAdapter, StudyPointService studyPointService, FileImporter fileImporter, FileExporter fileExporter) {
         this.minioAdapter = minioAdapter;
-        this.raoRunnerClient = raoRunnerClient;
+        this.studyPointService = studyPointService;
         this.fileImporter = fileImporter;
         this.fileExporter = fileExporter;
-        this.limitingBranchResult = limitingBranchResult;
-        this.searchTreeRaoConfiguration = searchTreeRaoConfiguration;
     }
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
         try {
+            Map<StudyPoint, CompletableFuture<RaoResponse>> studyPointCompletableFutures = new HashMap<>();
             Instant computationStartInstant = Instant.now();
             List<StudyPoint> studyPoints = fileImporter.importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
+            Map<StudyPoint, RaoRequest> studyPointRaoRequests = new HashMap<>();
             List<StudyPointResult> studyPointResults = new ArrayList<>();
             if (!studyPoints.isEmpty()) {
-                StudyPointService studyPointService = new StudyPointService(minioAdapter, raoRunnerClient, limitingBranchResult, searchTreeRaoConfiguration);
-                Network network = fileImporter.importNetwork(coreValidRequest.getCgm().getFilename(), coreValidRequest.getCgm().getUrl());
-                ReferenceProgram referenceProgram = fileImporter.importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
-                Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
-                GlskDocument glskDocument = fileImporter.importGlskFile(coreValidRequest.getGlsk());
-                ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
-                FbConstraintCreationContext cracCreationContext = fileImporter.importCrac(coreValidRequest.getCbcora().getUrl(), coreValidRequest.getTimestamp(), network);
-                String jsonCracUrl = saveCracInJsonFormat(cracCreationContext.getCrac(), coreValidRequest.getTimestamp());
-                StudyPointData studyPointData = new StudyPointData(network, coreNetPositions, scalableZonalData, cracCreationContext, jsonCracUrl);
-                studyPoints.forEach(studyPoint -> studyPointResults.add(studyPointService.computeStudyPoint(studyPoint, studyPointData)));
+                StudyPointData studyPointData = fillStudyPointData(coreValidRequest);
+                studyPoints.forEach(studyPoint -> studyPointRaoRequests.put(studyPoint, studyPointService.computeStudyPointShift(studyPoint, studyPointData)));
+                studyPointRaoRequests.forEach((studyPoint, raoRequest) -> {
+                    CompletableFuture<RaoResponse> raoResponse = studyPointService.computeStudyPointRao(studyPoint, raoRequest);
+                    studyPointCompletableFutures.put(studyPoint, raoResponse);
+                    raoResponse.thenApply(raoResponse1 -> {
+                        LOGGER.info("End of RAO computation for studypoint {} .", studyPoint.getVerticeId());
+                        return null;
+                    }
+                    )
+                            .exceptionally(exception -> {
+                                studyPoint.getStudyPointResult().setStatusToError();
+                                throw new CoreValidRaoException(String.format("Error during RAO computation for studypoint %s .", studyPoint.getVerticeId()));
+                            });
+                });
+                CompletableFuture.allOf(studyPointCompletableFutures.values().toArray(new CompletableFuture[0])).get();
+                for (Map.Entry<StudyPoint, CompletableFuture<RaoResponse>> entry : studyPointCompletableFutures.entrySet()) {
+                    StudyPoint studyPoint = entry.getKey();
+                    RaoResponse raoResponse = entry.getValue().get();
+                    studyPointResults.add(studyPointService.postTreatRaoResult(studyPoint, studyPointData, raoResponse));
+                }
             }
-            String resultFileUrl = saveProcessOutputs(studyPointResults, coreValidRequest.getTimestamp());
             Instant computationEndInstant = Instant.now();
+            String resultFileUrl = saveProcessOutputs(studyPointResults, coreValidRequest.getTimestamp());
             return new CoreValidResponse(coreValidRequest.getId(), resultFileUrl, computationStartInstant, computationEndInstant);
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
+        } catch (ExecutionException e) {
             throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
         }
+    }
+
+    private StudyPointData fillStudyPointData(CoreValidRequest coreValidRequest) {
+        Network network = fileImporter.importNetwork(coreValidRequest.getCgm().getFilename(), coreValidRequest.getCgm().getUrl());
+        ReferenceProgram referenceProgram = fileImporter.importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
+        Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
+        GlskDocument glskDocument = fileImporter.importGlskFile(coreValidRequest.getGlsk());
+        ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
+        FbConstraintCreationContext cracCreationContext = fileImporter.importCrac(coreValidRequest.getCbcora().getUrl(), coreValidRequest.getTimestamp(), network);
+        String jsonCracUrl = saveCracInJsonFormat(cracCreationContext.getCrac(), coreValidRequest.getTimestamp());
+        return new StudyPointData(network, coreNetPositions, scalableZonalData, cracCreationContext, jsonCracUrl);
     }
 
     private String saveProcessOutputs(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp) {
