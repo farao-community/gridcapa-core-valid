@@ -25,13 +25,15 @@ public class StudyPointData {
     private ZonalData<Scalable> scalableZonalData;
     private FbConstraintCreationContext fbConstraintCreationContext;
     private String jsonCracUrl;
+    private String raoParametersUrl;
 
-    public StudyPointData(Network network, Map<String, Double> coreNetPositions, ZonalData<Scalable> scalableZonalData, FbConstraintCreationContext cracCreationContext, String jsonCracUrl) {
+    public StudyPointData(Network network, Map<String, Double> coreNetPositions, ZonalData<Scalable> scalableZonalData, FbConstraintCreationContext cracCreationContext, String jsonCracUrl, String raoParametersUrl1) {
         this.network = network;
         this.coreNetPositions = coreNetPositions;
         this.scalableZonalData = scalableZonalData;
         this.fbConstraintCreationContext = cracCreationContext;
         this.jsonCracUrl = jsonCracUrl;
+        this.raoParametersUrl = raoParametersUrl1;
     }
 
     public Network getNetwork() {
@@ -52,5 +54,9 @@ public class StudyPointData {
 
     public FbConstraintCreationContext getFbConstraintCreationContext() {
         return fbConstraintCreationContext;
+    }
+
+    public String getRaoParametersUrl() {
+        return raoParametersUrl;
     }
 }
