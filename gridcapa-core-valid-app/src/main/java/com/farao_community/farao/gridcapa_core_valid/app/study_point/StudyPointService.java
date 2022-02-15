@@ -83,7 +83,8 @@ public class StudyPointService {
             String shiftedCgmUrl = saveShiftedCgm(network, studyPoint);
             studyPoint.getStudyPointResult().setShiftedCgmUrl(shiftedCgmUrl);
             String raoRequestId = String.format("%s-%s", network.getNameOrId(), studyPoint.getVerticeId());
-            raoRequest = new RaoRequest(raoRequestId, shiftedCgmUrl, jsonCracUrl, saveRaoParametersAndGetUrl());
+            String raoDirPath = String.format("%s/artifacts/RAO-%s/", minioAdapter.getBasePath(), raoRequestId);
+            raoRequest = new RaoRequest(raoRequestId, shiftedCgmUrl, jsonCracUrl, saveRaoParametersAndGetUrl(), raoDirPath);
         } catch (Exception e) {
             LOGGER.error("Error during study point {} computation", studyPoint.getVerticeId(), e);
             studyPoint.getStudyPointResult().setStatus(StudyPointResult.Status.ERROR);

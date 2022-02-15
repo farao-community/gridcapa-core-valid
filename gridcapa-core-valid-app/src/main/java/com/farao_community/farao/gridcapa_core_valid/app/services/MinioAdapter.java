@@ -38,6 +38,10 @@ public class MinioAdapter {
         this.basePath = minioConfiguration.getBasePath();
     }
 
+    public String getBasePath() {
+        return basePath;
+    }
+
     public void uploadFile(String filePath, InputStream sourceInputStream) {
         String fullPath = String.format("%s/%s", basePath, filePath);
         try {
