@@ -12,31 +12,27 @@ import com.farao_community.farao.core_valid.api.exception.CoreValidInternalExcep
 import com.farao_community.farao.core_valid.api.exception.CoreValidRaoException;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
-import com.farao_community.farao.data.crac_api.Crac;
 import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_creator.FbConstraintCreationContext;
-import com.farao_community.farao.data.crac_io_api.CracExporters;
 import com.farao_community.farao.data.glsk.api.GlskDocument;
 import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
+import com.farao_community.farao.gridcapa_core_valid.app.configuration.SearchTreeRaoConfiguration;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
-import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.NetPositionsHandler;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointData;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointService;
+import com.farao_community.farao.rao_api.parameters.RaoParameters;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
+import com.farao_community.farao.search_tree_rao.SearchTreeRaoParameters;
 import com.powsybl.action.util.Scalable;
-import com.powsybl.commons.datasource.MemDataSource;
 import com.powsybl.iidm.network.Network;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -52,18 +48,16 @@ import java.util.concurrent.ExecutionException;
 @Component
 public class CoreValidHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(CoreValidHandler.class);
-    private final MinioAdapter minioAdapter;
     private final StudyPointService studyPointService;
     private final FileImporter fileImporter;
     private final FileExporter fileExporter;
+    private final SearchTreeRaoConfiguration searchTreeRaoConfiguration;
 
-    public static final String ARTIFACTS_S = "artifacts/%s";
-
-    public CoreValidHandler(MinioAdapter minioAdapter, StudyPointService studyPointService, FileImporter fileImporter, FileExporter fileExporter) {
-        this.minioAdapter = minioAdapter;
+    public CoreValidHandler(StudyPointService studyPointService, FileImporter fileImporter, FileExporter fileExporter, SearchTreeRaoConfiguration searchTreeRaoConfiguration) {
         this.studyPointService = studyPointService;
         this.fileImporter = fileImporter;
         this.fileExporter = fileExporter;
+        this.searchTreeRaoConfiguration = searchTreeRaoConfiguration;
     }
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
@@ -114,28 +108,25 @@ public class CoreValidHandler {
         GlskDocument glskDocument = fileImporter.importGlskFile(coreValidRequest.getGlsk());
         ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
         FbConstraintCreationContext cracCreationContext = fileImporter.importCrac(coreValidRequest.getCbcora().getUrl(), coreValidRequest.getTimestamp(), network);
-        String jsonCracUrl = saveCracInJsonFormat(cracCreationContext.getCrac(), coreValidRequest.getTimestamp());
-        return new StudyPointData(network, coreNetPositions, scalableZonalData, cracCreationContext, jsonCracUrl);
+        String jsonCracUrl = fileExporter.saveCracInJsonFormat(cracCreationContext.getCrac(), coreValidRequest.getTimestamp());
+        RaoParameters raoParameters = getRaoParametersConfig();
+        String raoParametersUrl = fileExporter.saveRaoParametersAndGetUrl(raoParameters);
+        return new StudyPointData(network, coreNetPositions, scalableZonalData, cracCreationContext, jsonCracUrl, raoParametersUrl);
+    }
+
+    private RaoParameters getRaoParametersConfig() {
+        RaoParameters raoParameters = RaoParameters.load();
+        SearchTreeRaoParameters searchTreeRaoParameters = raoParameters.getExtension(SearchTreeRaoParameters.class);
+
+        searchTreeRaoParameters.setMaxCurativePstPerTso(searchTreeRaoConfiguration.getMaxCurativePstPerTso());
+        searchTreeRaoParameters.setMaxCurativeTopoPerTso(searchTreeRaoConfiguration.getMaxCurativeTopoPerTso());
+        searchTreeRaoParameters.setMaxCurativeRaPerTso(searchTreeRaoConfiguration.getMaxCurativeRaPerTso());
+
+        raoParameters.addExtension(SearchTreeRaoParameters.class, searchTreeRaoParameters);
+        return raoParameters;
     }
 
     private String saveProcessOutputs(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp) {
         return fileExporter.exportStudyPointResult(studyPointResults, timestamp);
-    }
-
-    private String saveCracInJsonFormat(Crac crac, OffsetDateTime timestamp) {
-        MemDataSource memDataSource = new MemDataSource();
-        String jsonCracFileName = String.format("crac_%s.json", timestamp.toString());
-        try (OutputStream os = memDataSource.newOutputStream(jsonCracFileName, false)) {
-            CracExporters.exportCrac(crac, "Json", os);
-        } catch (IOException e) {
-            throw new CoreValidInternalException("Error while trying to save converted CRAC file.", e);
-        }
-        String cracPath = String.format(ARTIFACTS_S, jsonCracFileName);
-        try (InputStream is = memDataSource.newInputStream(jsonCracFileName)) {
-            minioAdapter.uploadFile(cracPath, is);
-        } catch (IOException e) {
-            throw new CoreValidInternalException("Error while trying to upload converted CRAC file.", e);
-        }
-        return minioAdapter.generatePreSignedUrl(cracPath);
     }
 }
