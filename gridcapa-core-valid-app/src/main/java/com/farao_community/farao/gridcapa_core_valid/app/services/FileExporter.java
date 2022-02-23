@@ -26,10 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.time.OffsetDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @author Alexandre Montigny {@literal <alexandre.montigny at rte-france.com>}
@@ -52,7 +49,7 @@ public class FileExporter {
 
     //region Export of Results
     public Map<ResultFileExporter.ResultType, String> exportStudyPointResult(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp) {
-        Map<ResultFileExporter.ResultType, String> resultMap = new HashMap<>();
+        Map<ResultFileExporter.ResultType, String> resultMap = new EnumMap<>(ResultFileExporter.ResultType.class);
         resultMap.put(ResultFileExporter.ResultType.MAIN_RESULT, mainResultFileExporter.exportStudyPointResult(studyPointResults, timestamp));
         resultMap.put(ResultFileExporter.ResultType.REX_RESULT, rexResultFileExporter.exportStudyPointResult(studyPointResults, timestamp));
         return resultMap;
