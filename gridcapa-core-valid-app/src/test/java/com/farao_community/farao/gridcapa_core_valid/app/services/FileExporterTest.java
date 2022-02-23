@@ -9,6 +9,7 @@ package com.farao_community.farao.gridcapa_core_valid.app.services;
 
 import com.farao_community.farao.data.crac_api.Crac;
 import com.farao_community.farao.data.crac_impl.CracImpl;
+import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.ResultFileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
 import com.farao_community.farao.rao_api.parameters.RaoParameters;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +44,8 @@ class FileExporterTest {
     void exportStudyPointResultTest() {
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("resultUrl");
         List<StudyPointResult> studyPointsResult = new ArrayList<>();
-        String resultUrl = fileExporter.exportStudyPointResult(studyPointsResult, dateTime);
-        Mockito.verify(minioAdapter, Mockito.times(1)).uploadFile(Mockito.any(), Mockito.any());
+        String resultUrl = fileExporter.exportStudyPointResult(studyPointsResult, dateTime).get(ResultFileExporter.ResultType.MAIN_RESULT);
+        Mockito.verify(minioAdapter, Mockito.times(2)).uploadFile(Mockito.any(), Mockito.any(ByteArrayOutputStream.class));
         assertEquals("resultUrl", resultUrl);
     }
 
@@ -51,7 +54,7 @@ class FileExporterTest {
         RaoParameters raoParameters = RaoParameters.load();
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("raoParametersUrl");
         String raoParametersUrl = fileExporter.saveRaoParametersAndGetUrl(raoParameters);
-        Mockito.verify(minioAdapter, Mockito.times(1)).uploadFile(Mockito.any(), Mockito.any());
+        Mockito.verify(minioAdapter, Mockito.times(1)).uploadFile(Mockito.any(), Mockito.any(ByteArrayOutputStream.class));
         assertEquals("raoParametersUrl", raoParametersUrl);
     }
 
@@ -60,7 +63,7 @@ class FileExporterTest {
         Crac crac = new CracImpl("id");
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("cracUrl");
         String cracUrl = fileExporter.saveCracInJsonFormat(crac, dateTime);
-        Mockito.verify(minioAdapter, Mockito.times(1)).uploadFile(Mockito.any(), Mockito.any());
+        Mockito.verify(minioAdapter, Mockito.times(1)).uploadFile(Mockito.any(), Mockito.any(InputStream.class));
         assertEquals("cracUrl", cracUrl);
     }
 }
