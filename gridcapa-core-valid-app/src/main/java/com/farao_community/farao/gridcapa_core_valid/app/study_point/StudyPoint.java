@@ -13,10 +13,10 @@ import java.util.Map;
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
 public class StudyPoint {
-    private int period;
-    private String verticeId;
-    private Map<String, Double> positions;
-    private StudyPointResult studyPointResult;
+    private final int period;
+    private final String verticeId;
+    private final Map<String, Double> positions;
+    private final StudyPointResult studyPointResult;
 
     public StudyPoint(int period, String verticeId, Map<String, Double> positions) {
         this.period = period;

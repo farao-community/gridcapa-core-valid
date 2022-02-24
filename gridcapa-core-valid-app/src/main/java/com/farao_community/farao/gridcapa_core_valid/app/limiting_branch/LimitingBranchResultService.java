@@ -78,7 +78,7 @@ public class LimitingBranchResultService {
         );
     }
 
-    private Set<RemedialAction<?>> getRemedialActions(RaoResult raoResult, Cnec cnec) {
+    private Set<RemedialAction<?>> getRemedialActions(RaoResult raoResult, Cnec<?> cnec) {
         Set<NetworkAction> networkActions = raoResult.getActivatedNetworkActionsDuringState(cnec.getState());
         Set<RangeAction<?>> rangeActions = raoResult.getActivatedRangeActionsDuringState(cnec.getState());
         Set<RemedialAction<?>> remedialActionsActivated = new HashSet<>();

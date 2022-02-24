@@ -29,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 public class MinioAdapter {
     private static final int DEFAULT_DOWNLOAD_LINK_EXPIRY_IN_DAYS = 7;
     private static final Logger LOGGER = LoggerFactory.getLogger(MinioAdapter.class);
+    public static final String FORMAT_URL = "%s/%s";
 
     private final MinioClient client;
     private final String bucket;
@@ -45,7 +46,7 @@ public class MinioAdapter {
     }
 
     public void uploadFile(String filePath, InputStream sourceInputStream) {
-        String fullPath = String.format("%s/%s", basePath, filePath);
+        String fullPath = String.format(FORMAT_URL, basePath, filePath);
         try {
             createBucketIfDoesNotExist(bucket);
             client.putObject(PutObjectArgs.builder().bucket(bucket).object(fullPath).stream(sourceInputStream, -1, 50000000).build());
@@ -62,7 +63,7 @@ public class MinioAdapter {
     }
 
     public String generatePreSignedUrl(String filePath) {
-        String fullPath = String.format("%s/%s", basePath, filePath);
+        String fullPath = String.format(FORMAT_URL, basePath, filePath);
         try {
             return client.getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()
@@ -78,7 +79,7 @@ public class MinioAdapter {
 
     public CoreValidFileResource generateFileResource(String filePath) {
         try {
-            String fullFilePath = String.format("%s/%s", basePath, filePath);
+            String fullFilePath = String.format(FORMAT_URL, basePath, filePath);
             String filename = FilenameUtils.getName(filePath);
             LOGGER.info("Generates pre-signed URL for file '{}' in Minio bucket '{}'", fullFilePath, bucket);
             String url = client.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().bucket(bucket).object(fullFilePath).expiry(DEFAULT_DOWNLOAD_LINK_EXPIRY_IN_DAYS, TimeUnit.DAYS).method(Method.GET).build());

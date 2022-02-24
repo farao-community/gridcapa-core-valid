@@ -25,8 +25,8 @@ public class CoreValidResponse {
     private final String id;
     private final String mainResultFileUrl;
     private final String rexResultFileUrl; // TODO: remove this once choice of result file type can be done in the configuration
-    private Instant computationStartInstant;
-    private Instant computationEndInstant;
+    private final Instant computationStartInstant;
+    private final Instant computationEndInstant;
 
     @JsonCreator
     public CoreValidResponse(@JsonProperty("id") String id, @JsonProperty("mainResultFileUrl") String mainResultFileUrl, @JsonProperty("rexResultFileUrl") String rexResultFileUrl, @JsonProperty("computationStartInstant") Instant computationStartInstant, @JsonProperty("computationEndInstant") Instant computationEndInstant) {

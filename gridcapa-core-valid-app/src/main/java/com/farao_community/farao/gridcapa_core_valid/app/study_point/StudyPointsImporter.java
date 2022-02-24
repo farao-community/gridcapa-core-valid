@@ -12,10 +12,10 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.OffsetDateTime;
@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
 public final class StudyPointsImporter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(StudyPointsImporter.class);
 
     private StudyPointsImporter() {
         throw new IllegalStateException("Utility class");
@@ -56,7 +55,6 @@ public final class StudyPointsImporter {
             }
             return studyPoints;
         } catch (Exception e) {
-            LOGGER.error("Exception occurred during parsing.", e);
             throw new CoreValidInvalidDataException("Exception occurred during parsing study point file", e);
         }
     }

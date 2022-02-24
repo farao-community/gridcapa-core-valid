@@ -20,12 +20,12 @@ import java.util.Map;
  */
 public class StudyPointData {
 
-    private Network network;
-    private Map<String, Double> coreNetPositions;
-    private ZonalData<Scalable> scalableZonalData;
-    private FbConstraintCreationContext fbConstraintCreationContext;
-    private String jsonCracUrl;
-    private String raoParametersUrl;
+    private final Network network;
+    private final Map<String, Double> coreNetPositions;
+    private final ZonalData<Scalable> scalableZonalData;
+    private final FbConstraintCreationContext fbConstraintCreationContext;
+    private final String jsonCracUrl;
+    private final String raoParametersUrl;
 
     public StudyPointData(Network network, Map<String, Double> coreNetPositions, ZonalData<Scalable> scalableZonalData, FbConstraintCreationContext cracCreationContext, String jsonCracUrl, String raoParametersUrl1) {
         this.network = network;
