@@ -8,10 +8,11 @@
 package com.farao_community.farao.gridcapa_core_valid.app.services;
 
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
-import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataException;
 import com.farao_community.farao.data.crac_api.Crac;
 import com.farao_community.farao.data.crac_io_api.CracExporters;
-import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResult;
+import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.MainResultFileExporter;
+import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.ResultFileExporter;
+import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.RexResultFileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
 import com.farao_community.farao.rao_api.json.JsonRaoParameters;
@@ -19,18 +20,13 @@ import com.farao_community.farao.rao_api.parameters.RaoParameters;
 import com.powsybl.commons.datasource.MemDataSource;
 import com.powsybl.iidm.export.Exporters;
 import com.powsybl.iidm.network.Network;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @author Alexandre Montigny {@literal <alexandre.montigny at rte-france.com>}
@@ -39,37 +35,28 @@ import java.util.Properties;
 public class FileExporter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FileExporter.class);
-    private static final String SAMPLE_CSV_FILE = "outputs/%s-ValidationCORE-v0.csv";
     public static final String ARTIFACTS_S = "artifacts/%s";
     private static final String RAO_PARAMETERS_FILE_NAME = "raoParameters.json";
     private final MinioAdapter minioAdapter;
+    private final MainResultFileExporter mainResultFileExporter;
+    private final RexResultFileExporter rexResultFileExporter;
 
-    public FileExporter(MinioAdapter minioAdapter) {
+    public FileExporter(MinioAdapter minioAdapter, MainResultFileExporter mainResultFileExporter, RexResultFileExporter rexResultFileExporter) {
         this.minioAdapter = minioAdapter;
+        this.mainResultFileExporter = mainResultFileExporter;
+        this.rexResultFileExporter = rexResultFileExporter;
     }
 
-    public String exportStudyPointResult(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        String filePath;
-        try {
-            CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(baos), CSVFormat.EXCEL.withDelimiter(';')
-                    .withHeader("Period", "Vertice ID", "Branch ID", "Branch Status", "RAM before", "RAM after"));
-            for (StudyPointResult studyPointResult : studyPointResults) {
-                addStudyPointResultToOutputFile(studyPointResult, csvPrinter);
-            }
-            csvPrinter.flush();
-            csvPrinter.close();
-        } catch (IOException e) {
-            throw new CoreValidInvalidDataException("Error during export of studypoint results on Minio", e);
-        }
-        byte[] barray = baos.toByteArray();
-        InputStream is = new ByteArrayInputStream(barray);
-        filePath = String.format(SAMPLE_CSV_FILE, timestamp.atZoneSameInstant(ZoneId.of("Europe/Paris")).format(DateTimeFormatter.ofPattern("yyyyMMdd-HH")));
-        minioAdapter.uploadFile(filePath, is);
-        LOGGER.info("Result file was successfully uploaded on minIO");
-        return minioAdapter.generatePreSignedUrl(filePath);
+    //region Export of Results
+    public Map<ResultFileExporter.ResultType, String> exportStudyPointResult(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp) {
+        Map<ResultFileExporter.ResultType, String> resultMap = new EnumMap<>(ResultFileExporter.ResultType.class);
+        resultMap.put(ResultFileExporter.ResultType.MAIN_RESULT, mainResultFileExporter.exportStudyPointResult(studyPointResults, timestamp));
+        resultMap.put(ResultFileExporter.ResultType.REX_RESULT, rexResultFileExporter.exportStudyPointResult(studyPointResults, timestamp));
+        return resultMap;
     }
+    //endregion
 
+    //region Shifted CGM uploading on minIO
     public String saveShiftedCgm(Network network, StudyPoint studyPoint) {
         String fileName = network.getNameOrId() + "_" + studyPoint.getVerticeId() + ".xiidm";
         String networkPath = String.format(ARTIFACTS_S, fileName);
@@ -85,15 +72,19 @@ public class FileExporter {
         return minioAdapter.generatePreSignedUrl(networkPath);
     }
 
+    //endregion
+
+    //region RaoParameters uploading on minIO
     public String saveRaoParametersAndGetUrl(RaoParameters raoParameters) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         JsonRaoParameters.write(raoParameters, baos);
         String raoParametersDestinationPath = String.format(ARTIFACTS_S, RAO_PARAMETERS_FILE_NAME);
-        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-        minioAdapter.uploadFile(raoParametersDestinationPath, bais);
+        minioAdapter.uploadFile(raoParametersDestinationPath, baos);
         return minioAdapter.generatePreSignedUrl(raoParametersDestinationPath);
     }
+    //endregion
 
+    //region Crac uploading on minIO
     public String saveCracInJsonFormat(Crac crac, OffsetDateTime timestamp) {
         MemDataSource memDataSource = new MemDataSource();
         String jsonCracFileName = String.format("crac_%s.json", timestamp.toString());
@@ -110,34 +101,6 @@ public class FileExporter {
         }
         return minioAdapter.generatePreSignedUrl(cracPath);
     }
-
-    private void addStudyPointResultToOutputFile(StudyPointResult studyPointResult, CSVPrinter csvPrinter) throws IOException {
-        for (LimitingBranchResult limitingBranchResult : studyPointResult.getListLimitingBranchResult()) {
-            addLimitingBranchResultToOutputFile(limitingBranchResult, studyPointResult, csvPrinter);
-        }
-    }
-
-    private void addLimitingBranchResultToOutputFile(LimitingBranchResult limitingBranchResult, StudyPointResult studyPointResult, CSVPrinter csvPrinter) throws IOException {
-        String period = studyPointResult.getPeriod();
-        String verticeId = studyPointResult.getId();
-        String branchId = limitingBranchResult.getCriticalBranchId();
-        String branchStatus;
-        switch (limitingBranchResult.getState().getInstant()) {
-            case PREVENTIVE:
-                branchStatus = "P";
-                break;
-            case OUTAGE:
-                branchStatus = "O";
-                break;
-            case CURATIVE:
-                branchStatus = "C";
-                break;
-            default:
-                throw new CoreValidInvalidDataException(String.format("Invalid value in CBCORA file, for cnec {}", branchId));
-        }
-        String ramBefore = String.valueOf(Math.round(limitingBranchResult.getRamBefore()));
-        String ramAfter = String.valueOf(Math.round(limitingBranchResult.getRamAfter()));
-        csvPrinter.printRecord(period, verticeId, branchId, branchStatus, ramBefore, ramAfter);
-    }
+    //endregion
 
 }

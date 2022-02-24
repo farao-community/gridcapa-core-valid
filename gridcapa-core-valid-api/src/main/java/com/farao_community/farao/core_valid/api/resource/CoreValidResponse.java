@@ -23,14 +23,16 @@ public class CoreValidResponse {
 
     @Id
     private final String id;
-    private final String resultFileUrl;
+    private final String mainResultFileUrl;
+    private final String rexResultFileUrl; // TODO: remove this once choice of result file type can be done in the configuration
     private Instant computationStartInstant;
     private Instant computationEndInstant;
 
     @JsonCreator
-    public CoreValidResponse(@JsonProperty("id") String id, @JsonProperty("result-file-url") String resultFileUrl, @JsonProperty("computationStartInstant") Instant computationStartInstant, @JsonProperty("computationEndInstant") Instant computationEndInstant) {
+    public CoreValidResponse(@JsonProperty("id") String id, @JsonProperty("mainResultFileUrl") String mainResultFileUrl, @JsonProperty("rexResultFileUrl") String rexResultFileUrl, @JsonProperty("computationStartInstant") Instant computationStartInstant, @JsonProperty("computationEndInstant") Instant computationEndInstant) {
         this.id = id;
-        this.resultFileUrl = resultFileUrl;
+        this.mainResultFileUrl = mainResultFileUrl;
+        this.rexResultFileUrl = rexResultFileUrl;
         this.computationStartInstant = computationStartInstant;
         this.computationEndInstant = computationEndInstant;
     }
@@ -39,8 +41,12 @@ public class CoreValidResponse {
         return id;
     }
 
-    public String getResultFileUrl() {
-        return resultFileUrl;
+    public String getMainResultFileUrl() {
+        return mainResultFileUrl;
+    }
+
+    public String getRexResultFileUrl() {
+        return rexResultFileUrl;
     }
 
     public Instant getComputationStartInstant() {

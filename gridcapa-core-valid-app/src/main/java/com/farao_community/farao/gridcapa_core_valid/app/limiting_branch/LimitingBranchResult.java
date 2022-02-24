@@ -8,6 +8,7 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.limiting_branch;
 
+import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataException;
 import com.farao_community.farao.data.crac_api.RemedialAction;
 import com.farao_community.farao.data.crac_api.State;
 
@@ -25,9 +26,10 @@ public class LimitingBranchResult {
     private final Double flowAfter;
     private final Set<RemedialAction<?>> remedialActions;
     private final String criticalBranchId;
+    private final String criticalBranchName;
     private final State state;
 
-    public LimitingBranchResult(String verticeId, String criticalBranchId, Double ramBefore, Double ramAfter, Double flowBefore, Double flowAfter, Set<RemedialAction<?>> remedialActions, State state) {
+    public LimitingBranchResult(String verticeId, String criticalBranchId, Double ramBefore, Double ramAfter, Double flowBefore, Double flowAfter, Set<RemedialAction<?>> remedialActions, String criticalBranchName, State state) {
         this.verticeId = verticeId;
         this.criticalBranchId = criticalBranchId;
         this.ramBefore = ramBefore;
@@ -35,6 +37,7 @@ public class LimitingBranchResult {
         this.flowBefore = flowBefore;
         this.flowAfter = flowAfter;
         this.remedialActions = remedialActions;
+        this.criticalBranchName = criticalBranchName;
         this.state = state;
     }
 
@@ -66,7 +69,29 @@ public class LimitingBranchResult {
         return criticalBranchId;
     }
 
+    public String getCriticalBranchName() {
+        return criticalBranchName;
+    }
+
     public State getState() {
         return state;
+    }
+
+    public String getBranchStatus() {
+        String branchStatus;
+        switch (getState().getInstant()) {
+            case PREVENTIVE:
+                branchStatus = "P";
+                break;
+            case OUTAGE:
+                branchStatus = "O";
+                break;
+            case CURATIVE:
+                branchStatus = "C";
+                break;
+            default:
+                throw new CoreValidInvalidDataException(String.format("Invalid value in CBCORA file, for cnec %s", getCriticalBranchId()));
+        }
+        return branchStatus;
     }
 }

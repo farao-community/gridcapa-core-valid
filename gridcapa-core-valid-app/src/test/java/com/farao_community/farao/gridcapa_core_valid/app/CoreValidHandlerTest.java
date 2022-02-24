@@ -24,6 +24,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.net.URL;
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,7 +58,7 @@ class CoreValidHandlerTest {
         RaoResponse raoResponse = new RaoResponse("id", "instant", "praUrl", "cracUrl", "raoUrl", Instant.now(), Instant.now());
         Mockito.when(studyPointService.computeStudyPointRao(Mockito.any(), Mockito.any())).thenReturn(future);
         future.complete(raoResponse);
-        Mockito.when(fileExporter.exportStudyPointResult(Mockito.any(), Mockito.any())).thenReturn("");
+        Mockito.when(fileExporter.exportStudyPointResult(Mockito.any(), Mockito.any())).thenReturn(new HashMap<>());
         String requestId = "Test request";
         String networkFileName = "20210723_0030_2D5_CGM_limits.uct";
         CoreValidFileResource networkFile = createFileResource(networkFileName, getClass().getResource(testDirectory + "/" + networkFileName));

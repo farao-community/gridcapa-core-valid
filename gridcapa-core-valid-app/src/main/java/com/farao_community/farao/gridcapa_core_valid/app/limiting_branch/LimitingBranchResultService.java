@@ -63,6 +63,7 @@ public class LimitingBranchResultService {
         Double flowBefore = raoResult.getFlow(OptimizationState.INITIAL, cnec, Unit.MEGAWATT);
         Double flowAfter = raoResult.getFlow(OptimizationState.afterOptimizing(cnec.getState()), cnec, Unit.MEGAWATT);
         Set<RemedialAction<?>> remedialActions = getRemedialActions(raoResult, cnec);
+        String criticalBranchName = cnec.getName();
         State state = cnec.getState();
         return new LimitingBranchResult(
                 studyPointId,
@@ -72,6 +73,7 @@ public class LimitingBranchResultService {
                 flowBefore,
                 flowAfter,
                 remedialActions,
+                criticalBranchName,
                 state
         );
     }

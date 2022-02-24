@@ -17,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
@@ -51,6 +53,12 @@ public class MinioAdapter {
             LOGGER.error(e.getMessage(), e);
             throw new CoreValidInternalException(String.format("Exception occurred while uploading file: %s, to minio server", filePath));
         }
+    }
+
+    public void uploadFile(String filePath, ByteArrayOutputStream baos) {
+        byte[] mainByteArray = baos.toByteArray();
+        InputStream is = new ByteArrayInputStream(mainByteArray);
+        uploadFile(filePath, is);
     }
 
     public String generatePreSignedUrl(String filePath) {
