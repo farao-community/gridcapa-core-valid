@@ -37,6 +37,7 @@ public class CoreValidRequest {
     private final CoreValidFileResource glsk;
     private final CoreValidFileResource refProg;
     private final CoreValidFileResource studyPoints;
+    private final boolean launchedAutomatically;
 
     @JsonCreator
     public CoreValidRequest(@JsonProperty("id") String id,
@@ -45,7 +46,8 @@ public class CoreValidRequest {
                             @JsonProperty("cbcora") CoreValidFileResource cbcora,
                             @JsonProperty("glsk") CoreValidFileResource glsk,
                             @JsonProperty("refProg") CoreValidFileResource refProg,
-                            @JsonProperty("studyPoints") CoreValidFileResource studyPoints) {
+                            @JsonProperty("studyPoints") CoreValidFileResource studyPoints,
+                            @JsonProperty("launchedAutomatically") boolean launchedAutomatically) {
         this.id = id;
         this.timestamp = timestamp;
         this.cgm = cgm;
@@ -53,6 +55,18 @@ public class CoreValidRequest {
         this.glsk = glsk;
         this.refProg = refProg;
         this.studyPoints = studyPoints;
+        this.launchedAutomatically = launchedAutomatically;
+    }
+
+    private CoreValidRequest(CoreValidRequestBuilder builder) {
+        this(builder.id,
+                builder.timestamp,
+                builder.cgm,
+                builder.cbcora,
+                builder.glsk,
+                builder.refProg,
+                builder.studyPoints,
+                builder.launchedAutomatically);
     }
 
     public String getId() {
@@ -83,8 +97,49 @@ public class CoreValidRequest {
         return studyPoints;
     }
 
+    public boolean getLaunchedAutomatically() {
+        return launchedAutomatically;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    public static class CoreValidRequestBuilder {
+        private final String id;
+        private final OffsetDateTime timestamp;
+        private final CoreValidFileResource cgm;
+        private final CoreValidFileResource cbcora;
+        private final CoreValidFileResource glsk;
+        private final CoreValidFileResource refProg;
+        private final CoreValidFileResource studyPoints;
+        private boolean launchedAutomatically;
+
+        public CoreValidRequestBuilder(String id,
+                                OffsetDateTime timestamp,
+                                CoreValidFileResource cgm,
+                                CoreValidFileResource cbcora,
+                                CoreValidFileResource glsk,
+                                CoreValidFileResource refProg,
+                                CoreValidFileResource studyPoints) {
+            this.id = id;
+            this.timestamp = timestamp;
+            this.cgm = cgm;
+            this.cbcora = cbcora;
+            this.glsk = glsk;
+            this.refProg = refProg;
+            this.studyPoints = studyPoints;
+            this.launchedAutomatically = false;
+        }
+
+        public CoreValidRequestBuilder isLaunchedAutomatically() {
+            this.launchedAutomatically = true;
+            return this;
+        }
+
+        public CoreValidRequest build() {
+            return new CoreValidRequest(this);
+        }
     }
 }
