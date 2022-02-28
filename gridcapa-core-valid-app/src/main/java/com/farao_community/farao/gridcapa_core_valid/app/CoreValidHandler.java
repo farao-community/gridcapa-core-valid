@@ -25,7 +25,7 @@ import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointS
 import com.farao_community.farao.rao_api.parameters.RaoParameters;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
-import com.farao_community.farao.search_tree_rao.SearchTreeRaoParameters;
+import com.farao_community.farao.search_tree_rao.castor.parameters.SearchTreeRaoParameters;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.iidm.network.Network;
 import org.slf4j.Logger;
