@@ -92,7 +92,7 @@ public class CoreValidHandler {
             }
             Instant computationEndInstant = Instant.now();
             Map<ResultFileExporter.ResultType, String> resultFileUrls = saveProcessOutputs(studyPointResults, coreValidRequest.getTimestamp());
-            return new CoreValidResponse(coreValidRequest.getId(), resultFileUrls.get(ResultFileExporter.ResultType.MAIN_RESULT), resultFileUrls.get(ResultFileExporter.ResultType.REX_RESULT), computationStartInstant, computationEndInstant);
+            return new CoreValidResponse(coreValidRequest.getId(), resultFileUrls.get(ResultFileExporter.ResultType.MAIN_RESULT), resultFileUrls.get(ResultFileExporter.ResultType.REX_RESULT), resultFileUrls.get(ResultFileExporter.ResultType.REMEDIAL_ACTIONS_RESULT), computationStartInstant, computationEndInstant);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);

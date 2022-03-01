@@ -25,14 +25,16 @@ public class CoreValidResponse {
     private final String id;
     private final String mainResultFileUrl;
     private final String rexResultFileUrl; // TODO: remove this once choice of result file type can be done in the configuration
+    private final String remedialActionsFileUrl;
     private final Instant computationStartInstant;
     private final Instant computationEndInstant;
 
     @JsonCreator
-    public CoreValidResponse(@JsonProperty("id") String id, @JsonProperty("mainResultFileUrl") String mainResultFileUrl, @JsonProperty("rexResultFileUrl") String rexResultFileUrl, @JsonProperty("computationStartInstant") Instant computationStartInstant, @JsonProperty("computationEndInstant") Instant computationEndInstant) {
+    public CoreValidResponse(@JsonProperty("id") String id, @JsonProperty("mainResultFileUrl") String mainResultFileUrl, @JsonProperty("rexResultFileUrl") String rexResultFileUrl, @JsonProperty("remedialActionsResultFileUrl") String remedialActionsFileUrl, @JsonProperty("computationStartInstant") Instant computationStartInstant, @JsonProperty("computationEndInstant") Instant computationEndInstant) {
         this.id = id;
         this.mainResultFileUrl = mainResultFileUrl;
         this.rexResultFileUrl = rexResultFileUrl;
+        this.remedialActionsFileUrl = remedialActionsFileUrl;
         this.computationStartInstant = computationStartInstant;
         this.computationEndInstant = computationEndInstant;
     }
@@ -47,6 +49,10 @@ public class CoreValidResponse {
 
     public String getRexResultFileUrl() {
         return rexResultFileUrl;
+    }
+
+    public String getRemedialActionsFileUrl() {
+        return remedialActionsFileUrl;
     }
 
     public Instant getComputationStartInstant() {
