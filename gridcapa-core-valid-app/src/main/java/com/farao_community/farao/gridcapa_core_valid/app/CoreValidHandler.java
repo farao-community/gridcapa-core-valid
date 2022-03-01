@@ -91,7 +91,6 @@ public class CoreValidHandler {
                 }
             }
             Instant computationEndInstant = Instant.now();
-            LOGGER.info("SAVING FILES");
             Map<ResultFileExporter.ResultType, String> resultFileUrls = saveProcessOutputs(studyPointResults, coreValidRequest.getTimestamp());
             return new CoreValidResponse(coreValidRequest.getId(), resultFileUrls.get(ResultFileExporter.ResultType.MAIN_RESULT), resultFileUrls.get(ResultFileExporter.ResultType.REX_RESULT), computationStartInstant, computationEndInstant);
         } catch (InterruptedException e) {
