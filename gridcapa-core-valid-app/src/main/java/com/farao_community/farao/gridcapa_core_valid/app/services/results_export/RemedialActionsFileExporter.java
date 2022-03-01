@@ -45,12 +45,10 @@ public class RemedialActionsFileExporter implements ResultFileExporter {
 
     @Override
     public String exportStudyPointResult(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp) {
-        LOGGER.info("RA FILE");
         ByteArrayOutputStream rexResultBaos = new ByteArrayOutputStream();
         try {
             CSVPrinter rexResultCsvPrinter = new CSVPrinter(new OutputStreamWriter(rexResultBaos), CSVFormat.EXCEL.withDelimiter(';')
                     .withHeader("Period", "Vertice ID", "State", "RA applied"));
-            LOGGER.info("SIZE " + studyPointResults.size());
             for (StudyPointResult studyPointResult : studyPointResults) {
                 LOGGER.info("ADD");
                 addStudyPointResultToRemedialActionsOutputFile(studyPointResult, rexResultCsvPrinter);
@@ -67,7 +65,6 @@ public class RemedialActionsFileExporter implements ResultFileExporter {
     }
 
     private void addStudyPointResultToRemedialActionsOutputFile(StudyPointResult studyPointResult, CSVPrinter csvPrinter) throws IOException {
-        LOGGER.info("size limiting branches " + studyPointResult.getListLimitingBranchResult().size());
         for (LimitingBranchResult limitingBranchResult : studyPointResult.getListLimitingBranchResult()) {
             addLimitingBranchResultToRemedialActionsOutputFile(limitingBranchResult, studyPointResult, csvPrinter);
         }
@@ -75,7 +72,6 @@ public class RemedialActionsFileExporter implements ResultFileExporter {
 
     private void addLimitingBranchResultToRemedialActionsOutputFile(LimitingBranchResult limitingBranchResult, StudyPointResult studyPointResult, CSVPrinter csvPrinter) throws IOException {
         List<String> mainResultFields = new ArrayList<>();
-        LOGGER.info("size remedial actions " + limitingBranchResult.getRemedialActions().size());
         for (RemedialAction<?> remedialAction : limitingBranchResult.getRemedialActions()) {
             mainResultFields.add(studyPointResult.getPeriod());
             mainResultFields.add(studyPointResult.getId());
