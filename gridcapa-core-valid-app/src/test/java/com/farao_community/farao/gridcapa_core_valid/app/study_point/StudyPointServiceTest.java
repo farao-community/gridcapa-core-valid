@@ -75,8 +75,7 @@ class StudyPointServiceTest {
         InputStream networkStream = getClass().getResourceAsStream(testDirectory + "/20210723_0030_2D5_CGM.uct");
         network = Importers.loadNetwork("20210723_0030_2D5_CGM.uct", networkStream);
         scalableZonalData = glskDocument.getZonalScalable(network, dateTime.toInstant());
-        CoreValidRequest.CoreValidRequestBuilder builder = new CoreValidRequest.CoreValidRequestBuilder("id", null, null, new CoreValidFileResource("name", "url"), null, null, null);
-        coreValidRequest = builder.build();
+        coreValidRequest = new CoreValidRequest("id", null, null, new CoreValidFileResource("name", "url"), null, null, null);
     }
 
     @Test

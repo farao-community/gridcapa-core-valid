@@ -38,8 +38,7 @@ class CoreValidRequestTest {
 
     @Test
     void checkManualCoreValidRequest() {
-        CoreValidRequest coreValidRequest = new CoreValidRequest.CoreValidRequestBuilder("id", dateTime, cgm, cbcora, glsk, refProg, studyPoints)
-                .build();
+        CoreValidRequest coreValidRequest = new CoreValidRequest("id", dateTime, cgm, cbcora, glsk, refProg, studyPoints);
         assertNotNull(coreValidRequest);
         assertEquals("id", coreValidRequest.getId());
         assertEquals("2021-10-03T00:30Z", coreValidRequest.getTimestamp().toString());
@@ -53,9 +52,7 @@ class CoreValidRequestTest {
 
     @Test
     void checkAutoCoreValidRequest() {
-        CoreValidRequest coreValidRequest = new CoreValidRequest.CoreValidRequestBuilder("id", dateTime, cgm, cbcora, glsk, refProg, studyPoints)
-                .isLaunchedAutomatically()
-                .build();
+        CoreValidRequest coreValidRequest = new CoreValidRequest("id", dateTime, cgm, cbcora, glsk, refProg, studyPoints, true);
         assertTrue(coreValidRequest.getLaunchedAutomatically());
     }
 

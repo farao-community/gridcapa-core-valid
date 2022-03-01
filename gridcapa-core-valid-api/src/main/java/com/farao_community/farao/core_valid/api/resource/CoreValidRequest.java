@@ -58,15 +58,14 @@ public class CoreValidRequest {
         this.launchedAutomatically = launchedAutomatically;
     }
 
-    private CoreValidRequest(CoreValidRequestBuilder builder) {
-        this(builder.id,
-                builder.timestamp,
-                builder.cgm,
-                builder.cbcora,
-                builder.glsk,
-                builder.refProg,
-                builder.studyPoints,
-                builder.launchedAutomatically);
+    public CoreValidRequest(String id,
+                            OffsetDateTime timestamp,
+                            CoreValidFileResource cgm,
+                            CoreValidFileResource cbcora,
+                            CoreValidFileResource glsk,
+                            CoreValidFileResource refProg,
+                            CoreValidFileResource studyPoints) {
+        this(id, timestamp, cgm, cbcora, glsk, refProg, studyPoints, false);
     }
 
     public String getId() {
@@ -106,40 +105,4 @@ public class CoreValidRequest {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    public static class CoreValidRequestBuilder {
-        private final String id;
-        private final OffsetDateTime timestamp;
-        private final CoreValidFileResource cgm;
-        private final CoreValidFileResource cbcora;
-        private final CoreValidFileResource glsk;
-        private final CoreValidFileResource refProg;
-        private final CoreValidFileResource studyPoints;
-        private boolean launchedAutomatically;
-
-        public CoreValidRequestBuilder(String id,
-                                OffsetDateTime timestamp,
-                                CoreValidFileResource cgm,
-                                CoreValidFileResource cbcora,
-                                CoreValidFileResource glsk,
-                                CoreValidFileResource refProg,
-                                CoreValidFileResource studyPoints) {
-            this.id = id;
-            this.timestamp = timestamp;
-            this.cgm = cgm;
-            this.cbcora = cbcora;
-            this.glsk = glsk;
-            this.refProg = refProg;
-            this.studyPoints = studyPoints;
-            this.launchedAutomatically = false;
-        }
-
-        public CoreValidRequestBuilder isLaunchedAutomatically() {
-            this.launchedAutomatically = true;
-            return this;
-        }
-
-        public CoreValidRequest build() {
-            return new CoreValidRequest(this);
-        }
-    }
 }
