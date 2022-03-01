@@ -50,7 +50,6 @@ public class RemedialActionsFileExporter implements ResultFileExporter {
             CSVPrinter rexResultCsvPrinter = new CSVPrinter(new OutputStreamWriter(rexResultBaos), CSVFormat.EXCEL.withDelimiter(';')
                     .withHeader("Period", "Vertice ID", "State", "RA applied"));
             for (StudyPointResult studyPointResult : studyPointResults) {
-                LOGGER.info("ADD");
                 addStudyPointResultToRemedialActionsOutputFile(studyPointResult, rexResultCsvPrinter);
             }
             rexResultCsvPrinter.flush();
