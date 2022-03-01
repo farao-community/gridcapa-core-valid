@@ -51,6 +51,7 @@ public class RexResultFileExporter implements ResultFileExporter {
 
     @Override
     public String exportStudyPointResult(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp) {
+        LOGGER.info("REX FILE");
         ByteArrayOutputStream rexResultBaos = new ByteArrayOutputStream();
         try {
             CSVPrinter rexResultCsvPrinter = new CSVPrinter(new OutputStreamWriter(rexResultBaos), CSVFormat.EXCEL.withDelimiter(';')

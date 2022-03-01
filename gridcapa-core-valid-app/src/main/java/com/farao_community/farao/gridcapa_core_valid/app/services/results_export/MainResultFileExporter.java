@@ -45,6 +45,7 @@ public class MainResultFileExporter implements ResultFileExporter {
 
     @Override
     public String exportStudyPointResult(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp) {
+        LOGGER.info("MAIN FILE");
         ByteArrayOutputStream mainResultBaos = new ByteArrayOutputStream();
         try {
             CSVPrinter mainResultCsvPrinter = new CSVPrinter(new OutputStreamWriter(mainResultBaos), CSVFormat.EXCEL.withDelimiter(';')

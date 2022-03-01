@@ -27,6 +27,7 @@ public interface ResultFileExporter {
      */
     enum ResultType {
         MAIN_RESULT,
+        REMEDIAL_ACTIONS_RESULT,
         REX_RESULT
     }
 }
