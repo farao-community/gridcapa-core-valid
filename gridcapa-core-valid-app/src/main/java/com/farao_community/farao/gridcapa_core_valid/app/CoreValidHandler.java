@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -90,7 +89,7 @@ public class CoreValidHandler {
                 }
             }
             Instant computationEndInstant = Instant.now();
-            Map<ResultFileExporter.ResultType, String> resultFileUrls = saveProcessOutputs(studyPointResults, coreValidRequest.getTimestamp());
+            Map<ResultFileExporter.ResultType, String> resultFileUrls = saveProcessOutputs(studyPointResults, coreValidRequest);
             return new CoreValidResponse(coreValidRequest.getId(), resultFileUrls.get(ResultFileExporter.ResultType.MAIN_RESULT), resultFileUrls.get(ResultFileExporter.ResultType.REX_RESULT), computationStartInstant, computationEndInstant);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -125,7 +124,7 @@ public class CoreValidHandler {
         return raoParameters;
     }
 
-    private Map<ResultFileExporter.ResultType, String> saveProcessOutputs(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp) {
-        return fileExporter.exportStudyPointResult(studyPointResults, timestamp);
+    private Map<ResultFileExporter.ResultType, String> saveProcessOutputs(List<StudyPointResult> studyPointResults, CoreValidRequest coreValidRequest) {
+        return fileExporter.exportStudyPointResult(studyPointResults, coreValidRequest);
     }
 }
