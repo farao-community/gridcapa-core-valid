@@ -48,7 +48,7 @@ public class RemedialActionsFileExporter implements ResultFileExporter {
         ByteArrayOutputStream remedialActionsResultBaos = new ByteArrayOutputStream();
         try {
             CSVPrinter remedialActionsResultCsvPrinter = new CSVPrinter(new OutputStreamWriter(remedialActionsResultBaos), CSVFormat.EXCEL.withDelimiter(';')
-                    .withHeader("Period", "Vertice ID", "State", "RA ID, RA name"));
+                    .withHeader("Period", "Vertice ID", "State", "RA ID", "RA name"));
             for (StudyPointResult studyPointResult : studyPointResults) {
                 addStudyPointResultToRemedialActionsOutputFile(studyPointResult, remedialActionsResultCsvPrinter);
             }
