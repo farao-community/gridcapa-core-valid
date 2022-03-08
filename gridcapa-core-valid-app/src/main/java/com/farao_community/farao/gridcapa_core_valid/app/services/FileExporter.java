@@ -44,7 +44,7 @@ public class FileExporter {
     private final RemedialActionsFileExporter remedialActionsFileExporter;
     private final RexResultFileExporter rexResultFileExporter;
 
-    public FileExporter(MinioAdapter minioAdapter, MainResultFileExporter mainResultFileExporter, RexResultFileExporter rexResultFileExporter, RemedialActionsFileExporter remedialActionsFileExporter) {
+    public FileExporter(MinioAdapter minioAdapter, MainResultFileExporter mainResultFileExporter, RemedialActionsFileExporter remedialActionsFileExporter, RexResultFileExporter rexResultFileExporter) {
         this.minioAdapter = minioAdapter;
         this.mainResultFileExporter = mainResultFileExporter;
         this.remedialActionsFileExporter = remedialActionsFileExporter;
