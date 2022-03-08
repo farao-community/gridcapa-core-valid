@@ -12,6 +12,7 @@ import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.data.crac_api.Crac;
 import com.farao_community.farao.data.crac_io_api.CracExporters;
 import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.MainResultFileExporter;
+import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.RemedialActionsFileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.ResultFileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.RexResultFileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
@@ -40,11 +41,13 @@ public class FileExporter {
     private static final String RAO_PARAMETERS_FILE_NAME = "raoParameters.json";
     private final MinioAdapter minioAdapter;
     private final MainResultFileExporter mainResultFileExporter;
+    private final RemedialActionsFileExporter remedialActionsFileExporter;
     private final RexResultFileExporter rexResultFileExporter;
 
-    public FileExporter(MinioAdapter minioAdapter, MainResultFileExporter mainResultFileExporter, RexResultFileExporter rexResultFileExporter) {
+    public FileExporter(MinioAdapter minioAdapter, MainResultFileExporter mainResultFileExporter, RemedialActionsFileExporter remedialActionsFileExporter, RexResultFileExporter rexResultFileExporter) {
         this.minioAdapter = minioAdapter;
         this.mainResultFileExporter = mainResultFileExporter;
+        this.remedialActionsFileExporter = remedialActionsFileExporter;
         this.rexResultFileExporter = rexResultFileExporter;
     }
 
@@ -55,6 +58,7 @@ public class FileExporter {
             resultMap.put(ResultFileExporter.ResultType.MAIN_RESULT, mainResultFileExporter.exportStudyPointResult(studyPointResults, coreValidRequest.getTimestamp()));
         }
         resultMap.put(ResultFileExporter.ResultType.REX_RESULT, rexResultFileExporter.exportStudyPointResult(studyPointResults, coreValidRequest.getTimestamp()));
+        resultMap.put(ResultFileExporter.ResultType.REMEDIAL_ACTIONS_RESULT, remedialActionsFileExporter.exportStudyPointResult(studyPointResults, coreValidRequest.getTimestamp()));
         return resultMap;
     }
     //endregion

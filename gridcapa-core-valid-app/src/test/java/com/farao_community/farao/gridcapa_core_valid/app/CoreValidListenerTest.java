@@ -70,7 +70,7 @@ class CoreValidListenerTest {
         String resultFileUrl = "fileUrl";
         Instant computationStartInstant = Instant.now();
         Instant computationEndInstant = Instant.now();
-        CoreValidResponse coreValidResponse = new CoreValidResponse("c7fc89da-dcd7-40d2-8d63-b8aef0a1ecdf", resultFileUrl, resultFileUrl, computationStartInstant, computationEndInstant);
+        CoreValidResponse coreValidResponse = new CoreValidResponse("c7fc89da-dcd7-40d2-8d63-b8aef0a1ecdf", resultFileUrl, resultFileUrl, resultFileUrl, computationStartInstant, computationEndInstant);
         Mockito.when(coreValidHandler.handleCoreValidRequest(Mockito.any(CoreValidRequest.class))).thenReturn(coreValidResponse);
         coreValidListener.onMessage(message);
         Mockito.verify(streamBridge, Mockito.times(2)).send(Mockito.anyString(), Mockito.any());

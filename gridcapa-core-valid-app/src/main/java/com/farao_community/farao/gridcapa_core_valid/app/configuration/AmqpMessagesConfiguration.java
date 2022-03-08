@@ -33,7 +33,6 @@ public class AmqpMessagesConfiguration {
     private String requestDestination;
     @Value("${core-valid-runner.bindings.request.routing-key}")
     private String requestRoutingKey;
-
     @Value("${core-valid-runner.async-time-out}")
     private long asyncTimeOut;
 

@@ -16,7 +16,9 @@ import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_c
 import com.farao_community.farao.data.glsk.api.GlskDocument;
 import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
 import com.farao_community.farao.gridcapa_core_valid.app.configuration.SearchTreeRaoConfiguration;
-import com.farao_community.farao.gridcapa_core_valid.app.services.*;
+import com.farao_community.farao.gridcapa_core_valid.app.services.FileExporter;
+import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
+import com.farao_community.farao.gridcapa_core_valid.app.services.NetPositionsHandler;
 import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.ResultFileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointData;
@@ -74,8 +76,7 @@ public class CoreValidHandler {
                     raoResponse.thenApply(raoResponse1 -> {
                         LOGGER.info("End of RAO computation for studypoint {} .", studyPoint.getVerticeId());
                         return null;
-                    }
-                    )
+                    })
                             .exceptionally(exception -> {
                                 studyPoint.getStudyPointResult().setStatusToError();
                                 throw new CoreValidRaoException(String.format("Error during RAO computation for studypoint %s .", studyPoint.getVerticeId()));
@@ -90,7 +91,7 @@ public class CoreValidHandler {
             }
             Instant computationEndInstant = Instant.now();
             Map<ResultFileExporter.ResultType, String> resultFileUrls = saveProcessOutputs(studyPointResults, coreValidRequest);
-            return new CoreValidResponse(coreValidRequest.getId(), resultFileUrls.get(ResultFileExporter.ResultType.MAIN_RESULT), resultFileUrls.get(ResultFileExporter.ResultType.REX_RESULT), computationStartInstant, computationEndInstant);
+            return new CoreValidResponse(coreValidRequest.getId(), resultFileUrls.get(ResultFileExporter.ResultType.MAIN_RESULT), resultFileUrls.get(ResultFileExporter.ResultType.REX_RESULT), resultFileUrls.get(ResultFileExporter.ResultType.REMEDIAL_ACTIONS_RESULT), computationStartInstant, computationEndInstant);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
