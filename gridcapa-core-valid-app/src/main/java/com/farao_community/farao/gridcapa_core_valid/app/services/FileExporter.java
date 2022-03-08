@@ -8,6 +8,7 @@
 package com.farao_community.farao.gridcapa_core_valid.app.services;
 
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
+import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.data.crac_api.Crac;
 import com.farao_community.farao.data.crac_io_api.CracExporters;
 import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.MainResultFileExporter;
@@ -43,7 +44,7 @@ public class FileExporter {
     private final RemedialActionsFileExporter remedialActionsFileExporter;
     private final RexResultFileExporter rexResultFileExporter;
 
-    public FileExporter(MinioAdapter minioAdapter, MainResultFileExporter mainResultFileExporter, RemedialActionsFileExporter remedialActionsFileExporter, RexResultFileExporter rexResultFileExporter) {
+    public FileExporter(MinioAdapter minioAdapter, MainResultFileExporter mainResultFileExporter, RexResultFileExporter rexResultFileExporter, RemedialActionsFileExporter remedialActionsFileExporter) {
         this.minioAdapter = minioAdapter;
         this.mainResultFileExporter = mainResultFileExporter;
         this.remedialActionsFileExporter = remedialActionsFileExporter;
@@ -51,11 +52,13 @@ public class FileExporter {
     }
 
     //region Export of Results
-    public Map<ResultFileExporter.ResultType, String> exportStudyPointResult(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp) {
+    public Map<ResultFileExporter.ResultType, String> exportStudyPointResult(List<StudyPointResult> studyPointResults, CoreValidRequest coreValidRequest) {
         Map<ResultFileExporter.ResultType, String> resultMap = new EnumMap<>(ResultFileExporter.ResultType.class);
-        resultMap.put(ResultFileExporter.ResultType.MAIN_RESULT, mainResultFileExporter.exportStudyPointResult(studyPointResults, timestamp));
-        resultMap.put(ResultFileExporter.ResultType.REX_RESULT, rexResultFileExporter.exportStudyPointResult(studyPointResults, timestamp));
-        resultMap.put(ResultFileExporter.ResultType.REMEDIAL_ACTIONS_RESULT, remedialActionsFileExporter.exportStudyPointResult(studyPointResults, timestamp));
+        if (coreValidRequest.getLaunchedAutomatically()) {
+            resultMap.put(ResultFileExporter.ResultType.MAIN_RESULT, mainResultFileExporter.exportStudyPointResult(studyPointResults, coreValidRequest.getTimestamp()));
+        }
+        resultMap.put(ResultFileExporter.ResultType.REX_RESULT, rexResultFileExporter.exportStudyPointResult(studyPointResults, coreValidRequest.getTimestamp()));
+        resultMap.put(ResultFileExporter.ResultType.REMEDIAL_ACTIONS_RESULT, remedialActionsFileExporter.exportStudyPointResult(studyPointResults, coreValidRequest.getTimestamp()));
         return resultMap;
     }
     //endregion
