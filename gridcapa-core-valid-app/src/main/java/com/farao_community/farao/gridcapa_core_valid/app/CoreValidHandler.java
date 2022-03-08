@@ -15,6 +15,7 @@ import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
 import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_creator.FbConstraintCreationContext;
 import com.farao_community.farao.data.glsk.api.GlskDocument;
 import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
+import com.farao_community.farao.gridcapa.task_manager.api.TaskDto;
 import com.farao_community.farao.gridcapa_core_valid.app.configuration.SearchTreeRaoConfiguration;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
@@ -32,6 +33,9 @@ import com.powsybl.action.util.Scalable;
 import com.powsybl.iidm.network.Network;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -53,15 +57,26 @@ public class CoreValidHandler {
     private final FileImporter fileImporter;
     private final FileExporter fileExporter;
     private final SearchTreeRaoConfiguration searchTreeRaoConfiguration;
+    private final Logger jobLauncherEventsLogger;
+    private final RestTemplateBuilder restTemplateBuilder;
 
-    public CoreValidHandler(StudyPointService studyPointService, FileImporter fileImporter, FileExporter fileExporter, SearchTreeRaoConfiguration searchTreeRaoConfiguration) {
+    public CoreValidHandler(RestTemplateBuilder restTemplateBuilder, StudyPointService studyPointService, FileImporter fileImporter, FileExporter fileExporter, SearchTreeRaoConfiguration searchTreeRaoConfiguration, Logger jobLauncherEventsLogger) {
         this.studyPointService = studyPointService;
         this.fileImporter = fileImporter;
         this.fileExporter = fileExporter;
         this.searchTreeRaoConfiguration = searchTreeRaoConfiguration;
+        this.jobLauncherEventsLogger = jobLauncherEventsLogger;
+        this.restTemplateBuilder = restTemplateBuilder;
     }
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
+        String requestUrl = "http://core-valid-gridcapa-task-manager:8080/tasks/" + coreValidRequest.getTimestamp();
+        ResponseEntity<TaskDto> responseEntity = restTemplateBuilder.build().getForEntity(requestUrl, TaskDto.class);
+        TaskDto taskDto = responseEntity.getBody();
+
+        String taskId = taskDto.getId().toString();
+        MDC.put("gridcapa-task-id", taskId);
+
         try {
             Map<StudyPoint, CompletableFuture<RaoResponse>> studyPointCompletableFutures = new HashMap<>();
             Instant computationStartInstant = Instant.now();

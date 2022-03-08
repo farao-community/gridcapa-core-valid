@@ -1,3 +1,7 @@
+logback:
+  amqp:
+    exchange: task-manager-logs-exchange
+    routing-key: "#"
 spring:
   banner:
     location: classpath:banner.txt

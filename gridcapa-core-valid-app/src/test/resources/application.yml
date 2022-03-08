@@ -1,3 +1,7 @@
+logback:
+  amqp:
+    exchange: core-valid-logs-exchange
+    routing-key: "#"
 spring:
   rabbitmq:
     host: localhost
