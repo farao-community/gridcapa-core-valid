@@ -45,20 +45,20 @@ public class RemedialActionsFileExporter implements ResultFileExporter {
 
     @Override
     public String exportStudyPointResult(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp) {
-        ByteArrayOutputStream rexResultBaos = new ByteArrayOutputStream();
+        ByteArrayOutputStream remedialActionsResultBaos = new ByteArrayOutputStream();
         try {
-            CSVPrinter rexResultCsvPrinter = new CSVPrinter(new OutputStreamWriter(rexResultBaos), CSVFormat.EXCEL.withDelimiter(';')
-                    .withHeader("Period", "Vertice ID", "State", "RA applied"));
+            CSVPrinter remedialActionsResultCsvPrinter = new CSVPrinter(new OutputStreamWriter(remedialActionsResultBaos), CSVFormat.EXCEL.withDelimiter(';')
+                    .withHeader("Period", "Vertice ID", "State", "RA ID", "RA name"));
             for (StudyPointResult studyPointResult : studyPointResults) {
-                addStudyPointResultToRemedialActionsOutputFile(studyPointResult, rexResultCsvPrinter);
+                addStudyPointResultToRemedialActionsOutputFile(studyPointResult, remedialActionsResultCsvPrinter);
             }
-            rexResultCsvPrinter.flush();
-            rexResultCsvPrinter.close();
+            remedialActionsResultCsvPrinter.flush();
+            remedialActionsResultCsvPrinter.close();
         } catch (IOException e) {
             throw new CoreValidInvalidDataException("Error during export of studypoint results on Minio", e);
         }
         String filePath = String.format(REMEDIAL_ACTIONS_SAMPLE_CSV_FILE, timestamp.atZoneSameInstant(ZoneId.of("Europe/Paris")).format(DateTimeFormatter.ofPattern("yyyyMMdd-HH")));
-        minioAdapter.uploadFile(filePath, rexResultBaos);
+        minioAdapter.uploadFile(filePath, remedialActionsResultBaos);
         LOGGER.info("Remedial Actions result file was successfully uploaded on minIO");
         return minioAdapter.generatePreSignedUrl(filePath);
     }
@@ -75,6 +75,7 @@ public class RemedialActionsFileExporter implements ResultFileExporter {
             mainResultFields.add(studyPointResult.getPeriod());
             mainResultFields.add(studyPointResult.getId());
             mainResultFields.add(limitingBranchResult.getCriticalBranchId());
+            mainResultFields.add(remedialAction.getId());
             mainResultFields.add(remedialAction.getName());
             csvPrinter.printRecord(mainResultFields);
         }
