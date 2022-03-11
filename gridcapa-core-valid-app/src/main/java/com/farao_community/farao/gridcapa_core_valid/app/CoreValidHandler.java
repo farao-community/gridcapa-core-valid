@@ -33,11 +33,9 @@ import com.powsybl.iidm.network.Network;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,21 +54,19 @@ public class CoreValidHandler {
     private final FileExporter fileExporter;
     private final SearchTreeRaoConfiguration searchTreeRaoConfiguration;
     private final Logger jobLauncherEventsLogger;
-    private final RestTemplateBuilder restTemplateBuilder;
 
-    public CoreValidHandler(RestTemplateBuilder restTemplateBuilder, StudyPointService studyPointService, FileImporter fileImporter, FileExporter fileExporter, SearchTreeRaoConfiguration searchTreeRaoConfiguration, Logger jobLauncherEventsLogger) {
+    public CoreValidHandler(StudyPointService studyPointService, FileImporter fileImporter, FileExporter fileExporter, SearchTreeRaoConfiguration searchTreeRaoConfiguration, Logger jobLauncherEventsLogger) {
         this.studyPointService = studyPointService;
         this.fileImporter = fileImporter;
         this.fileExporter = fileExporter;
         this.searchTreeRaoConfiguration = searchTreeRaoConfiguration;
         this.jobLauncherEventsLogger = jobLauncherEventsLogger;
-        this.restTemplateBuilder = restTemplateBuilder;
     }
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
 
         MDC.put("gridcapa-task-id", coreValidRequest.getId());
-        jobLauncherEventsLogger.info("plip plop test lol");
+        jobLauncherEventsLogger.info("test event");
 
         try {
             Map<StudyPoint, CompletableFuture<RaoResponse>> studyPointCompletableFutures = new HashMap<>();
