@@ -53,20 +53,20 @@ public class CoreValidHandler {
     private final FileImporter fileImporter;
     private final FileExporter fileExporter;
     private final SearchTreeRaoConfiguration searchTreeRaoConfiguration;
-    private final Logger jobLauncherEventsLogger;
+    private final Logger eventsLogger;
 
-    public CoreValidHandler(StudyPointService studyPointService, FileImporter fileImporter, FileExporter fileExporter, SearchTreeRaoConfiguration searchTreeRaoConfiguration, Logger jobLauncherEventsLogger) {
+    public CoreValidHandler(StudyPointService studyPointService, FileImporter fileImporter, FileExporter fileExporter, SearchTreeRaoConfiguration searchTreeRaoConfiguration, Logger eventsLogger) {
         this.studyPointService = studyPointService;
         this.fileImporter = fileImporter;
         this.fileExporter = fileExporter;
         this.searchTreeRaoConfiguration = searchTreeRaoConfiguration;
-        this.jobLauncherEventsLogger = jobLauncherEventsLogger;
+        this.eventsLogger = eventsLogger;
     }
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
 
         MDC.put("gridcapa-task-id", coreValidRequest.getId());
-        jobLauncherEventsLogger.info("test event");
+        eventsLogger.info("test event");
 
         try {
             Map<StudyPoint, CompletableFuture<RaoResponse>> studyPointCompletableFutures = new HashMap<>();
