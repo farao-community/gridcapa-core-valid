@@ -77,7 +77,7 @@ public class CoreValidHandler {
             if (!studyPoints.isEmpty()) {
                 StudyPointData studyPointData = fillStudyPointData(coreValidRequest);
                 studyPoints.forEach(studyPoint -> studyPointRaoRequests.put(studyPoint, studyPointService.computeStudyPointShift(studyPoint, studyPointData)));
-                LOGGER.info("All studypoints shifts are done for timestamp {}", formattedTimestamp);
+                eventsLogger.info("All studypoints shifts are done for timestamp {}", formattedTimestamp);
                 studyPointRaoRequests.forEach((studyPoint, raoRequest) -> {
                     CompletableFuture<RaoResponse> raoResponse = studyPointService.computeStudyPointRao(studyPoint, raoRequest);
                     studyPointCompletableFutures.put(studyPoint, raoResponse);
