@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2022, RTE (http://www.rte-france.com)
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -32,9 +32,11 @@ import com.powsybl.action.util.Scalable;
 import com.powsybl.iidm.network.Network;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,15 +54,20 @@ public class CoreValidHandler {
     private final FileImporter fileImporter;
     private final FileExporter fileExporter;
     private final SearchTreeRaoConfiguration searchTreeRaoConfiguration;
+    private final Logger eventsLogger;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd' 'HH:mm");
+    private String formattedTimestamp;
 
-    public CoreValidHandler(StudyPointService studyPointService, FileImporter fileImporter, FileExporter fileExporter, SearchTreeRaoConfiguration searchTreeRaoConfiguration) {
+    public CoreValidHandler(StudyPointService studyPointService, FileImporter fileImporter, FileExporter fileExporter, SearchTreeRaoConfiguration searchTreeRaoConfiguration, Logger eventsLogger) {
         this.studyPointService = studyPointService;
         this.fileImporter = fileImporter;
         this.fileExporter = fileExporter;
         this.searchTreeRaoConfiguration = searchTreeRaoConfiguration;
+        this.eventsLogger = eventsLogger;
     }
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
+        setUpEventLogging(coreValidRequest);
         try {
             Map<StudyPoint, CompletableFuture<RaoResponse>> studyPointCompletableFutures = new HashMap<>();
             Instant computationStartInstant = Instant.now();
@@ -70,15 +77,17 @@ public class CoreValidHandler {
             if (!studyPoints.isEmpty()) {
                 StudyPointData studyPointData = fillStudyPointData(coreValidRequest);
                 studyPoints.forEach(studyPoint -> studyPointRaoRequests.put(studyPoint, studyPointService.computeStudyPointShift(studyPoint, studyPointData)));
+                eventsLogger.info("All studypoints shifts are done for timestamp {}", formattedTimestamp);
                 studyPointRaoRequests.forEach((studyPoint, raoRequest) -> {
                     CompletableFuture<RaoResponse> raoResponse = studyPointService.computeStudyPointRao(studyPoint, raoRequest);
                     studyPointCompletableFutures.put(studyPoint, raoResponse);
                     raoResponse.thenApply(raoResponse1 -> {
-                        LOGGER.info("End of RAO computation for studypoint {} .", studyPoint.getVerticeId());
+                        eventsLogger.info("End of RAO computation for studypoint {} .", studyPoint.getVerticeId());
                         return null;
                     })
                             .exceptionally(exception -> {
                                 studyPoint.getStudyPointResult().setStatusToError();
+                                eventsLogger.error("Error during RAO computation for studypoint {}.", studyPoint.getVerticeId());
                                 throw new CoreValidRaoException(String.format("Error during RAO computation for studypoint %s .", studyPoint.getVerticeId()));
                             });
                 });
@@ -91,11 +100,14 @@ public class CoreValidHandler {
             }
             Instant computationEndInstant = Instant.now();
             Map<ResultFileExporter.ResultType, String> resultFileUrls = saveProcessOutputs(studyPointResults, coreValidRequest);
+            eventsLogger.info("Process done for timestamp {}.", formattedTimestamp);
             return new CoreValidResponse(coreValidRequest.getId(), resultFileUrls.get(ResultFileExporter.ResultType.MAIN_RESULT), resultFileUrls.get(ResultFileExporter.ResultType.REX_RESULT), resultFileUrls.get(ResultFileExporter.ResultType.REMEDIAL_ACTIONS_RESULT), computationStartInstant, computationEndInstant);
         } catch (InterruptedException e) {
+            eventsLogger.error("Error during core request running for timestamp {}.", formattedTimestamp);
             Thread.currentThread().interrupt();
             throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
         } catch (ExecutionException e) {
+            eventsLogger.error("Error during core request running for timestamp {}.", formattedTimestamp);
             throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
         }
     }
@@ -127,5 +139,10 @@ public class CoreValidHandler {
 
     private Map<ResultFileExporter.ResultType, String> saveProcessOutputs(List<StudyPointResult> studyPointResults, CoreValidRequest coreValidRequest) {
         return fileExporter.exportStudyPointResult(studyPointResults, coreValidRequest);
+    }
+
+    private void setUpEventLogging(CoreValidRequest coreValidRequest) {
+        MDC.put("gridcapa-task-id", coreValidRequest.getId());
+        formattedTimestamp = formatter.format(coreValidRequest.getTimestamp());
     }
 }
