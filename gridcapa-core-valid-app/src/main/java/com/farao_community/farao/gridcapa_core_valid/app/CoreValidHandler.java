@@ -77,6 +77,7 @@ public class CoreValidHandler {
             if (!studyPoints.isEmpty()) {
                 StudyPointData studyPointData = fillStudyPointData(coreValidRequest);
                 studyPoints.forEach(studyPoint -> studyPointRaoRequests.put(studyPoint, studyPointService.computeStudyPointShift(studyPoint, studyPointData)));
+                LOGGER.info("All studypoints shifts are done for timestamp {}", formattedTimestamp);
                 studyPointRaoRequests.forEach((studyPoint, raoRequest) -> {
                     CompletableFuture<RaoResponse> raoResponse = studyPointService.computeStudyPointRao(studyPoint, raoRequest);
                     studyPointCompletableFutures.put(studyPoint, raoResponse);
@@ -86,7 +87,7 @@ public class CoreValidHandler {
                     })
                             .exceptionally(exception -> {
                                 studyPoint.getStudyPointResult().setStatusToError();
-                                eventsLogger.error("Error for studypoint {}.", studyPoint.getVerticeId());
+                                eventsLogger.error("Error during RAO computation for studypoint {}.", studyPoint.getVerticeId());
                                 throw new CoreValidRaoException(String.format("Error during RAO computation for studypoint %s .", studyPoint.getVerticeId()));
                             });
                 });
