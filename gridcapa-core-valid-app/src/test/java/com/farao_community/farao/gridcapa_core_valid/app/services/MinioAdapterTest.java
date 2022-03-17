@@ -11,7 +11,6 @@ import io.minio.MinioClient;
 import io.minio.Result;
 import io.minio.errors.*;
 import io.minio.messages.Item;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -23,12 +22,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -63,8 +60,13 @@ class MinioAdapterTest {
 
     @Test
     void listArtifactsTest() {
-        Result res = new Result(Item.class);
-        List<Result<Item>> listRes = Collections.singletonList(res);
+        Item item = new Item() {
+            @Override
+            public String objectName() {
+                return "networkWithPRA.xiidm";
+            }
+        };
+        List<Result<Item>> listRes = Collections.singletonList(new Result<>(item));
         Mockito.when(minioClient.listObjects(Mockito.any())).thenReturn(listRes);
         minioAdapter.listArtifacts("prefix");
         Mockito.verify(minioClient, Mockito.times(1)).listObjects(Mockito.any());
