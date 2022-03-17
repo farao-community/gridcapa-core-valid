@@ -90,7 +90,7 @@ public class MinioAdapter {
         }
     }
 
-    private Iterable<Result<Item>> listArtifacts(String prefix) {
+    public Iterable<Result<Item>> listArtifacts(String prefix) {
         return client.listObjects(ListObjectsArgs.builder()
                 .bucket(bucket)
                 .prefix(basePath + "artifacts/" + prefix)
