@@ -8,11 +8,10 @@
 package com.farao_community.farao.gridcapa_core_valid.app.services;
 
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
-import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.gridcapa_core_valid.app.configuration.MinioConfiguration;
 import io.minio.*;
 import io.minio.http.Method;
-import org.apache.commons.io.FilenameUtils;
+import io.minio.messages.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -77,15 +76,41 @@ public class MinioAdapter {
         }
     }
 
-    public CoreValidFileResource generateFileResource(String filePath) {
-        try {
-            String fullFilePath = String.format(FORMAT_URL, basePath, filePath);
-            String filename = FilenameUtils.getName(filePath);
-            LOGGER.info("Generates pre-signed URL for file '{}' in Minio bucket '{}'", fullFilePath, bucket);
-            String url = client.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().bucket(bucket).object(fullFilePath).expiry(DEFAULT_DOWNLOAD_LINK_EXPIRY_IN_DAYS, TimeUnit.DAYS).method(Method.GET).build());
-            return new CoreValidFileResource(filename, url);
-        } catch (Exception e) {
-            throw new CoreValidInternalException("Exception in MinIO connection.", e);
+    public void deleteCgmBeforeRao(String prefix) {
+        Iterable<Result<Item>> files = listArtifacts(prefix);
+
+        for (Result<Item> result : files) {
+            try {
+                String objectName = result.get().objectName();
+                client.removeObject(RemoveObjectArgs.builder().bucket(bucket).object(objectName).build());
+                LOGGER.info("File {} deleted from Minio", objectName);
+            } catch (Exception e) {
+                LOGGER.error(String.format("Can not delete artifact starting with %s.", prefix));
+            }
+        }
+    }
+
+    private Iterable<Result<Item>> listArtifacts(String prefix) {
+        return client.listObjects(ListObjectsArgs.builder()
+                .bucket(bucket)
+                .prefix(basePath + "artifacts/" + prefix)
+                .recursive(true)
+                .build());
+    }
+
+    public void deleteCgmAfterRao() {
+        Iterable<Result<Item>> files = listArtifacts("RAO");
+
+        for (Result<Item> result : files) {
+            try {
+                String objectName = result.get().objectName();
+                if (objectName.contains("networkWithPRA.xiidm")) {
+                    client.removeObject(RemoveObjectArgs.builder().bucket(bucket).object(result.get().objectName()).build());
+                    LOGGER.info("File {} deleted from Minio", objectName);
+                }
+            } catch (Exception e) {
+                LOGGER.error("Can not delete artifact CGM after RAO");
+            }
         }
     }
 

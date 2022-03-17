@@ -18,6 +18,7 @@ import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram
 import com.farao_community.farao.gridcapa_core_valid.app.configuration.SearchTreeRaoConfiguration;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
+import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.NetPositionsHandler;
 import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.ResultFileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
@@ -31,11 +32,11 @@ import com.farao_community.farao.search_tree_rao.castor.parameters.SearchTreeRao
 import com.powsybl.action.util.Scalable;
 import com.powsybl.iidm.network.Network;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,20 +50,22 @@ import java.util.concurrent.ExecutionException;
  */
 @Component
 public class CoreValidHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CoreValidHandler.class);
     private final StudyPointService studyPointService;
     private final FileImporter fileImporter;
     private final FileExporter fileExporter;
     private final SearchTreeRaoConfiguration searchTreeRaoConfiguration;
+    private final MinioAdapter minioAdapter;
     private final Logger eventsLogger;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd' 'HH:mm");
+    private final DateTimeFormatter timestampFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd' 'HH:mm");
+    private final DateTimeFormatter artifactsFormatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmm");
     private String formattedTimestamp;
 
-    public CoreValidHandler(StudyPointService studyPointService, FileImporter fileImporter, FileExporter fileExporter, SearchTreeRaoConfiguration searchTreeRaoConfiguration, Logger eventsLogger) {
+    public CoreValidHandler(StudyPointService studyPointService, FileImporter fileImporter, FileExporter fileExporter, SearchTreeRaoConfiguration searchTreeRaoConfiguration, MinioAdapter minioAdapter, Logger eventsLogger) {
         this.studyPointService = studyPointService;
         this.fileImporter = fileImporter;
         this.fileExporter = fileExporter;
         this.searchTreeRaoConfiguration = searchTreeRaoConfiguration;
+        this.minioAdapter = minioAdapter;
         this.eventsLogger = eventsLogger;
     }
 
@@ -100,6 +103,9 @@ public class CoreValidHandler {
             }
             Instant computationEndInstant = Instant.now();
             Map<ResultFileExporter.ResultType, String> resultFileUrls = saveProcessOutputs(studyPointResults, coreValidRequest);
+            if (coreValidRequest.getLaunchedAutomatically()) {
+                deleteArtifacts(coreValidRequest);
+            }
             eventsLogger.info("Process done for timestamp {}.", formattedTimestamp);
             return new CoreValidResponse(coreValidRequest.getId(), resultFileUrls.get(ResultFileExporter.ResultType.MAIN_RESULT), resultFileUrls.get(ResultFileExporter.ResultType.REX_RESULT), resultFileUrls.get(ResultFileExporter.ResultType.REMEDIAL_ACTIONS_RESULT), computationStartInstant, computationEndInstant);
         } catch (InterruptedException e) {
@@ -110,6 +116,11 @@ public class CoreValidHandler {
             eventsLogger.error("Error during core request running for timestamp {}.", formattedTimestamp);
             throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
         }
+    }
+
+    private void deleteArtifacts(CoreValidRequest coreValidRequest) {
+        minioAdapter.deleteCgmBeforeRao(artifactsFormatter.format(coreValidRequest.getTimestamp().atZoneSameInstant(ZoneId.of("Europe/Paris"))));
+        minioAdapter.deleteCgmAfterRao();
     }
 
     private StudyPointData fillStudyPointData(CoreValidRequest coreValidRequest) {
@@ -143,6 +154,6 @@ public class CoreValidHandler {
 
     private void setUpEventLogging(CoreValidRequest coreValidRequest) {
         MDC.put("gridcapa-task-id", coreValidRequest.getId());
-        formattedTimestamp = formatter.format(coreValidRequest.getTimestamp());
+        formattedTimestamp = timestampFormatter.format(coreValidRequest.getTimestamp());
     }
 }
