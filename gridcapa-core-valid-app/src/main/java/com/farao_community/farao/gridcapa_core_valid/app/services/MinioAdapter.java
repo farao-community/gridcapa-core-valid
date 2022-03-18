@@ -76,20 +76,6 @@ public class MinioAdapter {
         }
     }
 
-    public void deleteCgmBeforeRao(String prefix) {
-        Iterable<Result<Item>> files = listArtifacts(prefix);
-
-        for (Result<Item> result : files) {
-            try {
-                String objectName = result.get().objectName();
-                client.removeObject(RemoveObjectArgs.builder().bucket(bucket).object(objectName).build());
-                LOGGER.info("File {} deleted from Minio", objectName);
-            } catch (Exception e) {
-                LOGGER.error(String.format("Can not delete artifact starting with %s.", prefix));
-            }
-        }
-    }
-
     public Iterable<Result<Item>> listArtifacts(String prefix) {
         return client.listObjects(ListObjectsArgs.builder()
                 .bucket(bucket)
@@ -98,18 +84,30 @@ public class MinioAdapter {
                 .build());
     }
 
-    public void deleteCgmAfterRao() {
-        Iterable<Result<Item>> files = listArtifacts("RAO");
-
-        for (Result<Item> result : files) {
+    public void deleteObjects(Iterable<Result<Item>> results) {
+        String objectName = "";
+        for (Result<Item> result : results) {
             try {
-                String objectName = result.get().objectName();
-                if (objectName.contains("networkWithPRA.xiidm")) {
+                objectName = result.get().objectName();
+                client.removeObject(RemoveObjectArgs.builder().bucket(bucket).object(result.get().objectName()).build());
+                LOGGER.info("File {} deleted from Minio", objectName);
+            } catch (Exception e) {
+                LOGGER.error("Can not delete object {}.", objectName);
+            }
+        }
+    }
+
+    public void deleteObjectsContainingString(Iterable<Result<Item>> results, String containedString) {
+        String objectName = "";
+        for (Result<Item> result : results) {
+            try {
+                objectName = result.get().objectName();
+                if (objectName.contains(containedString)) {
                     client.removeObject(RemoveObjectArgs.builder().bucket(bucket).object(result.get().objectName()).build());
                     LOGGER.info("File {} deleted from Minio", objectName);
                 }
             } catch (Exception e) {
-                LOGGER.error("Can not delete artifact CGM after RAO");
+                LOGGER.error("Can not delete object {}.", objectName);
             }
         }
     }

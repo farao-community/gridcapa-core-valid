@@ -119,8 +119,8 @@ public class CoreValidHandler {
     }
 
     private void deleteArtifacts(CoreValidRequest coreValidRequest) {
-        minioAdapter.deleteCgmBeforeRao(artifactsFormatter.format(coreValidRequest.getTimestamp().atZoneSameInstant(ZoneId.of("Europe/Paris"))));
-        minioAdapter.deleteCgmAfterRao();
+        deleteCgmBeforeRao(artifactsFormatter.format(coreValidRequest.getTimestamp().atZoneSameInstant(ZoneId.of("Europe/Paris"))));
+        deleteCgmAfterRao("RAO");
     }
 
     private StudyPointData fillStudyPointData(CoreValidRequest coreValidRequest) {
@@ -150,6 +150,14 @@ public class CoreValidHandler {
 
     private Map<ResultFileExporter.ResultType, String> saveProcessOutputs(List<StudyPointResult> studyPointResults, CoreValidRequest coreValidRequest) {
         return fileExporter.exportStudyPointResult(studyPointResults, coreValidRequest);
+    }
+
+    public void deleteCgmBeforeRao(String prefix) {
+        minioAdapter.deleteObjects(minioAdapter.listArtifacts(prefix));
+    }
+
+    public void deleteCgmAfterRao(String prefix) {
+        minioAdapter.deleteObjectsContainingString(minioAdapter.listArtifacts(prefix), "networkWithPRA.xiidm");
     }
 
     private void setUpEventLogging(CoreValidRequest coreValidRequest) {

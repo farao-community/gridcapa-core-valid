@@ -24,6 +24,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -68,7 +69,8 @@ class MinioAdapterTest {
         };
         List<Result<Item>> listRes = Collections.singletonList(new Result<>(item));
         Mockito.when(minioClient.listObjects(Mockito.any())).thenReturn(listRes);
-        minioAdapter.listArtifacts("prefix");
+        Iterable<Result<Item>> results = minioAdapter.listArtifacts("prefix");
+        assertEquals(1, StreamSupport.stream(results.spliterator(), false).count());
         Mockito.verify(minioClient, Mockito.times(1)).listObjects(Mockito.any());
     }
 
@@ -81,9 +83,8 @@ class MinioAdapterTest {
             }
         };
         List<Result<Item>> listRes = Collections.singletonList(new Result<>(item));
-        Mockito.when(minioClient.listObjects(Mockito.any())).thenReturn(listRes);
-        minioAdapter.deleteCgmBeforeRao("prefixBefore");
-        minioAdapter.deleteCgmAfterRao();
+        minioAdapter.deleteObjects(listRes);
+        minioAdapter.deleteObjectsContainingString(listRes, "network");
         Mockito.verify(minioClient, Mockito.times(2)).removeObject(Mockito.any());
     }
 
