@@ -88,4 +88,10 @@ class MinioAdapterTest {
         Mockito.verify(minioClient, Mockito.times(2)).removeObject(Mockito.any());
     }
 
+    @Test
+    void fileExistOnMinio() throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        Mockito.when(minioClient.statObject(Mockito.any())).thenReturn(null);
+        minioAdapter.exists("filepath");
+        Mockito.verify(minioClient, Mockito.times(1)).statObject(Mockito.any());
+    }
 }

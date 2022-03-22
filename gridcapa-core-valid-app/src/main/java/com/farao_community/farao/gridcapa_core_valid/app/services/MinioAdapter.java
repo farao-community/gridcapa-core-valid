@@ -112,6 +112,24 @@ public class MinioAdapter {
         }
     }
 
+    public boolean exists(String filePath) {
+        createBucketIfDoesNotExist(bucket);
+        try {
+            StatObjectResponse statObjectResponse = client.statObject(StatObjectArgs.builder()
+                    .bucket(bucket)
+                    .object(basePath + filePath)
+                    .build());
+            if (statObjectResponse == null) {
+                LOGGER.warn("File '{}' does not exist in MinIO bucket '{}'", filePath, bucket);
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            LOGGER.warn("File '{}' does not exist in MinIO bucket '{}'", filePath, bucket);
+            return false;
+        }
+    }
+
     private void createBucketIfDoesNotExist(String bucket) {
         try {
             if (!client.bucketExists(BucketExistsArgs.builder().bucket(bucket).build())) {
