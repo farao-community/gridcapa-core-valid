@@ -72,6 +72,8 @@ class CoreValidHandlerTest {
         CoreValidRequest request = new CoreValidRequest(requestId, dateTime, networkFile, cbcoraFile, glskFile,  refProgFile, studyPointsFile, true);
         CoreValidResponse response = coreValidHandler.handleCoreValidRequest(request);
         assertEquals(requestId, response.getId());
+        Mockito.verify(minioAdapter, Mockito.times(1)).deleteObjects(Mockito.any());
+        Mockito.verify(minioAdapter, Mockito.times(1)).deleteObjectsContainingString(Mockito.any(), Mockito.anyString());
     }
 
     private CoreValidFileResource createFileResource(String filename, URL resource) {
