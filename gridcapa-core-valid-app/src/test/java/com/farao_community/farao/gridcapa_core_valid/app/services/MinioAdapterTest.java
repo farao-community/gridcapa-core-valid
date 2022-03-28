@@ -8,6 +8,9 @@
 package com.farao_community.farao.gridcapa_core_valid.app.services;
 
 import io.minio.MinioClient;
+import io.minio.Result;
+import io.minio.errors.*;
+import io.minio.messages.Item;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -16,8 +19,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.StreamSupport;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -48,6 +57,35 @@ class MinioAdapterTest {
         String url = minioAdapter.generatePreSignedUrl("file/path");
         Mockito.verify(minioClient, Mockito.times(1)).getPresignedObjectUrl(Mockito.any());
         assertEquals("http://url", url);
+    }
+
+    @Test
+    void listArtifactsTest() {
+        Item item = new Item() {
+            @Override
+            public String objectName() {
+                return "networkWithPRA.xiidm";
+            }
+        };
+        List<Result<Item>> listRes = Collections.singletonList(new Result<>(item));
+        Mockito.when(minioClient.listObjects(Mockito.any())).thenReturn(listRes);
+        Iterable<Result<Item>> results = minioAdapter.listArtifacts("prefix");
+        assertEquals(1, StreamSupport.stream(results.spliterator(), false).count());
+        Mockito.verify(minioClient, Mockito.times(1)).listObjects(Mockito.any());
+    }
+
+    @Test
+    void deleteCgmBeforeAndAfterRaoTest() throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        Item item = new Item() {
+            @Override
+            public String objectName() {
+                return "networkWithPRA.xiidm";
+            }
+        };
+        List<Result<Item>> listRes = Collections.singletonList(new Result<>(item));
+        minioAdapter.deleteObjects(listRes);
+        minioAdapter.deleteObjectsContainingString(listRes, "network");
+        Mockito.verify(minioClient, Mockito.times(2)).removeObject(Mockito.any());
     }
 
 }

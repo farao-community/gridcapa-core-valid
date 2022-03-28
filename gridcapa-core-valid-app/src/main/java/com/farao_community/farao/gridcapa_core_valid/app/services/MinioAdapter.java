@@ -8,11 +8,10 @@
 package com.farao_community.farao.gridcapa_core_valid.app.services;
 
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
-import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.gridcapa_core_valid.app.configuration.MinioConfiguration;
 import io.minio.*;
 import io.minio.http.Method;
-import org.apache.commons.io.FilenameUtils;
+import io.minio.messages.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -77,15 +76,30 @@ public class MinioAdapter {
         }
     }
 
-    public CoreValidFileResource generateFileResource(String filePath) {
-        try {
-            String fullFilePath = String.format(FORMAT_URL, basePath, filePath);
-            String filename = FilenameUtils.getName(filePath);
-            LOGGER.info("Generates pre-signed URL for file '{}' in Minio bucket '{}'", fullFilePath, bucket);
-            String url = client.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().bucket(bucket).object(fullFilePath).expiry(DEFAULT_DOWNLOAD_LINK_EXPIRY_IN_DAYS, TimeUnit.DAYS).method(Method.GET).build());
-            return new CoreValidFileResource(filename, url);
-        } catch (Exception e) {
-            throw new CoreValidInternalException("Exception in MinIO connection.", e);
+    public Iterable<Result<Item>> listArtifacts(String prefix) {
+        return client.listObjects(ListObjectsArgs.builder()
+                .bucket(bucket)
+                .prefix(basePath + "artifacts/" + prefix)
+                .recursive(true)
+                .build());
+    }
+
+    public void deleteObjects(Iterable<Result<Item>> results) {
+        deleteObjectsContainingString(results, "");
+    }
+
+    public void deleteObjectsContainingString(Iterable<Result<Item>> results, String containedString) {
+        String objectName = "";
+        for (Result<Item> result : results) {
+            try {
+                objectName = result.get().objectName();
+                if (objectName.contains(containedString)) {
+                    client.removeObject(RemoveObjectArgs.builder().bucket(bucket).object(result.get().objectName()).build());
+                    LOGGER.info("File {} deleted from Minio", objectName);
+                }
+            } catch (Exception e) {
+                LOGGER.error("Can not delete object {}.", objectName);
+            }
         }
     }
 
