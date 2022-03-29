@@ -12,7 +12,6 @@ import io.minio.Result;
 import io.minio.StatObjectResponse;
 import io.minio.errors.*;
 import io.minio.messages.Item;
-import okhttp3.Headers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
