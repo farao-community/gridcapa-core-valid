@@ -9,8 +9,10 @@ package com.farao_community.farao.gridcapa_core_valid.app.services;
 
 import io.minio.MinioClient;
 import io.minio.Result;
+import io.minio.StatObjectResponse;
 import io.minio.errors.*;
 import io.minio.messages.Item;
+import okhttp3.Headers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -89,8 +91,16 @@ class MinioAdapterTest {
     }
 
     @Test
-    void fileExistOnMinio() throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+    void fileDoesNotExistOnMinio() throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
         Mockito.when(minioClient.statObject(Mockito.any())).thenReturn(null);
+        minioAdapter.exists("filepath");
+        Mockito.verify(minioClient, Mockito.times(1)).statObject(Mockito.any());
+    }
+
+    @Test
+    void fileExistOnMinio() throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        StatObjectResponse objectStat = Mockito.mock(StatObjectResponse.class);
+        Mockito.when(minioClient.statObject(Mockito.any())).thenReturn(objectStat);
         minioAdapter.exists("filepath");
         Mockito.verify(minioClient, Mockito.times(1)).statObject(Mockito.any());
     }
