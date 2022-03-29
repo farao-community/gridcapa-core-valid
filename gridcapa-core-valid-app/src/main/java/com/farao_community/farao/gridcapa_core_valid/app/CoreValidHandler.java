@@ -47,18 +47,26 @@ import java.util.concurrent.ExecutionException;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
+ * @author Theo Pascoli {@literal <theo.pascoli at rte-france.com>}
  */
 @Component
 public class CoreValidHandler {
-    private final StudyPointService studyPointService;
-    private final FileImporter fileImporter;
-    private final FileExporter fileExporter;
-    private final SearchTreeRaoConfiguration searchTreeRaoConfiguration;
-    private final MinioAdapter minioAdapter;
     private final Logger eventsLogger;
-    private final DateTimeFormatter timestampFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd' 'HH:mm");
+    private final FileExporter fileExporter;
+    private final FileImporter fileImporter;
+    private final MinioAdapter minioAdapter;
+    private final SearchTreeRaoConfiguration searchTreeRaoConfiguration;
+    private final StudyPointService studyPointService;
     private final DateTimeFormatter artifactsFormatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmm");
+    private final DateTimeFormatter timestampFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd' 'HH:mm");
+    private Instant computationStartInstant;
+    private Instant computationEndInstant;
     private String formattedTimestamp;
+    private List<StudyPoint> studyPoints;
+    private Map<ResultFileExporter.ResultType, String> resultFileUrls;
+    private Map<StudyPoint, CompletableFuture<RaoResponse>> studyPointCompletableFutures;
+    private Map<StudyPoint, RaoRequest> studyPointRaoRequests;
+    private List<StudyPointResult> studyPointResults;
 
     public CoreValidHandler(StudyPointService studyPointService, FileImporter fileImporter, FileExporter fileExporter, SearchTreeRaoConfiguration searchTreeRaoConfiguration, MinioAdapter minioAdapter, Logger eventsLogger) {
         this.studyPointService = studyPointService;
@@ -70,44 +78,10 @@ public class CoreValidHandler {
     }
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
-        setUpEventLogging(coreValidRequest);
         try {
-            Map<StudyPoint, CompletableFuture<RaoResponse>> studyPointCompletableFutures = new HashMap<>();
-            Instant computationStartInstant = Instant.now();
-            List<StudyPoint> studyPoints = fileImporter.importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
-            Map<StudyPoint, RaoRequest> studyPointRaoRequests = new HashMap<>();
-            List<StudyPointResult> studyPointResults = new ArrayList<>();
-            if (!studyPoints.isEmpty()) {
-                StudyPointData studyPointData = fillStudyPointData(coreValidRequest);
-                studyPoints.forEach(studyPoint -> studyPointRaoRequests.put(studyPoint, studyPointService.computeStudyPointShift(studyPoint, studyPointData)));
-                eventsLogger.info("All studypoints shifts are done for timestamp {}", formattedTimestamp);
-                studyPointRaoRequests.forEach((studyPoint, raoRequest) -> {
-                    CompletableFuture<RaoResponse> raoResponse = studyPointService.computeStudyPointRao(studyPoint, raoRequest);
-                    studyPointCompletableFutures.put(studyPoint, raoResponse);
-                    raoResponse.thenApply(raoResponse1 -> {
-                        eventsLogger.info("End of RAO computation for studypoint {} .", studyPoint.getVerticeId());
-                        return null;
-                    })
-                            .exceptionally(exception -> {
-                                studyPoint.getStudyPointResult().setStatusToError();
-                                eventsLogger.error("Error during RAO computation for studypoint {}.", studyPoint.getVerticeId());
-                                throw new CoreValidRaoException(String.format("Error during RAO computation for studypoint %s .", studyPoint.getVerticeId()));
-                            });
-                });
-                CompletableFuture.allOf(studyPointCompletableFutures.values().toArray(new CompletableFuture[0])).get();
-                for (Map.Entry<StudyPoint, CompletableFuture<RaoResponse>> entry : studyPointCompletableFutures.entrySet()) {
-                    StudyPoint studyPoint = entry.getKey();
-                    RaoResponse raoResponse = entry.getValue().get();
-                    studyPointResults.add(studyPointService.postTreatRaoResult(studyPoint, studyPointData, raoResponse));
-                }
-            }
-            Instant computationEndInstant = Instant.now();
-            Map<ResultFileExporter.ResultType, String> resultFileUrls = saveProcessOutputs(studyPointResults, coreValidRequest);
-            if (coreValidRequest.getLaunchedAutomatically()) {
-                deleteArtifacts(coreValidRequest);
-            }
-            eventsLogger.info("Process done for timestamp {}.", formattedTimestamp);
-            return new CoreValidResponse(coreValidRequest.getId(), resultFileUrls.get(ResultFileExporter.ResultType.MAIN_RESULT), resultFileUrls.get(ResultFileExporter.ResultType.REX_RESULT), resultFileUrls.get(ResultFileExporter.ResultType.REMEDIAL_ACTIONS_RESULT), computationStartInstant, computationEndInstant);
+            preTreatment(coreValidRequest);
+            computeStudyPoints(coreValidRequest);
+            postTreatment(coreValidRequest);
         } catch (InterruptedException e) {
             eventsLogger.error("Error during core request running for timestamp {}.", formattedTimestamp);
             Thread.currentThread().interrupt();
@@ -116,6 +90,59 @@ public class CoreValidHandler {
             eventsLogger.error("Error during core request running for timestamp {}.", formattedTimestamp);
             throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
         }
+        return new CoreValidResponse(coreValidRequest.getId(), resultFileUrls.get(ResultFileExporter.ResultType.MAIN_RESULT), resultFileUrls.get(ResultFileExporter.ResultType.REX_RESULT), resultFileUrls.get(ResultFileExporter.ResultType.REMEDIAL_ACTIONS_RESULT), computationStartInstant, computationEndInstant);
+    }
+
+    private void preTreatment(CoreValidRequest coreValidRequest) {
+        setUpEventLogging(coreValidRequest);
+        studyPointRaoRequests = new HashMap<>();
+        studyPointResults = new ArrayList<>();
+        studyPointCompletableFutures = new HashMap<>();
+        computationStartInstant = Instant.now();
+        studyPoints = fileImporter.importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
+    }
+
+    private void computeStudyPoints(CoreValidRequest coreValidRequest) throws InterruptedException, ExecutionException {
+        if (!studyPoints.isEmpty()) {
+            StudyPointData studyPointData = fillStudyPointData(coreValidRequest);
+            studyPoints.forEach(studyPoint -> studyPointRaoRequests.put(studyPoint, studyPointService.computeStudyPointShift(studyPoint, studyPointData)));
+            eventsLogger.info("All studypoints shifts are done for timestamp {}", formattedTimestamp);
+            runRaoForEachStudyPoint();
+            fillResultsForEachStudyPoint(studyPointData);
+        }
+    }
+
+    private void postTreatment(CoreValidRequest coreValidRequest) {
+        computationEndInstant = Instant.now();
+        resultFileUrls = saveProcessOutputs(studyPointResults, coreValidRequest);
+        if (coreValidRequest.getLaunchedAutomatically()) {
+            deleteArtifacts(coreValidRequest);
+        }
+        eventsLogger.info("Process done for timestamp {}.", formattedTimestamp);
+    }
+
+    private void fillResultsForEachStudyPoint(StudyPointData studyPointData) throws InterruptedException, ExecutionException {
+        for (Map.Entry<StudyPoint, CompletableFuture<RaoResponse>> entry : studyPointCompletableFutures.entrySet()) {
+            StudyPoint studyPoint = entry.getKey();
+            RaoResponse raoResponse = entry.getValue().get();
+            studyPointResults.add(studyPointService.postTreatRaoResult(studyPoint, studyPointData, raoResponse));
+        }
+    }
+
+    private void runRaoForEachStudyPoint() throws ExecutionException, InterruptedException {
+        studyPointRaoRequests.forEach((studyPoint, raoRequest) -> {
+            CompletableFuture<RaoResponse> raoResponse = studyPointService.computeStudyPointRao(studyPoint, raoRequest);
+            studyPointCompletableFutures.put(studyPoint, raoResponse);
+            raoResponse.thenApply(raoResponse1 -> {
+                eventsLogger.info("End of RAO computation for studypoint {} .", studyPoint.getVerticeId());
+                return null;
+            }).exceptionally(exception -> {
+                studyPoint.getStudyPointResult().setStatusToError();
+                eventsLogger.error("Error during RAO computation for studypoint {}.", studyPoint.getVerticeId());
+                throw new CoreValidRaoException(String.format("Error during RAO computation for studypoint %s .", studyPoint.getVerticeId()));
+            });
+        });
+        CompletableFuture.allOf(studyPointCompletableFutures.values().toArray(new CompletableFuture[0])).get();
     }
 
     private void deleteArtifacts(CoreValidRequest coreValidRequest) {
