@@ -27,7 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -92,7 +92,7 @@ class MinioAdapterTest {
     @Test
     void fileDoesNotExistOnMinio() throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
         Mockito.when(minioClient.statObject(Mockito.any())).thenReturn(null);
-        minioAdapter.exists("filepath");
+        assertFalse(minioAdapter.exists("filepath"));
         Mockito.verify(minioClient, Mockito.times(1)).statObject(Mockito.any());
     }
 
@@ -100,7 +100,7 @@ class MinioAdapterTest {
     void fileExistOnMinio() throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
         StatObjectResponse objectStat = Mockito.mock(StatObjectResponse.class);
         Mockito.when(minioClient.statObject(Mockito.any())).thenReturn(objectStat);
-        minioAdapter.exists("filepath");
+        assertTrue(minioAdapter.exists("filepath"));
         Mockito.verify(minioClient, Mockito.times(1)).statObject(Mockito.any());
     }
 }
