@@ -31,7 +31,10 @@ import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
 import com.farao_community.farao.search_tree_rao.castor.parameters.SearchTreeRaoParameters;
 import com.powsybl.action.util.Scalable;
 import com.powsybl.iidm.network.Network;
+import io.minio.Result;
+import io.minio.messages.Item;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
@@ -44,6 +47,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -51,6 +56,8 @@ import java.util.concurrent.ExecutionException;
  */
 @Component
 public class CoreValidHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoreValidHandler.class);
     private final Logger eventsLogger;
     private final FileExporter fileExporter;
     private final FileImporter fileImporter;
@@ -59,14 +66,14 @@ public class CoreValidHandler {
     private final StudyPointService studyPointService;
     private final DateTimeFormatter artifactsFormatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmm");
     private final DateTimeFormatter timestampFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd' 'HH:mm");
+    private final Map<StudyPoint, CompletableFuture<RaoResponse>> studyPointCompletableFutures = new HashMap<>();
+    private final Map<StudyPoint, RaoRequest> studyPointRaoRequests = new HashMap<>();
+    private final List<StudyPointResult> studyPointResults = new ArrayList<>();
     private Instant computationStartInstant;
     private Instant computationEndInstant;
     private String formattedTimestamp;
     private List<StudyPoint> studyPoints;
     private Map<ResultFileExporter.ResultType, String> resultFileUrls;
-    private Map<StudyPoint, CompletableFuture<RaoResponse>> studyPointCompletableFutures;
-    private Map<StudyPoint, RaoRequest> studyPointRaoRequests;
-    private List<StudyPointResult> studyPointResults;
 
     public CoreValidHandler(StudyPointService studyPointService, FileImporter fileImporter, FileExporter fileExporter, SearchTreeRaoConfiguration searchTreeRaoConfiguration, MinioAdapter minioAdapter, Logger eventsLogger) {
         this.studyPointService = studyPointService;
@@ -95,14 +102,16 @@ public class CoreValidHandler {
 
     private void preTreatment(CoreValidRequest coreValidRequest) {
         setUpEventLogging(coreValidRequest);
-        studyPointRaoRequests = new HashMap<>();
-        studyPointResults = new ArrayList<>();
-        studyPointCompletableFutures = new HashMap<>();
         computationStartInstant = Instant.now();
-        studyPoints = fileImporter.importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
+    }
+
+    private void setUpEventLogging(CoreValidRequest coreValidRequest) {
+        MDC.put("gridcapa-task-id", coreValidRequest.getId());
+        formattedTimestamp = timestampFormatter.format(coreValidRequest.getTimestamp());
     }
 
     private void computeStudyPoints(CoreValidRequest coreValidRequest) throws InterruptedException, ExecutionException {
+        importStudyPoints(coreValidRequest);
         if (!studyPoints.isEmpty()) {
             StudyPointData studyPointData = fillStudyPointData(coreValidRequest);
             studyPoints.forEach(studyPoint -> studyPointRaoRequests.put(studyPoint, studyPointService.computeStudyPointShift(studyPoint, studyPointData)));
@@ -112,21 +121,37 @@ public class CoreValidHandler {
         }
     }
 
-    private void postTreatment(CoreValidRequest coreValidRequest) {
-        computationEndInstant = Instant.now();
-        resultFileUrls = saveProcessOutputs(studyPointResults, coreValidRequest);
-        if (coreValidRequest.getLaunchedAutomatically()) {
-            deleteArtifacts(coreValidRequest);
-        }
-        eventsLogger.info("Process done for timestamp {}.", formattedTimestamp);
+    private void importStudyPoints(CoreValidRequest coreValidRequest) {
+        studyPoints = fileImporter.importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
     }
 
-    private void fillResultsForEachStudyPoint(StudyPointData studyPointData) throws InterruptedException, ExecutionException {
-        for (Map.Entry<StudyPoint, CompletableFuture<RaoResponse>> entry : studyPointCompletableFutures.entrySet()) {
-            StudyPoint studyPoint = entry.getKey();
-            RaoResponse raoResponse = entry.getValue().get();
-            studyPointResults.add(studyPointService.postTreatRaoResult(studyPoint, studyPointData, raoResponse));
-        }
+    private StudyPointData fillStudyPointData(CoreValidRequest coreValidRequest) {
+        Network network = fileImporter.importNetwork(coreValidRequest.getCgm());
+        ReferenceProgram referenceProgram = fileImporter.importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
+        Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
+        GlskDocument glskDocument = fileImporter.importGlskFile(coreValidRequest.getGlsk());
+        ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
+        FbConstraintCreationContext cracCreationContext = fileImporter.importCrac(coreValidRequest.getCbcora().getUrl(), coreValidRequest.getTimestamp(), network);
+        String jsonCracUrl = fileExporter.saveCracInJsonFormat(cracCreationContext.getCrac(), coreValidRequest.getTimestamp());
+        RaoParameters raoParameters = getRaoParameters();
+        String raoParametersUrl = fileExporter.saveRaoParametersAndGetUrl(raoParameters);
+        return new StudyPointData(network, coreNetPositions, scalableZonalData, cracCreationContext, jsonCracUrl, raoParametersUrl);
+    }
+
+    private RaoParameters getRaoParameters() {
+        RaoParameters raoParameters = RaoParameters.load();
+        SearchTreeRaoParameters searchTreeRaoParameters = raoParameters.getExtension(SearchTreeRaoParameters.class);
+
+        addParametersToSearchTreeRao(searchTreeRaoParameters);
+
+        raoParameters.addExtension(SearchTreeRaoParameters.class, searchTreeRaoParameters);
+        return raoParameters;
+    }
+
+    private void addParametersToSearchTreeRao(SearchTreeRaoParameters searchTreeRaoParameters) {
+        searchTreeRaoParameters.setMaxCurativePstPerTso(searchTreeRaoConfiguration.getMaxCurativePstPerTso());
+        searchTreeRaoParameters.setMaxCurativeTopoPerTso(searchTreeRaoConfiguration.getMaxCurativeTopoPerTso());
+        searchTreeRaoParameters.setMaxCurativeRaPerTso(searchTreeRaoConfiguration.getMaxCurativeRaPerTso());
     }
 
     private void runRaoForEachStudyPoint() throws ExecutionException, InterruptedException {
@@ -145,50 +170,64 @@ public class CoreValidHandler {
         CompletableFuture.allOf(studyPointCompletableFutures.values().toArray(new CompletableFuture[0])).get();
     }
 
-    private void deleteArtifacts(CoreValidRequest coreValidRequest) {
-        deleteCgmBeforeRao(artifactsFormatter.format(coreValidRequest.getTimestamp().atZoneSameInstant(ZoneId.of("Europe/Paris"))));
-        deleteCgmAfterRao("RAO");
+    private void fillResultsForEachStudyPoint(StudyPointData studyPointData) throws InterruptedException, ExecutionException {
+        for (Map.Entry<StudyPoint, CompletableFuture<RaoResponse>> entry : studyPointCompletableFutures.entrySet()) {
+            StudyPoint studyPoint = entry.getKey();
+            RaoResponse raoResponse = entry.getValue().get();
+            studyPointResults.add(studyPointService.postTreatRaoResult(studyPoint, studyPointData, raoResponse));
+        }
     }
 
-    private StudyPointData fillStudyPointData(CoreValidRequest coreValidRequest) {
-        Network network = fileImporter.importNetwork(coreValidRequest.getCgm().getFilename(), coreValidRequest.getCgm().getUrl());
-        ReferenceProgram referenceProgram = fileImporter.importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
-        Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
-        GlskDocument glskDocument = fileImporter.importGlskFile(coreValidRequest.getGlsk());
-        ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
-        FbConstraintCreationContext cracCreationContext = fileImporter.importCrac(coreValidRequest.getCbcora().getUrl(), coreValidRequest.getTimestamp(), network);
-        String jsonCracUrl = fileExporter.saveCracInJsonFormat(cracCreationContext.getCrac(), coreValidRequest.getTimestamp());
-        RaoParameters raoParameters = getRaoParametersConfig();
-        String raoParametersUrl = fileExporter.saveRaoParametersAndGetUrl(raoParameters);
-        return new StudyPointData(network, coreNetPositions, scalableZonalData, cracCreationContext, jsonCracUrl, raoParametersUrl);
-    }
-
-    private RaoParameters getRaoParametersConfig() {
-        RaoParameters raoParameters = RaoParameters.load();
-        SearchTreeRaoParameters searchTreeRaoParameters = raoParameters.getExtension(SearchTreeRaoParameters.class);
-
-        searchTreeRaoParameters.setMaxCurativePstPerTso(searchTreeRaoConfiguration.getMaxCurativePstPerTso());
-        searchTreeRaoParameters.setMaxCurativeTopoPerTso(searchTreeRaoConfiguration.getMaxCurativeTopoPerTso());
-        searchTreeRaoParameters.setMaxCurativeRaPerTso(searchTreeRaoConfiguration.getMaxCurativeRaPerTso());
-
-        raoParameters.addExtension(SearchTreeRaoParameters.class, searchTreeRaoParameters);
-        return raoParameters;
+    private void postTreatment(CoreValidRequest coreValidRequest) {
+        computationEndInstant = Instant.now();
+        resultFileUrls = saveProcessOutputs(studyPointResults, coreValidRequest);
+        if (coreValidRequest.getLaunchedAutomatically()) {
+            deleteArtifacts(coreValidRequest);
+        }
+        eventsLogger.info("Process done for timestamp {}.", formattedTimestamp);
     }
 
     private Map<ResultFileExporter.ResultType, String> saveProcessOutputs(List<StudyPointResult> studyPointResults, CoreValidRequest coreValidRequest) {
         return fileExporter.exportStudyPointResult(studyPointResults, coreValidRequest);
     }
 
-    public void deleteCgmBeforeRao(String prefix) {
-        minioAdapter.deleteObjects(minioAdapter.listArtifacts(prefix));
+    private void deleteArtifacts(CoreValidRequest coreValidRequest) {
+        deleteCgmBeforeRao(artifactsFormatter.format(coreValidRequest.getTimestamp().atZoneSameInstant(ZoneId.of("Europe/Paris"))));
+        deleteCgmAfterRao("RAO");
     }
 
-    public void deleteCgmAfterRao(String prefix) {
-        minioAdapter.deleteObjectsContainingString(minioAdapter.listArtifacts(prefix), "networkWithPRA.xiidm");
+    private void deleteCgmBeforeRao(String prefix) {
+        Iterable<Result<Item>> results = listMinioArtifactsStartingWith(prefix);
+        minioAdapter.deleteObjects(results);
     }
 
-    private void setUpEventLogging(CoreValidRequest coreValidRequest) {
-        MDC.put("gridcapa-task-id", coreValidRequest.getId());
-        formattedTimestamp = timestampFormatter.format(coreValidRequest.getTimestamp());
+    private void deleteCgmAfterRao(String prefix) {
+        Iterable<Result<Item>> results = listMinioArtifactsStartingWith(prefix);
+        List<Result<Item>> listObjectsToDelete = filterMinioObjectsOnName(results);
+        minioAdapter.deleteObjects(listObjectsToDelete);
+    }
+
+    private Iterable<Result<Item>> listMinioArtifactsStartingWith(String prefix) {
+        return minioAdapter.listArtifacts(prefix);
+    }
+
+    private List<Result<Item>> filterMinioObjectsOnName(Iterable<Result<Item>> results) {
+        List<Result<Item>> collect = new ArrayList<>();
+
+        try {
+            collect = StreamSupport.stream(results.spliterator(), false)
+                    .filter(res -> {
+                        try {
+                            return res.get().objectName().equals("networkWithPRA.xiidm");
+                        } catch (Exception e) {
+                            LOGGER.error("Cant get the name of the Minio file");
+                        }
+                        return false;
+                    }).collect(Collectors.toList());
+        } catch (Exception e) {
+            LOGGER.error("Cant get the name of the Minio file");
+        }
+
+        return collect;
     }
 }
