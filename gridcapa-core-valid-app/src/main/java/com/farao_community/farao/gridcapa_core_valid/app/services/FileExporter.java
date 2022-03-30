@@ -109,5 +109,4 @@ public class FileExporter {
         return minioAdapter.generatePreSignedUrl(cracPath);
     }
     //endregion
-
 }

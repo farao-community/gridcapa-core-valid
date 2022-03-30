@@ -9,6 +9,7 @@ package com.farao_community.farao.gridcapa_core_valid.app.services;
 
 import io.minio.MinioClient;
 import io.minio.Result;
+import io.minio.StatObjectResponse;
 import io.minio.errors.*;
 import io.minio.messages.Item;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -88,4 +89,18 @@ class MinioAdapterTest {
         Mockito.verify(minioClient, Mockito.times(2)).removeObject(Mockito.any());
     }
 
+    @Test
+    void fileDoesNotExistOnMinio() throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        Mockito.when(minioClient.statObject(Mockito.any())).thenReturn(null);
+        assertFalse(minioAdapter.exists("filepath"));
+        Mockito.verify(minioClient, Mockito.times(1)).statObject(Mockito.any());
+    }
+
+    @Test
+    void fileExistOnMinio() throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        StatObjectResponse objectStat = Mockito.mock(StatObjectResponse.class);
+        Mockito.when(minioClient.statObject(Mockito.any())).thenReturn(objectStat);
+        assertTrue(minioAdapter.exists("filepath"));
+        Mockito.verify(minioClient, Mockito.times(1)).statObject(Mockito.any());
+    }
 }
