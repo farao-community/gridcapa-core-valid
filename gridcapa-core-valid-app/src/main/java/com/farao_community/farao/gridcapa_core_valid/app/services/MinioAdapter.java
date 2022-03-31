@@ -85,18 +85,12 @@ public class MinioAdapter {
     }
 
     public void deleteObjects(Iterable<Result<Item>> results) {
-        deleteObjectsContainingString(results, "");
-    }
-
-    public void deleteObjectsContainingString(Iterable<Result<Item>> results, String containedString) {
         String objectName = "";
         for (Result<Item> result : results) {
             try {
                 objectName = result.get().objectName();
-                if (objectName.contains(containedString)) {
-                    client.removeObject(RemoveObjectArgs.builder().bucket(bucket).object(result.get().objectName()).build());
-                    LOGGER.info("File {} deleted from Minio", objectName);
-                }
+                client.removeObject(RemoveObjectArgs.builder().bucket(bucket).object(result.get().objectName()).build());
+                LOGGER.info("File {} deleted from Minio", objectName);
             } catch (Exception e) {
                 LOGGER.error("Can not delete object {}.", objectName);
             }

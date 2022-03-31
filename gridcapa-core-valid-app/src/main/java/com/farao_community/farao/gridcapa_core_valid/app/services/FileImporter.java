@@ -42,9 +42,9 @@ public class FileImporter {
         this.urlValidationService = urlValidationService;
     }
 
-    public Network importNetwork(String filename, String networkUrl) {
-        InputStream networkStream = urlValidationService.openUrlStream(networkUrl);
-        return NetworkHandler.loadNetwork(filename, networkStream);
+    public Network importNetwork(CoreValidFileResource cgmFile) {
+        InputStream networkStream = urlValidationService.openUrlStream(cgmFile.getUrl());
+        return NetworkHandler.loadNetwork(cgmFile.getFilename(), networkStream);
     }
 
     public GlskDocument importGlskFile(CoreValidFileResource glskFileResource) {

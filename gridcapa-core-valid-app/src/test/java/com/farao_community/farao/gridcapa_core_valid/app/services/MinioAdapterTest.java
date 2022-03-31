@@ -76,7 +76,7 @@ class MinioAdapterTest {
     }
 
     @Test
-    void deleteCgmBeforeAndAfterRaoTest() throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+    void deleteObjectsTest() throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
         Item item = new Item() {
             @Override
             public String objectName() {
@@ -85,8 +85,7 @@ class MinioAdapterTest {
         };
         List<Result<Item>> listRes = Collections.singletonList(new Result<>(item));
         minioAdapter.deleteObjects(listRes);
-        minioAdapter.deleteObjectsContainingString(listRes, "network");
-        Mockito.verify(minioClient, Mockito.times(2)).removeObject(Mockito.any());
+        Mockito.verify(minioClient, Mockito.times(1)).removeObject(Mockito.any());
     }
 
     @Test
