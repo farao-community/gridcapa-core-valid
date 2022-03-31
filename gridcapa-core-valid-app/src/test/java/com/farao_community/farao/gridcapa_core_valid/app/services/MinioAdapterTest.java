@@ -9,6 +9,7 @@ package com.farao_community.farao.gridcapa_core_valid.app.services;
 
 import io.minio.MinioClient;
 import io.minio.Result;
+import io.minio.StatObjectResponse;
 import io.minio.errors.*;
 import io.minio.messages.Item;
 import org.junit.jupiter.api.BeforeEach;
