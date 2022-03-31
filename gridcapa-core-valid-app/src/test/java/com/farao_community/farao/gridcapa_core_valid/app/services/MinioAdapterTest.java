@@ -86,5 +86,4 @@ class MinioAdapterTest {
         minioAdapter.deleteObjects(listRes);
         Mockito.verify(minioClient, Mockito.times(1)).removeObject(Mockito.any());
     }
-
 }
