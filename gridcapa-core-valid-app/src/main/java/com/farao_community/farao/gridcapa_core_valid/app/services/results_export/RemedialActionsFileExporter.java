@@ -23,8 +23,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,8 +33,7 @@ import java.util.List;
 public class RemedialActionsFileExporter implements ResultFileExporter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RemedialActionsFileExporter.class);
-    private static final String REMEDIAL_ACTIONS_SAMPLE_CSV_FILE = "outputs/%s-RemedialActions-REX-v0.csv";
-
+    private static final String REMEDIAL_ACTIONS_SAMPLE_CSV_FILE = "outputs/%s-RemedialActions-REX-v[v].csv";
     private final MinioAdapter minioAdapter;
 
     public RemedialActionsFileExporter(MinioAdapter minioAdapter) {
@@ -57,7 +54,7 @@ public class RemedialActionsFileExporter implements ResultFileExporter {
         } catch (IOException e) {
             throw new CoreValidInvalidDataException("Error during export of studypoint results on Minio", e);
         }
-        String filePath = String.format(REMEDIAL_ACTIONS_SAMPLE_CSV_FILE, timestamp.atZoneSameInstant(ZoneId.of("Europe/Paris")).format(DateTimeFormatter.ofPattern("yyyyMMdd-HH")));
+        String filePath = getFormattedFilename(REMEDIAL_ACTIONS_SAMPLE_CSV_FILE, timestamp, minioAdapter);
         minioAdapter.uploadFile(filePath, remedialActionsResultBaos);
         LOGGER.info("Remedial Actions result file was successfully uploaded on minIO");
         return minioAdapter.generatePreSignedUrl(filePath);

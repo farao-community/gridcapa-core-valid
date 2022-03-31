@@ -22,8 +22,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +33,7 @@ import java.util.List;
 @Component
 public class MainResultFileExporter implements ResultFileExporter {
 
-    private static final String MAIN_SAMPLE_CSV_FILE = "outputs/%s-ValidationCORE-v0.csv";
+    private static final String MAIN_SAMPLE_CSV_FILE = "outputs/%s-ValidationCORE-v[v].csv";
     private static final Logger LOGGER = LoggerFactory.getLogger(MainResultFileExporter.class);
     private final MinioAdapter minioAdapter;
 
@@ -57,7 +55,7 @@ public class MainResultFileExporter implements ResultFileExporter {
         } catch (IOException e) {
             throw new CoreValidInvalidDataException("Error during export of studypoint results on Minio", e);
         }
-        String filePath = String.format(MAIN_SAMPLE_CSV_FILE, timestamp.atZoneSameInstant(ZoneId.of("Europe/Paris")).format(DateTimeFormatter.ofPattern("yyyyMMdd-HH")));
+        String filePath = getFormattedFilename(MAIN_SAMPLE_CSV_FILE, timestamp, minioAdapter);
         minioAdapter.uploadFile(filePath, mainResultBaos);
         LOGGER.info("Main result file was successfully uploaded on minIO");
         return minioAdapter.generatePreSignedUrl(filePath);

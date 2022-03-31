@@ -8,9 +8,12 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.services.results_export;
 
+import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -19,6 +22,17 @@ import java.util.List;
  */
 public interface ResultFileExporter {
     String exportStudyPointResult(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp);
+
+    default String getFormattedFilename(String regex, OffsetDateTime timestamp, MinioAdapter minioAdapter) {
+        String filePath = String.format(regex, timestamp.atZoneSameInstant(ZoneId.of("Europe/Paris")).format(DateTimeFormatter.ofPattern("yyyyMMdd-HH")));
+        String fileVersionned = filePath.replace("[v]", "0");
+
+        for (int versionNumber = 0; minioAdapter.exists(fileVersionned) && versionNumber <= 99; versionNumber++) {
+            fileVersionned = filePath.replace("[v]", String.valueOf(versionNumber));
+        }
+
+        return fileVersionned;
+    }
 
     /**
      * Several types of results file can co-exist.

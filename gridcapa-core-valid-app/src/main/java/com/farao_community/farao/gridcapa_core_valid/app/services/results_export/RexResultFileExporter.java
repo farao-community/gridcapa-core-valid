@@ -23,8 +23,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +39,7 @@ import java.util.Optional;
 @Component
 public class RexResultFileExporter implements ResultFileExporter {
 
-    private static final String REX_SAMPLE_CSV_FILE = "outputs/%s-ValidationCORE-REX-v0.csv";
+    private static final String REX_SAMPLE_CSV_FILE = "outputs/%s-ValidationCORE-REX-v[v].csv";
     private static final Logger LOGGER = LoggerFactory.getLogger(RexResultFileExporter.class);
     private final MinioAdapter minioAdapter;
 
@@ -63,7 +61,7 @@ public class RexResultFileExporter implements ResultFileExporter {
         } catch (IOException e) {
             throw new CoreValidInvalidDataException("Error during export of studypoint results on Minio", e);
         }
-        String filePath = String.format(REX_SAMPLE_CSV_FILE, timestamp.atZoneSameInstant(ZoneId.of("Europe/Paris")).format(DateTimeFormatter.ofPattern("yyyyMMdd-HH")));
+        String filePath = getFormattedFilename(REX_SAMPLE_CSV_FILE, timestamp, minioAdapter);
         minioAdapter.uploadFile(filePath, rexResultBaos);
         LOGGER.info("Rex result file was successfully uploaded on minIO");
         return minioAdapter.generatePreSignedUrl(filePath);
