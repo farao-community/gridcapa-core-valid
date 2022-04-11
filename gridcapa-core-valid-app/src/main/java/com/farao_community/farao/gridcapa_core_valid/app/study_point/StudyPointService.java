@@ -27,10 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -73,7 +70,7 @@ public class StudyPointService {
             resetInitialPminPmax(network, scalableZonalData, initGenerators);
             String shiftedCgmUrl = fileExporter.saveShiftedCgm(network, studyPoint);
             studyPoint.getStudyPointResult().setShiftedCgmUrl(shiftedCgmUrl);
-            String raoRequestId = String.format("%s-%s", network.getNameOrId(), studyPoint.getVerticeId());
+            String raoRequestId = String.valueOf(UUID.randomUUID());
             String raoDirPath = String.format("%s/artifacts/RAO-%s/", minioAdapter.getBasePath(), raoRequestId);
             raoRequest = new RaoRequest(raoRequestId, shiftedCgmUrl, jsonCracUrl, raoParametersUrl, raoDirPath);
         } catch (Exception e) {
