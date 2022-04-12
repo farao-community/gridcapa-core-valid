@@ -53,7 +53,7 @@ class CoreValidHandlerTest {
     void handleCoreValidRequestTest() {
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("http://url");
         RaoRequest raoRequest = Mockito.mock(RaoRequest.class);
-        Mockito.when(studyPointService.computeStudyPointShift(Mockito.any(), Mockito.any())).thenReturn(raoRequest);
+        Mockito.when(studyPointService.computeStudyPointShift(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(raoRequest);
         CompletableFuture<RaoResponse> future = new CompletableFuture<>();
         RaoResponse raoResponse = new RaoResponse("id", "instant", "praUrl", "cracUrl", "raoUrl", Instant.now(), Instant.now());
         Mockito.when(studyPointService.computeStudyPointRao(Mockito.any(), Mockito.any())).thenReturn(future);

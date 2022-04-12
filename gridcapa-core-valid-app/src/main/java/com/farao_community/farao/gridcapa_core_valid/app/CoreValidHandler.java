@@ -114,7 +114,7 @@ public class CoreValidHandler {
         importStudyPoints(coreValidRequest);
         if (!studyPoints.isEmpty()) {
             StudyPointData studyPointData = fillStudyPointData(coreValidRequest);
-            studyPoints.forEach(studyPoint -> studyPointRaoRequests.put(studyPoint, studyPointService.computeStudyPointShift(studyPoint, studyPointData)));
+            studyPoints.forEach(studyPoint -> studyPointRaoRequests.put(studyPoint, studyPointService.computeStudyPointShift(studyPoint, studyPointData, coreValidRequest.getTimestamp())));
             eventsLogger.info("All studypoints shifts are done for timestamp {}", formattedTimestamp);
             runRaoForEachStudyPoint();
             fillResultsForEachStudyPoint(studyPointData);
