@@ -101,8 +101,21 @@ public class CoreValidHandler {
     }
 
     private void preTreatment(CoreValidRequest coreValidRequest) {
+        clearData();
         setUpEventLogging(coreValidRequest);
         computationStartInstant = Instant.now();
+    }
+
+    private void clearData() {
+        if (studyPoints != null) {
+            studyPoints.clear();
+        }
+        if (resultFileUrls != null) {
+            resultFileUrls.clear();
+        }
+        studyPointCompletableFutures.clear();
+        studyPointRaoRequests.clear();
+        studyPointResults.clear();
     }
 
     private void setUpEventLogging(CoreValidRequest coreValidRequest) {
