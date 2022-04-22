@@ -172,7 +172,9 @@ public class CoreValidHandler {
             CompletableFuture<RaoResponse> raoResponse = studyPointService.computeStudyPointRao(studyPoint, raoRequest);
             studyPointCompletableFutures.put(studyPoint, raoResponse);
             raoResponse.thenApply(raoResponse1 -> {
-                eventsLogger.info("End of RAO computation for studypoint {} .", studyPoint.getVerticeId());
+                LOGGER.info("End of RAO for studypoint {} ...", studyPoint.getVerticeId());
+                //eventsLogger.info("End of RAO computation for studypoint {} .", studyPoint.getVerticeId());
+                //This eventsLogger is removed because it creates error in task manager
                 return null;
             }).exceptionally(exception -> {
                 studyPoint.getStudyPointResult().setStatusToError();

@@ -46,12 +46,14 @@ public class StudyPointService {
     private final AsynchronousRaoRunnerClient asynchronousRaoRunnerClient;
     private final LimitingBranchResultService limitingBranchResultService;
     private final FileExporter fileExporter;
+    private final Logger eventsLogger;
 
-    public StudyPointService(MinioAdapter minioAdapter, AsynchronousRaoRunnerClient asynchronousRaoRunnerClient, LimitingBranchResultService limitingBranchResultService, FileExporter fileExporter) {
+    public StudyPointService(MinioAdapter minioAdapter, AsynchronousRaoRunnerClient asynchronousRaoRunnerClient, LimitingBranchResultService limitingBranchResultService, FileExporter fileExporter, Logger eventsLogger) {
         this.minioAdapter = minioAdapter;
         this.asynchronousRaoRunnerClient = asynchronousRaoRunnerClient;
         this.limitingBranchResultService = limitingBranchResultService;
         this.fileExporter = fileExporter;
+        this.eventsLogger = eventsLogger;
     }
 
     public RaoRequest computeStudyPointShift(StudyPoint studyPoint, StudyPointData studyPointData, OffsetDateTime timestamp, String coreValidRequesttId) {
@@ -87,10 +89,12 @@ public class StudyPointService {
 
     public CompletableFuture<RaoResponse> computeStudyPointRao(StudyPoint studyPoint, RaoRequest raoRequest) {
         LOGGER.info("Running RAO for studypoint {} ...", studyPoint.getVerticeId());
+        eventsLogger.info("Running RAO for studypoint {} ...", studyPoint.getVerticeId());
         try {
             return asynchronousRaoRunnerClient.runRaoAsynchronously(raoRequest);
         } catch (Exception e) {
             LOGGER.error("Error during RAO {}", studyPoint.getVerticeId(), e);
+            eventsLogger.error("Error during RAO {} : {}", studyPoint.getVerticeId(), e.getMessage());
             throw new CoreValidRaoException(e.getMessage());
         }
     }
