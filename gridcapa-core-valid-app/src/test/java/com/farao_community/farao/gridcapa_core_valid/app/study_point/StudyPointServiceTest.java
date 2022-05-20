@@ -7,17 +7,17 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.study_point;
 
-import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
-import com.farao_community.farao.data.glsk.api.GlskDocument;
-import com.farao_community.farao.data.glsk.api.io.GlskDocumentImporters;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResultService;
 import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
 import com.farao_community.farao.rao_runner.starter.AsynchronousRaoRunnerClient;
 import com.powsybl.action.util.Scalable;
+import com.powsybl.glsk.api.GlskDocument;
+import com.powsybl.glsk.api.io.GlskDocumentImporters;
+import com.powsybl.glsk.commons.ZonalData;
 import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.BeforeEach;

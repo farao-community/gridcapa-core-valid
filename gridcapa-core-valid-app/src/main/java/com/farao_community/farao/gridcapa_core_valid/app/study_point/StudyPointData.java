@@ -8,9 +8,9 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.study_point;
 
-import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_creator.FbConstraintCreationContext;
 import com.powsybl.action.util.Scalable;
+import com.powsybl.glsk.commons.ZonalData;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Map;
