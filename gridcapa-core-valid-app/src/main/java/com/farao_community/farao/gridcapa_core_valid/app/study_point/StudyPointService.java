@@ -46,15 +46,17 @@ public class StudyPointService {
     private final AsynchronousRaoRunnerClient asynchronousRaoRunnerClient;
     private final LimitingBranchResultService limitingBranchResultService;
     private final FileExporter fileExporter;
+    private final Logger eventsLogger;
 
-    public StudyPointService(MinioAdapter minioAdapter, AsynchronousRaoRunnerClient asynchronousRaoRunnerClient, LimitingBranchResultService limitingBranchResultService, FileExporter fileExporter) {
+    public StudyPointService(MinioAdapter minioAdapter, AsynchronousRaoRunnerClient asynchronousRaoRunnerClient, LimitingBranchResultService limitingBranchResultService, FileExporter fileExporter, Logger eventsLogger) {
         this.minioAdapter = minioAdapter;
         this.asynchronousRaoRunnerClient = asynchronousRaoRunnerClient;
         this.limitingBranchResultService = limitingBranchResultService;
         this.fileExporter = fileExporter;
+        this.eventsLogger = eventsLogger;
     }
 
-    public RaoRequest computeStudyPointShift(StudyPoint studyPoint, StudyPointData studyPointData, OffsetDateTime timestamp) {
+    public RaoRequest computeStudyPointShift(StudyPoint studyPoint, StudyPointData studyPointData, OffsetDateTime timestamp, String coreValidRequesttId) {
         LOGGER.info("Running computation for study point {} ", studyPoint.getVerticeId());
         Network network = studyPointData.getNetwork();
         ZonalData<Scalable> scalableZonalData = studyPointData.getScalableZonalData();
@@ -72,9 +74,9 @@ public class StudyPointService {
             resetInitialPminPmax(network, scalableZonalData, initGenerators);
             String shiftedCgmUrl = fileExporter.saveShiftedCgm(network, studyPoint);
             studyPoint.getStudyPointResult().setShiftedCgmUrl(shiftedCgmUrl);
-            String raoRequestId = String.valueOf(UUID.randomUUID());
             String raoDirPath = String.format("%s/artifacts/RAO-%s-%s/", minioAdapter.getBasePath(), timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'_'HH-mm")), studyPoint.getVerticeId());
-            raoRequest = new RaoRequest(raoRequestId, shiftedCgmUrl, jsonCracUrl, raoParametersUrl, raoDirPath);
+            // For rao logs dispatcher, the rao request should correspond to the core valid request
+            raoRequest = new RaoRequest(coreValidRequesttId, shiftedCgmUrl, jsonCracUrl, raoParametersUrl, raoDirPath);
         } catch (Exception e) {
             LOGGER.error("Error during study point {} computation", studyPoint.getVerticeId(), e);
             studyPoint.getStudyPointResult().setStatus(StudyPointResult.Status.ERROR);
@@ -87,10 +89,12 @@ public class StudyPointService {
 
     public CompletableFuture<RaoResponse> computeStudyPointRao(StudyPoint studyPoint, RaoRequest raoRequest) {
         LOGGER.info("Running RAO for studypoint {} ...", studyPoint.getVerticeId());
+        eventsLogger.info("Running RAO for studypoint {} ...", studyPoint.getVerticeId());
         try {
             return asynchronousRaoRunnerClient.runRaoAsynchronously(raoRequest);
         } catch (Exception e) {
             LOGGER.error("Error during RAO {}", studyPoint.getVerticeId(), e);
+            eventsLogger.error("Error during RAO {} : {}", studyPoint.getVerticeId(), e.getMessage());
             throw new CoreValidRaoException(e.getMessage());
         }
     }

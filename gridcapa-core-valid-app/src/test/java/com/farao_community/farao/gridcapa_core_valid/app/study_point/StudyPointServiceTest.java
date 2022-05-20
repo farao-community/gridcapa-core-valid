@@ -85,7 +85,7 @@ class StudyPointServiceTest {
         Mockito.when(asynchronousRaoRunnerClient.runRaoAsynchronously(Mockito.any())).thenReturn(future);
         Mockito.when(limitingBranchResult.importRaoResult(Mockito.any(), Mockito.any(), Mockito.anyString())).thenReturn(null);
         StudyPointData studyPointData = new StudyPointData(network, coreNetPositions, scalableZonalData, null, "", "");
-        RaoRequest raoRequest = studyPointService.computeStudyPointShift(studyPoints.get(0), studyPointData, OffsetDateTime.now());
+        RaoRequest raoRequest = studyPointService.computeStudyPointShift(studyPoints.get(0), studyPointData, OffsetDateTime.now(), "id");
         CompletableFuture<RaoResponse> raoResponseCompletableFuture = studyPointService.computeStudyPointRao(studyPoints.get(0), raoRequest);
         RaoResponse raoResponse = new RaoResponse("id", "instant", "praUrl", " cracUrl", "raoUrl", Instant.now(), Instant.now());
         raoResponseCompletableFuture.complete(raoResponse);
@@ -102,7 +102,7 @@ class StudyPointServiceTest {
     void checkStudyPointComputationFailed() {
         scalableZonalData = null;
         StudyPointData studyPointData = new StudyPointData(network, coreNetPositions, scalableZonalData, null, "", "");
-        studyPointService.computeStudyPointShift(studyPoints.get(0), studyPointData, OffsetDateTime.now());
+        studyPointService.computeStudyPointShift(studyPoints.get(0), studyPointData, OffsetDateTime.now(), "id");
         StudyPointResult result = studyPoints.get(0).getStudyPointResult();
         assertEquals("0_9", result.getId());
         assertEquals(StudyPointResult.Status.ERROR, result.getStatus());
