@@ -11,8 +11,8 @@ import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileExporter;
-import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointService;
+import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
 import org.junit.jupiter.api.Test;
@@ -72,7 +72,7 @@ class CoreValidHandlerTest {
         CoreValidRequest request = new CoreValidRequest(requestId, dateTime, networkFile, cbcoraFile, glskFile,  refProgFile, studyPointsFile, true);
         CoreValidResponse response = coreValidHandler.handleCoreValidRequest(request);
         assertEquals(requestId, response.getId());
-        Mockito.verify(minioAdapter, Mockito.times(2)).deleteObjects(Mockito.any());
+        Mockito.verify(minioAdapter, Mockito.times(2)).deleteFiles(Mockito.any());
     }
 
     private CoreValidFileResource createFileResource(String filename, URL resource) {

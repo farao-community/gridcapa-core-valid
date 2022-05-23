@@ -16,13 +16,13 @@ import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram
 import com.farao_community.farao.gridcapa_core_valid.app.configuration.SearchTreeRaoConfiguration;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
-import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.NetPositionsHandler;
 import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.ResultFileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointData;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointService;
+import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
 import com.farao_community.farao.rao_api.parameters.RaoParameters;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
@@ -31,8 +31,6 @@ import com.powsybl.action.util.Scalable;
 import com.powsybl.glsk.api.GlskDocument;
 import com.powsybl.glsk.commons.ZonalData;
 import com.powsybl.iidm.network.Network;
-import io.minio.Result;
-import io.minio.messages.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -48,7 +46,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -174,8 +171,6 @@ public class CoreValidHandler {
             studyPointCompletableFutures.put(studyPoint, raoResponse);
             raoResponse.thenApply(raoResponse1 -> {
                 LOGGER.info("End of RAO for studypoint {} ...", studyPoint.getVerticeId());
-                //eventsLogger.info("End of RAO computation for studypoint {} .", studyPoint.getVerticeId());
-                //This eventsLogger is removed because it creates error in task manager
                 return null;
             }).exceptionally(exception -> {
                 studyPoint.getStudyPointResult().setStatusToError();
@@ -213,28 +208,28 @@ public class CoreValidHandler {
     }
 
     private void deleteCgmBeforeRao(String prefix) {
-        Iterable<Result<Item>> results = listMinioArtifactsStartingWith(prefix);
-        minioAdapter.deleteObjects(results);
+        List<String> results = listMinioArtifactsStartingWith(prefix);
+        minioAdapter.deleteFiles(results);
     }
 
     private void deleteCgmAfterRao(String prefix) {
-        Iterable<Result<Item>> results = listMinioArtifactsStartingWith(prefix);
-        List<Result<Item>> listObjectsToDelete = filterMinioObjectsOnName(results);
-        minioAdapter.deleteObjects(listObjectsToDelete);
+        List<String> results = listMinioArtifactsStartingWith(prefix);
+        List<String> listObjectsToDelete = filterMinioObjectsOnName(results);
+        minioAdapter.deleteFiles(listObjectsToDelete);
     }
 
-    private Iterable<Result<Item>> listMinioArtifactsStartingWith(String prefix) {
-        return minioAdapter.listArtifacts(prefix);
+    private List<String> listMinioArtifactsStartingWith(String prefix) {
+        return minioAdapter.listFiles(prefix);
     }
 
-    private List<Result<Item>> filterMinioObjectsOnName(Iterable<Result<Item>> results) {
-        List<Result<Item>> collect = new ArrayList<>();
+    private List<String> filterMinioObjectsOnName(List<String> results) {
+        List<String> collect = new ArrayList<>();
 
         try {
-            collect = StreamSupport.stream(results.spliterator(), false)
+            collect = results.stream()
                     .filter(res -> {
                         try {
-                            return res.get().objectName().equals("networkWithPRA.xiidm");
+                            return res.equals("networkWithPRA.xiidm");
                         } catch (Exception e) {
                             LOGGER.error("Cant get the name of the Minio file");
                         }

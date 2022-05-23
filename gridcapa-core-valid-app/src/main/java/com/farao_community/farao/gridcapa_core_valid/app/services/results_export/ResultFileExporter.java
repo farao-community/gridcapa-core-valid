@@ -8,8 +8,8 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.services.results_export;
 
-import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
+import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -27,7 +27,7 @@ public interface ResultFileExporter {
         String filePath = String.format(regex, timestamp.atZoneSameInstant(ZoneId.of("Europe/Paris")).format(DateTimeFormatter.ofPattern("yyyyMMdd-HH")));
         String fileVersionned = filePath.replace("[v]", "0");
 
-        for (int versionNumber = 0; minioAdapter.exists(fileVersionned) && versionNumber <= 99; versionNumber++) {
+        for (int versionNumber = 0; minioAdapter.fileExists(fileVersionned) && versionNumber <= 99; versionNumber++) {
             fileVersionned = filePath.replace("[v]", String.valueOf(versionNumber));
         }
 

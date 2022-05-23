@@ -114,8 +114,8 @@
             <artifactId>farao-crac-creator-fb-constraint</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.minio</groupId>
-            <artifactId>minio</artifactId>
+            <groupId>com.farao-community.farao</groupId>
+            <artifactId>gridcapa-starter-minio-adapter</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>

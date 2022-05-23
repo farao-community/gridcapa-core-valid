@@ -17,6 +17,7 @@ import com.farao_community.farao.gridcapa_core_valid.app.services.results_export
 import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.RexResultFileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
+import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
 import com.farao_community.farao.rao_api.json.JsonRaoParameters;
 import com.farao_community.farao.rao_api.parameters.RaoParameters;
 import com.powsybl.commons.datasource.MemDataSource;
@@ -72,7 +73,7 @@ public class FileExporter {
         Exporters.export("XIIDM", network, new Properties(), memDataSource);
         try (InputStream is = memDataSource.newInputStream("", "xiidm")) {
             LOGGER.info("Uploading shifted cgm to {}", networkPath);
-            minioAdapter.uploadFile(networkPath, is);
+            minioAdapter.uploadArtifact(networkPath, is);
         } catch (IOException e) {
             throw new CoreValidInternalException("Error while trying to save shifted network", e);
         }
@@ -86,7 +87,8 @@ public class FileExporter {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         JsonRaoParameters.write(raoParameters, baos);
         String raoParametersDestinationPath = String.format(ARTIFACTS_S, RAO_PARAMETERS_FILE_NAME);
-        minioAdapter.uploadFile(raoParametersDestinationPath, baos);
+        ByteArrayInputStream inStream = new ByteArrayInputStream(baos.toByteArray());
+        minioAdapter.uploadArtifact(raoParametersDestinationPath, inStream);
         return minioAdapter.generatePreSignedUrl(raoParametersDestinationPath);
     }
     //endregion
@@ -102,7 +104,7 @@ public class FileExporter {
         }
         String cracPath = String.format(ARTIFACTS_S, jsonCracFileName);
         try (InputStream is = memDataSource.newInputStream(jsonCracFileName)) {
-            minioAdapter.uploadFile(cracPath, is);
+            minioAdapter.uploadArtifact(cracPath, is);
         } catch (IOException e) {
             throw new CoreValidInternalException("Error while trying to upload converted CRAC file.", e);
         }

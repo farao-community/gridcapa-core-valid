@@ -10,7 +10,8 @@ package com.farao_community.farao.gridcapa_core_valid.app.study_point;
 import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResultService;
-import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
+import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
+import com.farao_community.farao.minio_adapter.starter.MinioAdapterProperties;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
 import com.farao_community.farao.rao_runner.starter.AsynchronousRaoRunnerClient;
@@ -37,6 +38,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -61,7 +63,6 @@ class StudyPointServiceTest {
     private Network network;
     private ZonalData<Scalable> scalableZonalData;
     private Map<String, Double> coreNetPositions = new HashMap<>();
-    private CoreValidRequest coreValidRequest;
 
     @BeforeEach
     public void setup() {
@@ -75,11 +76,12 @@ class StudyPointServiceTest {
         InputStream networkStream = getClass().getResourceAsStream(testDirectory + "/20210723_0030_2D5_CGM.uct");
         network = Importers.loadNetwork("20210723_0030_2D5_CGM.uct", networkStream);
         scalableZonalData = glskDocument.getZonalScalable(network, dateTime.toInstant());
-        coreValidRequest = new CoreValidRequest("id", null, null, new CoreValidFileResource("name", "url"), null, null, null);
+        CoreValidRequest coreValidRequest = new CoreValidRequest("id", null, null, new CoreValidFileResource("name", "url"), null, null, null);
     }
 
     @Test
     void checkStudyPointComputationSucceed() {
+        when(minioAdapter.getProperties()).thenReturn(new MinioAdapterProperties("bucket", "basepath", "url", "accesskey", "secretkey"));
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("http://url");
         CompletableFuture<RaoResponse> future = new CompletableFuture<>();
         Mockito.when(asynchronousRaoRunnerClient.runRaoAsynchronously(Mockito.any())).thenReturn(future);
@@ -100,8 +102,8 @@ class StudyPointServiceTest {
 
     @Test
     void checkStudyPointComputationFailed() {
-        scalableZonalData = null;
-        StudyPointData studyPointData = new StudyPointData(network, coreNetPositions, scalableZonalData, null, "", "");
+        when(minioAdapter.getProperties()).thenReturn(new MinioAdapterProperties("bucket", "basepath", "url", "accesskey", "secretkey"));
+        StudyPointData studyPointData = new StudyPointData(network, coreNetPositions, null, null, "", "");
         studyPointService.computeStudyPointShift(studyPoints.get(0), studyPointData, OffsetDateTime.now(), "id");
         StudyPointResult result = studyPoints.get(0).getStudyPointResult();
         assertEquals("0_9", result.getId());
