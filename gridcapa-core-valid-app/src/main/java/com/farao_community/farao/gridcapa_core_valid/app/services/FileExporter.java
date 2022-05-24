@@ -96,7 +96,7 @@ public class FileExporter {
     //region Crac uploading on minIO
     public String saveCracInJsonFormat(Crac crac, OffsetDateTime timestamp) {
         MemDataSource memDataSource = new MemDataSource();
-        String jsonCracFileName = String.format("crac_%s.json", timestamp.toString());
+        String jsonCracFileName = String.format("crac_%s.json", removeIllegalCharacter(timestamp.toString()));
         try (OutputStream os = memDataSource.newOutputStream(jsonCracFileName, false)) {
             CracExporters.exportCrac(crac, "Json", os);
         } catch (IOException e) {
@@ -109,6 +109,10 @@ public class FileExporter {
             throw new CoreValidInternalException("Error while trying to upload converted CRAC file.", e);
         }
         return minioAdapter.generatePreSignedUrl(cracPath);
+    }
+
+    private String removeIllegalCharacter(String url) {
+        return url.replace(":", "");
     }
     //endregion
 }
