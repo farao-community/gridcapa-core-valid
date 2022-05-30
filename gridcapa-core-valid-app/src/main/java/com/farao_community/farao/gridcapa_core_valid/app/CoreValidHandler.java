@@ -45,7 +45,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -204,41 +203,10 @@ public class CoreValidHandler {
 
     private void deleteArtifacts(CoreValidRequest coreValidRequest) {
         deleteCgmBeforeRao(artifactsFormatter.format(coreValidRequest.getTimestamp().atZoneSameInstant(ZoneId.of("Europe/Paris"))));
-        deleteCgmAfterRao("RAO");
     }
 
     private void deleteCgmBeforeRao(String prefix) {
-        List<String> results = listMinioArtifactsStartingWith(prefix);
+        List<String> results = minioAdapter.listFiles("artifacts/" + prefix);
         minioAdapter.deleteFiles(results);
-    }
-
-    private void deleteCgmAfterRao(String prefix) {
-        List<String> results = listMinioArtifactsStartingWith(prefix);
-        List<String> listObjectsToDelete = filterMinioObjectsOnName(results);
-        minioAdapter.deleteFiles(listObjectsToDelete);
-    }
-
-    private List<String> listMinioArtifactsStartingWith(String prefix) {
-        return minioAdapter.listFiles(prefix);
-    }
-
-    private List<String> filterMinioObjectsOnName(List<String> results) {
-        List<String> collect = new ArrayList<>();
-
-        try {
-            collect = results.stream()
-                    .filter(res -> {
-                        try {
-                            return res.equals("networkWithPRA.xiidm");
-                        } catch (Exception e) {
-                            LOGGER.error("Cant get the name of the Minio file");
-                        }
-                        return false;
-                    }).collect(Collectors.toList());
-        } catch (Exception e) {
-            LOGGER.error("Cant get the name of the Minio file");
-        }
-
-        return collect;
     }
 }
