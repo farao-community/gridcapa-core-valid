@@ -7,32 +7,30 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app;
 
-import com.farao_community.farao.commons.ZonalData;
 import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
 import com.farao_community.farao.core_valid.api.exception.CoreValidRaoException;
 import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
 import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_creator.FbConstraintCreationContext;
-import com.farao_community.farao.data.glsk.api.GlskDocument;
 import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
 import com.farao_community.farao.gridcapa_core_valid.app.configuration.SearchTreeRaoConfiguration;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
-import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.NetPositionsHandler;
 import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.ResultFileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointData;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointService;
+import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
 import com.farao_community.farao.rao_api.parameters.RaoParameters;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
 import com.farao_community.farao.search_tree_rao.castor.parameters.SearchTreeRaoParameters;
 import com.powsybl.action.util.Scalable;
+import com.powsybl.glsk.api.GlskDocument;
+import com.powsybl.glsk.commons.ZonalData;
 import com.powsybl.iidm.network.Network;
-import io.minio.Result;
-import io.minio.messages.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -47,8 +45,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -162,6 +158,7 @@ public class CoreValidHandler {
     }
 
     private void addParametersToSearchTreeRao(SearchTreeRaoParameters searchTreeRaoParameters) {
+
         searchTreeRaoParameters.setMaxCurativePstPerTso(searchTreeRaoConfiguration.getMaxCurativePstPerTso());
         searchTreeRaoParameters.setMaxCurativeTopoPerTso(searchTreeRaoConfiguration.getMaxCurativeTopoPerTso());
         searchTreeRaoParameters.setMaxCurativeRaPerTso(searchTreeRaoConfiguration.getMaxCurativeRaPerTso());
@@ -173,8 +170,6 @@ public class CoreValidHandler {
             studyPointCompletableFutures.put(studyPoint, raoResponse);
             raoResponse.thenApply(raoResponse1 -> {
                 LOGGER.info("End of RAO for studypoint {} ...", studyPoint.getVerticeId());
-                //eventsLogger.info("End of RAO computation for studypoint {} .", studyPoint.getVerticeId());
-                //This eventsLogger is removed because it creates error in task manager
                 return null;
             }).exceptionally(exception -> {
                 studyPoint.getStudyPointResult().setStatusToError();
@@ -208,41 +203,10 @@ public class CoreValidHandler {
 
     private void deleteArtifacts(CoreValidRequest coreValidRequest) {
         deleteCgmBeforeRao(artifactsFormatter.format(coreValidRequest.getTimestamp().atZoneSameInstant(ZoneId.of("Europe/Paris"))));
-        deleteCgmAfterRao("RAO");
     }
 
     private void deleteCgmBeforeRao(String prefix) {
-        Iterable<Result<Item>> results = listMinioArtifactsStartingWith(prefix);
-        minioAdapter.deleteObjects(results);
-    }
-
-    private void deleteCgmAfterRao(String prefix) {
-        Iterable<Result<Item>> results = listMinioArtifactsStartingWith(prefix);
-        List<Result<Item>> listObjectsToDelete = filterMinioObjectsOnName(results);
-        minioAdapter.deleteObjects(listObjectsToDelete);
-    }
-
-    private Iterable<Result<Item>> listMinioArtifactsStartingWith(String prefix) {
-        return minioAdapter.listArtifacts(prefix);
-    }
-
-    private List<Result<Item>> filterMinioObjectsOnName(Iterable<Result<Item>> results) {
-        List<Result<Item>> collect = new ArrayList<>();
-
-        try {
-            collect = StreamSupport.stream(results.spliterator(), false)
-                    .filter(res -> {
-                        try {
-                            return res.get().objectName().equals("networkWithPRA.xiidm");
-                        } catch (Exception e) {
-                            LOGGER.error("Cant get the name of the Minio file");
-                        }
-                        return false;
-                    }).collect(Collectors.toList());
-        } catch (Exception e) {
-            LOGGER.error("Cant get the name of the Minio file");
-        }
-
-        return collect;
+        List<String> results = minioAdapter.listFiles("artifacts/" + prefix);
+        minioAdapter.deleteFiles(results);
     }
 }

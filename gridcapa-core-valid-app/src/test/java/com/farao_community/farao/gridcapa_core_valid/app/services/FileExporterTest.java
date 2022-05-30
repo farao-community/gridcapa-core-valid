@@ -14,6 +14,7 @@ import com.farao_community.farao.data.crac_impl.CracImpl;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResult;
 import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.ResultFileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
+import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
 import com.farao_community.farao.rao_api.parameters.RaoParameters;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -22,12 +23,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.OffsetDateTime;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -44,7 +46,7 @@ class FileExporterTest {
     private final OffsetDateTime dateTime = OffsetDateTime.parse("2021-07-22T22:30Z");
 
     @Test
-    void exportMainAndRexStudyPointResultTest() {
+    void exportMainAndRexStudyPointResultTest() throws IOException {
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("resultUrl");
         List<StudyPointResult> studyPointsResult = new ArrayList<>();
         StudyPointResult studyPointResult = mockStudyPointResult();
@@ -53,16 +55,16 @@ class FileExporterTest {
         Mockito.when(coreValidRequest.getTimestamp()).thenReturn(dateTime);
         Mockito.when(coreValidRequest.getLaunchedAutomatically()).thenReturn(true);
         String resultUrl = fileExporter.exportStudyPointResult(studyPointsResult, coreValidRequest).get(ResultFileExporter.ResultType.MAIN_RESULT);
-        ArgumentCaptor<ByteArrayOutputStream> argumentCaptor = ArgumentCaptor.forClass(ByteArrayOutputStream.class);
-        Mockito.verify(minioAdapter, Mockito.times(3)).uploadFile(Mockito.any(), argumentCaptor.capture());
-        List<ByteArrayOutputStream> resultsBaos = argumentCaptor.getAllValues();
-        assertEquals("Period;Vertice ID;Branch ID;Branch Status;RAM before;RAM after\r\n;;;;0;0\r\n", resultsBaos.get(0).toString());
-        assertEquals("Period;Vertice ID;Branch ID;Branch Name;Outage Name;Branch Status;RAM before;RAM after;flow before;flow after\r\n;;;;;;0;0;0;0\r\n", resultsBaos.get(1).toString());
+        ArgumentCaptor<InputStream> argumentCaptor = ArgumentCaptor.forClass(InputStream.class);
+        Mockito.verify(minioAdapter, Mockito.times(3)).uploadOutput(Mockito.any(), argumentCaptor.capture());
+        List<InputStream> resultsBaos = argumentCaptor.getAllValues();
+        assertEquals("Period;Vertice ID;Branch ID;Branch Status;RAM before;RAM after\r\n;;;;0;0\r\n", new String(resultsBaos.get(0).readAllBytes()));
+        assertEquals("Period;Vertice ID;Branch ID;Branch Name;Outage Name;Branch Status;RAM before;RAM after;flow before;flow after\r\n;;;;;;0;0;0;0\r\n", new String(resultsBaos.get(1).readAllBytes()));
         assertEquals("resultUrl", resultUrl);
     }
 
     @Test
-    void exportRexOnlyStudyPointResultTest() {
+    void exportRexOnlyStudyPointResultTest() throws IOException {
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("resultUrl");
         List<StudyPointResult> studyPointsResult = new ArrayList<>();
         StudyPointResult studyPointResult = mockStudyPointResult();
@@ -73,10 +75,10 @@ class FileExporterTest {
         Map<ResultFileExporter.ResultType, String> resultUrls = fileExporter.exportStudyPointResult(studyPointsResult, coreValidRequest);
         assertNull(resultUrls.get(ResultFileExporter.ResultType.MAIN_RESULT));
         String resultUrl = resultUrls.get(ResultFileExporter.ResultType.REX_RESULT);
-        ArgumentCaptor<ByteArrayOutputStream> argumentCaptor = ArgumentCaptor.forClass(ByteArrayOutputStream.class);
-        Mockito.verify(minioAdapter, Mockito.times(2)).uploadFile(Mockito.any(), argumentCaptor.capture());
-        List<ByteArrayOutputStream> resultsBaos = argumentCaptor.getAllValues();
-        assertEquals("Period;Vertice ID;Branch ID;Branch Name;Outage Name;Branch Status;RAM before;RAM after;flow before;flow after\r\n;;;;;;0;0;0;0\r\n", resultsBaos.get(0).toString());
+        ArgumentCaptor<InputStream> argumentCaptor = ArgumentCaptor.forClass(InputStream.class);
+        Mockito.verify(minioAdapter, Mockito.times(2)).uploadOutput(Mockito.any(), argumentCaptor.capture());
+        List<InputStream> resultsBaos = argumentCaptor.getAllValues();
+        assertEquals("Period;Vertice ID;Branch ID;Branch Name;Outage Name;Branch Status;RAM before;RAM after;flow before;flow after\r\n;;;;;;0;0;0;0\r\n", new String(resultsBaos.get(0).readAllBytes()));
         assertEquals("resultUrl", resultUrl);
     }
 
@@ -104,7 +106,7 @@ class FileExporterTest {
         RaoParameters raoParameters = RaoParameters.load();
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("raoParametersUrl");
         String raoParametersUrl = fileExporter.saveRaoParametersAndGetUrl(raoParameters);
-        Mockito.verify(minioAdapter, Mockito.times(1)).uploadFile(Mockito.any(), Mockito.any(ByteArrayOutputStream.class));
+        Mockito.verify(minioAdapter, Mockito.times(1)).uploadArtifact(Mockito.any(), Mockito.any(InputStream.class));
         assertEquals("raoParametersUrl", raoParametersUrl);
     }
 
@@ -113,7 +115,7 @@ class FileExporterTest {
         Crac crac = new CracImpl("id");
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("cracUrl");
         String cracUrl = fileExporter.saveCracInJsonFormat(crac, dateTime);
-        Mockito.verify(minioAdapter, Mockito.times(1)).uploadFile(Mockito.any(), Mockito.any(InputStream.class));
+        Mockito.verify(minioAdapter, Mockito.times(1)).uploadArtifact(Mockito.any(), Mockito.any(InputStream.class));
         assertEquals("cracUrl", cracUrl);
     }
 }

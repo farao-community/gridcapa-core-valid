@@ -11,17 +11,15 @@ package com.farao_community.farao.gridcapa_core_valid.app.services.results_expor
 import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataException;
 import com.farao_community.farao.data.crac_api.Contingency;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResult;
-import com.farao_community.farao.gridcapa_core_valid.app.services.MinioAdapter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
+import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +60,8 @@ public class RexResultFileExporter implements ResultFileExporter {
             throw new CoreValidInvalidDataException("Error during export of studypoint results on Minio", e);
         }
         String filePath = getFormattedFilename(REX_SAMPLE_CSV_FILE, timestamp, minioAdapter);
-        minioAdapter.uploadFile(filePath, rexResultBaos);
+        InputStream inStream = new ByteArrayInputStream(rexResultBaos.toByteArray());
+        minioAdapter.uploadOutput(filePath, inStream);
         LOGGER.info("Rex result file was successfully uploaded on minIO");
         return minioAdapter.generatePreSignedUrl(filePath);
     }

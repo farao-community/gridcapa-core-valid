@@ -78,12 +78,16 @@
             <artifactId>spring-amqp</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.farao-community.farao</groupId>
-            <artifactId>farao-glsk-document-api</artifactId>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-glsk-document-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-glsk-document-io-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.farao-community.farao</groupId>
-            <artifactId>farao-glsk-document-io-api</artifactId>
+            <artifactId>farao-search-tree-rao</artifactId>
         </dependency>
         <dependency>
             <groupId>com.farao-community.farao</groupId>
@@ -103,10 +107,6 @@
         </dependency>
         <dependency>
             <groupId>com.farao-community.farao</groupId>
-            <artifactId>farao-search-tree-rao</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.farao-community.farao</groupId>
             <artifactId>farao-crac-creator-api</artifactId>
         </dependency>
         <dependency>
@@ -114,8 +114,8 @@
             <artifactId>farao-crac-creator-fb-constraint</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.minio</groupId>
-            <artifactId>minio</artifactId>
+            <groupId>com.farao-community.farao</groupId>
+            <artifactId>gridcapa-starter-minio-adapter</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -148,11 +148,6 @@
 
         <!-- RUNTIME DEPENDENCIES -->
         <dependency>
-            <groupId>com.farao-community.farao</groupId>
-            <artifactId>farao-glsk-document-ucte</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <groupId>com.powsybl</groupId>
             <artifactId>powsybl-config-classic</artifactId>
             <scope>runtime</scope>
@@ -165,6 +160,11 @@
         <dependency>
             <groupId>com.powsybl</groupId>
             <artifactId>powsybl-ucte-converter</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-glsk-document-ucte</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>
