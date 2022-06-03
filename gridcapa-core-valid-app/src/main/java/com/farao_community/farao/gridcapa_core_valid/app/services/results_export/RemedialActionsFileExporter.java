@@ -8,7 +8,7 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.services.results_export;
 
-import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataException;
+import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInvalidDataException;
 import com.farao_community.farao.data.crac_api.RemedialAction;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResult;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;

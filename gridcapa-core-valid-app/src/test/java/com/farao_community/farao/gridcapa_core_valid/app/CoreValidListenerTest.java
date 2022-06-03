@@ -7,8 +7,8 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app;
 
-import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
-import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
+import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
+import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

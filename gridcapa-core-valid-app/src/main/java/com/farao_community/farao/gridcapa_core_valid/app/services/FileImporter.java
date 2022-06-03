@@ -7,8 +7,8 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.services;
 
-import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataException;
-import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
+import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInvalidDataException;
+import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.data.crac_creation.creator.api.parameters.CracCreationParameters;
 import com.farao_community.farao.data.crac_creation.creator.fb_constraint.FbConstraint;
 import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_creator.FbConstraintCracCreator;

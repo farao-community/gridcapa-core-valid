@@ -7,10 +7,10 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app;
 
-import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
-import com.farao_community.farao.core_valid.api.exception.CoreValidRaoException;
-import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
-import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
+import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInternalException;
+import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidRaoException;
+import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
+import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidResponse;
 import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_creator.FbConstraintCreationContext;
 import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
 import com.farao_community.farao.gridcapa_core_valid.app.configuration.SearchTreeRaoConfiguration;

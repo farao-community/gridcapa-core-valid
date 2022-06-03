@@ -7,7 +7,7 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.services;
 
-import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
+import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.data.crac_api.Crac;
 import com.farao_community.farao.data.crac_api.State;
 import com.farao_community.farao.data.crac_impl.CracImpl;
