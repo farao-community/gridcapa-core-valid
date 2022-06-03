@@ -7,12 +7,12 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app;
 
-import com.farao_community.farao.core_valid.api.JsonApiConverter;
-import com.farao_community.farao.core_valid.api.exception.AbstractCoreValidException;
-import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
-import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataException;
-import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
-import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
+import com.farao_community.farao.gridcapa_core_valid.api.JsonApiConverter;
+import com.farao_community.farao.gridcapa_core_valid.api.exception.AbstractCoreValidException;
+import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInternalException;
+import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInvalidDataException;
+import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
+import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidResponse;
 import com.farao_community.farao.gridcapa.task_manager.api.TaskStatus;
 import com.farao_community.farao.gridcapa.task_manager.api.TaskStatusUpdate;
 import com.farao_community.farao.gridcapa_core_valid.app.configuration.AmqpMessagesConfiguration;

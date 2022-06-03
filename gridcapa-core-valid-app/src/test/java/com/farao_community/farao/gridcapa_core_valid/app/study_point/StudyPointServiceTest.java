@@ -7,8 +7,8 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.study_point;
 
-import com.farao_community.farao.core_valid.api.resource.CoreValidFileResource;
-import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
+import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidFileResource;
+import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResultService;
 import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
 import com.farao_community.farao.minio_adapter.starter.MinioAdapterProperties;

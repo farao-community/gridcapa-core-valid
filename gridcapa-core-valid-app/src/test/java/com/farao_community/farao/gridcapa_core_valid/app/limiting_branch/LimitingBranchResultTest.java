@@ -7,7 +7,7 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.limiting_branch;
 
-import com.farao_community.farao.core_valid.api.exception.CoreValidInvalidDataException;
+import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInvalidDataException;
 import com.farao_community.farao.data.crac_api.Instant;
 import com.farao_community.farao.data.crac_api.State;
 import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_creator.FbConstraintCreationContext;

@@ -7,10 +7,10 @@
 
 package com.farao_community.farao.gridcapa_core_valid.starter;
 
-import com.farao_community.farao.core_valid.api.JsonApiConverter;
-import com.farao_community.farao.core_valid.api.exception.CoreValidInternalException;
-import com.farao_community.farao.core_valid.api.resource.CoreValidRequest;
-import com.farao_community.farao.core_valid.api.resource.CoreValidResponse;
+import com.farao_community.farao.gridcapa_core_valid.api.JsonApiConverter;
+import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInternalException;
+import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
+import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.*;

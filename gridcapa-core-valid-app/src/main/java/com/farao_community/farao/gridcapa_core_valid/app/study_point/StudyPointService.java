@@ -7,7 +7,7 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.study_point;
 
-import com.farao_community.farao.core_valid.api.exception.CoreValidRaoException;
+import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidRaoException;
 import com.farao_community.farao.gridcapa_core_valid.app.CoreAreasId;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResult;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResultService;
