@@ -37,7 +37,6 @@ public interface ResultFileExporter {
     /**
      * Several types of results file can co-exist.
      * They are enumerated here.
-     * TODO: remove this when the choice of the results file type can be done in the configuration file
      */
     enum ResultType {
         MAIN_RESULT,

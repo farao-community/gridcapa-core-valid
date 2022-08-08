@@ -25,7 +25,7 @@ public class CoreValidResponse {
     @Id
     private final String id;
     private final String mainResultFileUrl;
-    private final String rexResultFileUrl; // TODO: remove this once choice of result file type can be done in the configuration
+    private final String rexResultFileUrl;
     private final String remedialActionsFileUrl;
     private final Instant computationStartInstant;
     private final Instant computationEndInstant;

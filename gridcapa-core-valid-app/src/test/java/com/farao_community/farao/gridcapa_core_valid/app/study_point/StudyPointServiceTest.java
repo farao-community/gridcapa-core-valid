@@ -7,8 +7,6 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.study_point;
 
-import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidFileResource;
-import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResultService;
 import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
 import com.farao_community.farao.minio_adapter.starter.MinioAdapterProperties;
@@ -34,6 +32,7 @@ import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,12 +56,10 @@ class StudyPointServiceTest {
 
     @Autowired StudyPointService studyPointService;
 
-    private final String testDirectory = "/20210723";
     private List<StudyPoint> studyPoints;
-    private GlskDocument glskDocument;
     private Network network;
     private ZonalData<Scalable> scalableZonalData;
-    private Map<String, Double> coreNetPositions = new HashMap<>();
+    private final Map<String, Double> coreNetPositions = new HashMap<>();
 
     @BeforeEach
     public void setup() {
@@ -71,12 +68,12 @@ class StudyPointServiceTest {
         coreNetPositions.put("NL", 225.);
         coreNetPositions.put("BE", 275.);
         OffsetDateTime dateTime = OffsetDateTime.parse("2021-07-22T22:30Z");
+        String testDirectory = "/20210723";
         studyPoints = StudyPointsImporter.importStudyPoints(getClass().getResourceAsStream(testDirectory + "/20210723-Points_Etudes-v01.csv"), dateTime);
-        glskDocument = GlskDocumentImporters.importGlsk(getClass().getResourceAsStream(testDirectory + "/20210723-F226-v1.xml"));
+        GlskDocument glskDocument = GlskDocumentImporters.importGlsk(Objects.requireNonNull(getClass().getResourceAsStream(testDirectory + "/20210723-F226-v1.xml")));
         InputStream networkStream = getClass().getResourceAsStream(testDirectory + "/20210723_0030_2D5_CGM.uct");
         network = Importers.loadNetwork("20210723_0030_2D5_CGM.uct", networkStream);
         scalableZonalData = glskDocument.getZonalScalable(network, dateTime.toInstant());
-        CoreValidRequest coreValidRequest = new CoreValidRequest("id", null, null, new CoreValidFileResource("name", "url"), null, null, null);
     }
 
     @Test
