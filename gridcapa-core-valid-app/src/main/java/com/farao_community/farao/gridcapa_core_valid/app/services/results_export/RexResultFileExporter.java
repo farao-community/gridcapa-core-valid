@@ -29,8 +29,6 @@ import java.util.Optional;
  * ResultFileExporter implementation generating a zip archive with the following files:
  * <ul>
  *     <li>An overview of all limitingBranch for each study-point of the timestamp</li>
- *     <li>An overview of Remedial Actions (RAs) selected by the RAO runner for each study point (TODO)</li>
- *     <li>all shifted network files, before and after application of preventive RAs, for each study point(TODO)</li>
  * </ul>
  * @author Alexandre Montigny {@literal <alexandre.montigny at rte-france.com>}
  */
