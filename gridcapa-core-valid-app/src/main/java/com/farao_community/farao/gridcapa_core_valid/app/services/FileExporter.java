@@ -82,6 +82,22 @@ public class FileExporter {
 
     //endregion
 
+    //region Shifted CGM with Pra uploading on minIO
+    public String saveShiftedCgmWithPra(Network network, String filename) {
+        String networkPath = String.format(ARTIFACTS_S, filename);
+        MemDataSource memDataSource = new MemDataSource();
+        Exporters.export("UCTE", network, new Properties(), memDataSource);
+        try (InputStream is = memDataSource.newInputStream("", "uct")) {
+            LOGGER.info("Uploading shifted cgm with pra to {}", networkPath);
+            minioAdapter.uploadArtifact(networkPath, is);
+        } catch (IOException e) {
+            throw new CoreValidInternalException("Error while trying to save shifted network with pra", e);
+        }
+        return minioAdapter.generatePreSignedUrl(networkPath);
+    }
+
+    //endregion
+
     //region RaoParameters uploading on minIO
     public String saveRaoParametersAndGetUrl(RaoParameters raoParameters) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
