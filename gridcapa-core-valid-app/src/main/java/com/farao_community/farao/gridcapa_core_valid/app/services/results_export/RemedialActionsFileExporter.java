@@ -54,7 +54,7 @@ public class RemedialActionsFileExporter implements ResultFileExporter {
         }
         String filePath = getFormattedFilename(REMEDIAL_ACTIONS_SAMPLE_CSV_FILE, timestamp, minioAdapter);
         InputStream inStream = new ByteArrayInputStream(remedialActionsResultBaos.toByteArray());
-        minioAdapter.uploadOutput(filePath, inStream);
+        minioAdapter.uploadOutputForTimestamp(filePath, inStream, "CORE_VALID", ResultType.REMEDIAL_ACTIONS_RESULT.getFileType(), timestamp);
         LOGGER.info("Remedial Actions result file was successfully uploaded on minIO");
         return minioAdapter.generatePreSignedUrl(filePath);
     }

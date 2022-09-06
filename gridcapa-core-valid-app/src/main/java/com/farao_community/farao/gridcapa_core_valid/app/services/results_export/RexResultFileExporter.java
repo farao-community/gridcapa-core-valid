@@ -59,7 +59,7 @@ public class RexResultFileExporter implements ResultFileExporter {
         }
         String filePath = getFormattedFilename(REX_SAMPLE_CSV_FILE, timestamp, minioAdapter);
         InputStream inStream = new ByteArrayInputStream(rexResultBaos.toByteArray());
-        minioAdapter.uploadOutput(filePath, inStream);
+        minioAdapter.uploadOutputForTimestamp(filePath, inStream, "CORE_VALID", ResultType.REX_RESULT.getFileType(), timestamp);
         LOGGER.info("Rex result file was successfully uploaded on minIO");
         return minioAdapter.generatePreSignedUrl(filePath);
     }

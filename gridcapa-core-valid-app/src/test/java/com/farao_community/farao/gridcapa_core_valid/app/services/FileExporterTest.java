@@ -56,7 +56,7 @@ class FileExporterTest {
         Mockito.when(coreValidRequest.getLaunchedAutomatically()).thenReturn(true);
         String resultUrl = fileExporter.exportStudyPointResult(studyPointsResult, coreValidRequest).get(ResultFileExporter.ResultType.MAIN_RESULT);
         ArgumentCaptor<InputStream> argumentCaptor = ArgumentCaptor.forClass(InputStream.class);
-        Mockito.verify(minioAdapter, Mockito.times(3)).uploadOutput(Mockito.any(), argumentCaptor.capture());
+        Mockito.verify(minioAdapter, Mockito.times(3)).uploadOutputForTimestamp(Mockito.any(), argumentCaptor.capture(), Mockito.any(), Mockito.any(), Mockito.any());
         List<InputStream> resultsBaos = argumentCaptor.getAllValues();
         assertEquals("Period;Vertice ID;Branch ID;Branch Status;RAM before;RAM after\r\n;;;;0;0\r\n", new String(resultsBaos.get(0).readAllBytes()));
         assertEquals("Period;Vertice ID;Branch ID;Branch Name;Outage Name;Branch Status;RAM before;RAM after;flow before;flow after\r\n;;;;;;0;0;0;0\r\n", new String(resultsBaos.get(1).readAllBytes()));
@@ -76,7 +76,7 @@ class FileExporterTest {
         assertNull(resultUrls.get(ResultFileExporter.ResultType.MAIN_RESULT));
         String resultUrl = resultUrls.get(ResultFileExporter.ResultType.REX_RESULT);
         ArgumentCaptor<InputStream> argumentCaptor = ArgumentCaptor.forClass(InputStream.class);
-        Mockito.verify(minioAdapter, Mockito.times(2)).uploadOutput(Mockito.any(), argumentCaptor.capture());
+        Mockito.verify(minioAdapter, Mockito.times(2)).uploadOutputForTimestamp(Mockito.any(), argumentCaptor.capture(), Mockito.any(), Mockito.any(), Mockito.any());
         List<InputStream> resultsBaos = argumentCaptor.getAllValues();
         assertEquals("Period;Vertice ID;Branch ID;Branch Name;Outage Name;Branch Status;RAM before;RAM after;flow before;flow after\r\n;;;;;;0;0;0;0\r\n", new String(resultsBaos.get(0).readAllBytes()));
         assertEquals("resultUrl", resultUrl);
