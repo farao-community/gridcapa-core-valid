@@ -13,11 +13,11 @@ import com.farao_community.farao.minio_adapter.starter.MinioAdapterProperties;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
 import com.farao_community.farao.rao_runner.starter.AsynchronousRaoRunnerClient;
-import com.powsybl.action.util.Scalable;
 import com.powsybl.glsk.api.GlskDocument;
 import com.powsybl.glsk.api.io.GlskDocumentImporters;
 import com.powsybl.glsk.commons.ZonalData;
 import com.powsybl.iidm.import_.Importers;
+import com.powsybl.iidm.modification.scalable.Scalable;
 import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,7 +54,8 @@ class StudyPointServiceTest {
     @MockBean
     private AsynchronousRaoRunnerClient asynchronousRaoRunnerClient;
 
-    @Autowired StudyPointService studyPointService;
+    @Autowired
+    StudyPointService studyPointService;
 
     private List<StudyPoint> studyPoints;
     private Network network;

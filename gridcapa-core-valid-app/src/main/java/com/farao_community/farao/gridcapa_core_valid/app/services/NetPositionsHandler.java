@@ -7,13 +7,13 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.services;
 
-import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInternalException;
 import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
+import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInternalException;
 import com.farao_community.farao.gridcapa_core_valid.app.CoreAreasId;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
-import com.powsybl.action.util.Scalable;
 import com.powsybl.glsk.commons.CountryEICode;
 import com.powsybl.glsk.commons.ZonalData;
+import com.powsybl.iidm.modification.scalable.Scalable;
 import com.powsybl.iidm.network.Country;
 import com.powsybl.iidm.network.DanglingLine;
 import com.powsybl.iidm.network.Network;
