@@ -55,7 +55,7 @@ public class MainResultFileExporter implements ResultFileExporter {
         }
         String filePath = getFormattedFilename(MAIN_SAMPLE_CSV_FILE, timestamp, minioAdapter);
         InputStream inStream = new ByteArrayInputStream(mainResultBaos.toByteArray());
-        minioAdapter.uploadOutput(filePath, inStream);
+        minioAdapter.uploadOutputForTimestamp(filePath, inStream, "CORE_VALID", ResultType.MAIN_RESULT.getFileType(), timestamp);
         LOGGER.info("Main result file was successfully uploaded on minIO");
         return minioAdapter.generatePreSignedUrl(filePath);
     }

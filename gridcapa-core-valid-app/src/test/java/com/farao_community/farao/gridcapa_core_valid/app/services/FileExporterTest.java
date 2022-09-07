@@ -16,6 +16,8 @@ import com.farao_community.farao.gridcapa_core_valid.app.services.results_export
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
 import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
 import com.farao_community.farao.rao_api.parameters.RaoParameters;
+import com.powsybl.iidm.import_.Importers;
+import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -44,6 +46,7 @@ class FileExporterTest {
     private MinioAdapter minioAdapter;
 
     private final OffsetDateTime dateTime = OffsetDateTime.parse("2021-07-22T22:30Z");
+    private final String raoDirectory = "/rao-result";
 
     @Test
     void exportMainAndRexStudyPointResultTest() throws IOException {
@@ -56,7 +59,7 @@ class FileExporterTest {
         Mockito.when(coreValidRequest.getLaunchedAutomatically()).thenReturn(true);
         String resultUrl = fileExporter.exportStudyPointResult(studyPointsResult, coreValidRequest).get(ResultFileExporter.ResultType.MAIN_RESULT);
         ArgumentCaptor<InputStream> argumentCaptor = ArgumentCaptor.forClass(InputStream.class);
-        Mockito.verify(minioAdapter, Mockito.times(3)).uploadOutput(Mockito.any(), argumentCaptor.capture());
+        Mockito.verify(minioAdapter, Mockito.times(3)).uploadOutputForTimestamp(Mockito.any(), argumentCaptor.capture(), Mockito.any(), Mockito.any(), Mockito.any());
         List<InputStream> resultsBaos = argumentCaptor.getAllValues();
         assertEquals("Period;Vertice ID;Branch ID;Branch Status;RAM before;RAM after\r\n;;;;0;0\r\n", new String(resultsBaos.get(0).readAllBytes()));
         assertEquals("Period;Vertice ID;Branch ID;Branch Name;Outage Name;Branch Status;RAM before;RAM after;flow before;flow after\r\n;;;;;;0;0;0;0\r\n", new String(resultsBaos.get(1).readAllBytes()));
@@ -76,7 +79,7 @@ class FileExporterTest {
         assertNull(resultUrls.get(ResultFileExporter.ResultType.MAIN_RESULT));
         String resultUrl = resultUrls.get(ResultFileExporter.ResultType.REX_RESULT);
         ArgumentCaptor<InputStream> argumentCaptor = ArgumentCaptor.forClass(InputStream.class);
-        Mockito.verify(minioAdapter, Mockito.times(2)).uploadOutput(Mockito.any(), argumentCaptor.capture());
+        Mockito.verify(minioAdapter, Mockito.times(2)).uploadOutputForTimestamp(Mockito.any(), argumentCaptor.capture(), Mockito.any(), Mockito.any(), Mockito.any());
         List<InputStream> resultsBaos = argumentCaptor.getAllValues();
         assertEquals("Period;Vertice ID;Branch ID;Branch Name;Outage Name;Branch Status;RAM before;RAM after;flow before;flow after\r\n;;;;;;0;0;0;0\r\n", new String(resultsBaos.get(0).readAllBytes()));
         assertEquals("resultUrl", resultUrl);
@@ -117,5 +120,14 @@ class FileExporterTest {
         String cracUrl = fileExporter.saveCracInJsonFormat(crac, dateTime);
         Mockito.verify(minioAdapter, Mockito.times(1)).uploadArtifact(Mockito.any(), Mockito.any(InputStream.class));
         assertEquals("cracUrl", cracUrl);
+    }
+
+    @Test
+    void saveShiftedCgmWithPraTest() {
+        Network network = Importers.loadNetwork("network.uct", getClass().getResourceAsStream(raoDirectory + "/network.uct"));
+        Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("cgmWithPraUrl");
+        String cgmWithPraUrl = fileExporter.saveShiftedCgmWithPra(network, "test");
+        Mockito.verify(minioAdapter, Mockito.times(1)).uploadArtifact(Mockito.any(), Mockito.any(InputStream.class));
+        assertEquals("cgmWithPraUrl", cgmWithPraUrl);
     }
 }

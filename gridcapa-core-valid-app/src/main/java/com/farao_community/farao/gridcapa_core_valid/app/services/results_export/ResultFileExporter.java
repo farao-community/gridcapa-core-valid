@@ -39,8 +39,18 @@ public interface ResultFileExporter {
      * They are enumerated here.
      */
     enum ResultType {
-        MAIN_RESULT,
-        REMEDIAL_ACTIONS_RESULT,
-        REX_RESULT
+        MAIN_RESULT("AUTO-RESULT"),
+        REMEDIAL_ACTIONS_RESULT("REMEDIAL-ACTIONS-RESULT"),
+        REX_RESULT("REX-RESULT");
+
+        private final String fileType;
+
+        ResultType(String fileType) {
+            this.fileType = fileType;
+        }
+
+        public String getFileType() {
+            return fileType;
+        }
     }
 }

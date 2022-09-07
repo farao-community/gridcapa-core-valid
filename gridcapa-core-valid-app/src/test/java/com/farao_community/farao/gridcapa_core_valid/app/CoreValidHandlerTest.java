@@ -11,6 +11,7 @@ import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidFileR
 import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidResponse;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileExporter;
+import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointService;
 import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
@@ -47,6 +48,9 @@ class CoreValidHandlerTest {
     @MockBean
     private FileExporter fileExporter;
 
+    @MockBean
+    private FileImporter fileImporter;
+
     private final String testDirectory = "/20210723";
 
     @Test
@@ -59,6 +63,9 @@ class CoreValidHandlerTest {
         Mockito.when(studyPointService.computeStudyPointRao(Mockito.any(), Mockito.any())).thenReturn(future);
         future.complete(raoResponse);
         Mockito.when(fileExporter.exportStudyPointResult(Mockito.any(), Mockito.any())).thenReturn(new HashMap<>());
+        Mockito.when(fileImporter.importNetworkFromUrl(Mockito.any())).thenReturn(null);
+        Mockito.when(fileExporter.saveShiftedCgmWithPra(Mockito.any(), Mockito.any())).thenReturn("");
+
         String requestId = "Test request";
         String networkFileName = "20210723_0030_2D5_CGM_limits.uct";
         CoreValidFileResource networkFile = createFileResource(networkFileName, getClass().getResource(testDirectory + "/" + networkFileName));
