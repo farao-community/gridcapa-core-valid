@@ -184,7 +184,7 @@ public class CoreValidHandler {
         for (Map.Entry<StudyPoint, CompletableFuture<RaoResponse>> entry : studyPointCompletableFutures.entrySet()) {
             StudyPoint studyPoint = entry.getKey();
             RaoResponse raoResponse = entry.getValue().get();
-            Network networkWithPra = fileImporter.importNetworkWithPra(raoResponse.getNetworkWithPraFileUrl());
+            Network networkWithPra = fileImporter.importNetworkFromUrl(raoResponse.getNetworkWithPraFileUrl());
             String fileName = networkWithPra.getNameOrId() + "_" + studyPoint.getVerticeId() + "_withPra.uct";
             fileExporter.saveShiftedCgmWithPra(networkWithPra, fileName);
             studyPointResults.add(studyPointService.postTreatRaoResult(studyPoint, studyPointData, raoResponse));

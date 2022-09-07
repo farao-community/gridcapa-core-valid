@@ -68,6 +68,23 @@ class FileImporterTest {
         assertEquals("17XTSO-CS------W-20190108-F301v1", crac.getId());
     }
 
+    @Test
+    void importNetworkTest() {
+        String networkFileName = "20210723_0030_2D5_CGM.uct";
+        CoreValidFileResource networkFile = createFileResource(networkFileName, getClass().getResource(testDirectory + "/" + networkFileName));
+        Network network = fileImporter.importNetwork(networkFile);
+        assertNotNull(network);
+        assertEquals("20210723_0030_2D5_CGM", network.getNameOrId());
+    }
+
+    @Test
+    void importNetworkFromUrlTest() {
+        String cgmUrl = getClass().getResource(testDirectory + "/20210723_0030_2D5_CGM.uct").toExternalForm();
+        Network network = fileImporter.importNetworkFromUrl(cgmUrl);
+        assertNotNull(network);
+        assertEquals("20210723_0030_2D5_CGM", network.getNameOrId());
+    }
+
     private CoreValidFileResource createFileResource(String filename, URL resource) {
         return new CoreValidFileResource(filename, resource.toExternalForm());
     }

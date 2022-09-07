@@ -63,7 +63,7 @@ class CoreValidHandlerTest {
         Mockito.when(studyPointService.computeStudyPointRao(Mockito.any(), Mockito.any())).thenReturn(future);
         future.complete(raoResponse);
         Mockito.when(fileExporter.exportStudyPointResult(Mockito.any(), Mockito.any())).thenReturn(new HashMap<>());
-        Mockito.when(fileImporter.importNetworkWithPra(Mockito.any())).thenReturn(null);
+        Mockito.when(fileImporter.importNetworkFromUrl(Mockito.any())).thenReturn(null);
         Mockito.when(fileExporter.saveShiftedCgmWithPra(Mockito.any(), Mockito.any())).thenReturn("");
 
         String requestId = "Test request";

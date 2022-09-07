@@ -51,7 +51,7 @@ public class FileImporter {
         return NetworkHandler.loadNetwork(cgmFile.getFilename(), networkStream);
     }
 
-    public Network importNetworkWithPra(String cgmUrl) {
+    public Network importNetworkFromUrl(String cgmUrl) {
         return Importers.loadNetwork(getFilenameFromUrl(cgmUrl), urlValidationService.openUrlStream(cgmUrl));
     }
 
@@ -91,7 +91,7 @@ public class FileImporter {
         }
     }
 
-    private String getFilenameFromUrl(String url) {
+    String getFilenameFromUrl(String url) {
         try {
             return FilenameUtils.getName(new URL(url).getPath());
         } catch (MalformedURLException e) {
