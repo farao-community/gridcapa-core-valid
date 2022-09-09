@@ -22,6 +22,7 @@ import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointData;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointService;
+import com.farao_community.farao.gridcapa_core_valid.app.util.Threadable;
 import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
 import com.farao_community.farao.rao_api.parameters.RaoParameters;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
@@ -80,7 +81,8 @@ public class CoreValidHandler {
         this.eventsLogger = eventsLogger;
     }
 
-    public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
+    @Threadable
+    public CoreValidResponse run(CoreValidRequest coreValidRequest) {
         try {
             preTreatment(coreValidRequest);
             computeStudyPoints(coreValidRequest);

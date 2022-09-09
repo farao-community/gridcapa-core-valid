@@ -61,6 +61,22 @@ public class JsonApiConverter {
         }
     }
 
+    public <T> byte[] toJsonMessage(T jsonApiObject, Class<T> clazz) {
+        ResourceConverter converter = createConverter(clazz);
+        JSONAPIDocument<?> jsonApiDocument = new JSONAPIDocument<>(jsonApiObject);
+        try {
+            return converter.writeDocument(jsonApiDocument);
+        } catch (DocumentSerializationException e) {
+            throw new CoreValidInternalException("Exception occurred during message conversion", e);
+        }
+    }
+
+    private ResourceConverter createConverter(Class<?>... classes) {
+        ResourceConverter converter = new ResourceConverter(objectMapper, classes);
+        converter.disableSerializationOption(SerializationFeature.INCLUDE_META);
+        return converter;
+    }
+
     private ResourceConverter createConverter() {
         ResourceConverter converter = new ResourceConverter(objectMapper, CoreValidRequest.class, CoreValidResponse.class);
         converter.disableSerializationOption(SerializationFeature.INCLUDE_META);

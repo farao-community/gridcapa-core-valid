@@ -9,32 +9,43 @@ package com.farao_community.farao.gridcapa_core_valid.starter;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.Optional;
+
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
 @ConfigurationProperties("core-valid-runner")
 public class CoreValidClientProperties {
-    private AmqpConfiguration amqp;
+    private BindingConfiguration binding;
 
-    public CoreValidClientProperties.AmqpConfiguration getAmqp() {
-        return amqp;
+    public BindingConfiguration getBinding() {
+        return binding;
     }
 
-    public void setAmqp(CoreValidClientProperties.AmqpConfiguration amqp) {
-        this.amqp = amqp;
+    public void setBinding(BindingConfiguration binding) {
+        this.binding = binding;
     }
 
-    public static class AmqpConfiguration {
-        private String queueName;
+    public static class BindingConfiguration {
+        private String destination;
+        private String routingKey;
         private String expiration;
         private String applicationId;
 
-        public String getQueueName() {
-            return queueName;
+        public String getDestination() {
+            return destination;
         }
 
-        public void setQueueName(String queueName) {
-            this.queueName = queueName;
+        public void setDestination(String destination) {
+            this.destination = destination;
+        }
+
+        public String getRoutingKey() {
+            return Optional.ofNullable(routingKey).orElse("#");
+        }
+
+        public void setRoutingKey(String routingKey) {
+            this.routingKey = routingKey;
         }
 
         public String getExpiration() {

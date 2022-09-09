@@ -77,7 +77,7 @@ class CoreValidHandlerTest {
         CoreValidFileResource cbcoraFile = createFileResource("cbcora",  getClass().getResource(testDirectory + "/20210723-F301_CBCORA_hvdcvh-outage.xml"));
 
         CoreValidRequest request = new CoreValidRequest(requestId, dateTime, networkFile, cbcoraFile, glskFile,  refProgFile, studyPointsFile, true);
-        CoreValidResponse response = coreValidHandler.handleCoreValidRequest(request);
+        CoreValidResponse response = coreValidHandler.run(request);
         assertEquals(requestId, response.getId());
         Mockito.verify(minioAdapter, Mockito.times(1)).deleteFiles(Mockito.any());
     }

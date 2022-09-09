@@ -14,10 +14,19 @@ spring:
       reply-timeout: 6000000
   cloud:
     stream:
+      function:
+        definition: interrupt;request
+      default:
+        binder: rabbit
       bindings:
+        interrupt-in-0:
+          destination: core-valid-interrupt
+        request-in-0:
+          destination: core-valid-requests
+        request-out-0:
+          destination: core-valid-response
         task-status-update:
-          binder: rabbit
-          destination: task-status-updated
+          destination: core-valid-task-updated
 
 rao-runner-server:
   amqp:
@@ -25,13 +34,6 @@ rao-runner-server:
 
 core-valid-runner:
   async-time-out: 600000 # 10min (10*60*1000)
-  bindings:
-    request:
-      destination: core-valid-requests
-      routing-key: "#"
-    response:
-      destination: core-valid-response
-      expiration: 600000
   whitelist:
     - http://localhost:9000
     - http://minio:9000
