@@ -35,7 +35,7 @@ import com.powsybl.iidm.network.Network;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -51,7 +51,7 @@ import java.util.concurrent.ExecutionException;
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  * @author Theo Pascoli {@literal <theo.pascoli at rte-france.com>}
  */
-@Component
+@Service
 public class CoreValidHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CoreValidHandler.class);
@@ -87,11 +87,7 @@ public class CoreValidHandler {
             preTreatment(coreValidRequest);
             computeStudyPoints(coreValidRequest);
             postTreatment(coreValidRequest);
-        } catch (InterruptedException e) {
-            eventsLogger.error("Error during core request running for timestamp {}.", formattedTimestamp);
-            Thread.currentThread().interrupt();
-            throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
-        } catch (ExecutionException e) {
+        } catch (Exception e) {
             eventsLogger.error("Error during core request running for timestamp {}.", formattedTimestamp);
             throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
         }
@@ -121,14 +117,20 @@ public class CoreValidHandler {
         formattedTimestamp = timestampFormatter.format(coreValidRequest.getTimestamp());
     }
 
-    private void computeStudyPoints(CoreValidRequest coreValidRequest) throws InterruptedException, ExecutionException {
+    private void computeStudyPoints(CoreValidRequest coreValidRequest) {
         importStudyPoints(coreValidRequest);
         if (!studyPoints.isEmpty()) {
             StudyPointData studyPointData = fillStudyPointData(coreValidRequest);
             studyPoints.forEach(studyPoint -> studyPointRaoRequests.put(studyPoint, studyPointService.computeStudyPointShift(studyPoint, studyPointData, coreValidRequest.getTimestamp(), coreValidRequest.getId())));
             eventsLogger.info("All studypoints shifts are done for timestamp {}", formattedTimestamp);
-            runRaoForEachStudyPoint();
-            fillResultsForEachStudyPoint(studyPointData);
+            try {
+                runRaoForEachStudyPoint();
+                fillResultsForEachStudyPoint(studyPointData);
+            } catch (InterruptedException | ExecutionException e) {
+                eventsLogger.error("Error during RAO running for timestamp {}.", formattedTimestamp);
+                Thread.currentThread().interrupt();
+                throw new CoreValidInternalException(String.format("Error during RAO running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
+            }
         }
     }
 

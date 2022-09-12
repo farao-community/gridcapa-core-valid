@@ -1,29 +1,24 @@
 {
   "properties": [
     {
-      "name": "core-valid-runner.amqp.application-id",
+      "name": "core-valid-runner.binding.application-id",
       "type": "java.lang.String",
-      "description": "Name of the application that call core valid through starter."
+      "description": "Name of the application that call Core through starter."
     },
     {
-      "name": "core-valid-runner.amqp.queue-name",
+      "name": "core-valid-runner.binding.destination",
       "type": "java.lang.String",
-      "description": "AMQP queue to be used to send Core valid requests."
+      "description": "The exchange name on which to send the Core request."
     },
     {
-      "name": "core-valid-runner.amqp.exchange",
+      "name": "core-valid-runner.binding.routing-key",
       "type": "java.lang.String",
-      "description": "AMQP exchange to be used to send core valid requests."
+      "description": "The routing key to use for the binding to cse-runner instance. Default value \"#\" is used to notify all queues."
     },
     {
-      "name": "core-valid-runner.amqp.routing-key",
+      "name": "core-valid-runner.binding.expiration",
       "type": "java.lang.String",
-      "description": "AMQP routing key to associate to core valid requests."
-    },
-    {
-      "name": "core-valid-runner.amqp.expiration",
-      "type": "java.lang.String",
-      "description": "Expiration time of core valid requests."
+      "description": "Expiration time of Core requests."
     }
   ]
 }

@@ -7,10 +7,6 @@
 
 package com.farao_community.farao.gridcapa_core_valid.starter;
 
-import com.farao_community.farao.gridcapa_core_valid.api.JsonApiConverter;
-import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInternalException;
-import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
-import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.*;
@@ -26,42 +22,26 @@ public class CoreValidClient {
 
     private final AmqpTemplate amqpTemplate;
     private final CoreValidClientProperties coreValidClientProperties;
-    private final JsonApiConverter jsonConverter;
+    private final CoreValidMessageHandler coreValidMessageHandler;
 
     public CoreValidClient(AmqpTemplate amqpTemplate, CoreValidClientProperties coreValidClientProperties) {
         this.amqpTemplate = amqpTemplate;
         this.coreValidClientProperties = coreValidClientProperties;
-        this.jsonConverter = new JsonApiConverter();
+        this.coreValidMessageHandler = new CoreValidMessageHandler(coreValidClientProperties);
     }
 
-    public CoreValidResponse run(CoreValidRequest coreValidRequest, int priority) {
-        LOGGER.info("Core valid request sent: {}", coreValidRequest);
-        Message responseMessage = amqpTemplate.sendAndReceive(coreValidClientProperties.getBinding().getDestination(), buildMessage(coreValidRequest, priority));
-        if (responseMessage != null) {
-            return CoreValidResponseConversionHelper.convertCoreValidResponse(responseMessage, jsonConverter);
-        } else {
-            throw new CoreValidInternalException("Core valid Runner server did not respond");
-        }
+    public <I, J> J run(I request, Class<I> requestClass, Class<J> responseClass, int priority) {
+        LOGGER.info("Core valid request sent: {}", request);
+        Message responseMessage = amqpTemplate.sendAndReceive(
+                coreValidClientProperties.getBinding().getDestination(),
+                coreValidClientProperties.getBinding().getRoutingKey(),
+                coreValidMessageHandler.buildMessage(request, requestClass, priority));
+        J response = coreValidMessageHandler.readMessage(responseMessage, responseClass);
+        LOGGER.info("Response received: {}", response);
+        return response;
     }
 
-    public CoreValidResponse run(CoreValidRequest coreValidRequest) {
-        return run(coreValidRequest, DEFAULT_PRIORITY);
-    }
-
-    public Message buildMessage(CoreValidRequest coreValidRequest, int priority) {
-        return MessageBuilder.withBody(jsonConverter.toJsonMessage(coreValidRequest))
-                .andProperties(buildMessageProperties(priority))
-                .build();
-    }
-
-    private MessageProperties buildMessageProperties(int priority) {
-        return MessagePropertiesBuilder.newInstance()
-                .setAppId(coreValidClientProperties.getBinding().getApplicationId())
-                .setContentEncoding(CONTENT_ENCODING)
-                .setContentType(CONTENT_TYPE)
-                .setDeliveryMode(MessageDeliveryMode.NON_PERSISTENT)
-                .setExpiration(coreValidClientProperties.getBinding().getExpiration())
-                .setPriority(priority)
-                .build();
+    public <I, J> J run(I request, Class<I> requestClass, Class<J> responseClass) {
+        return run(request, requestClass, responseClass, DEFAULT_PRIORITY);
     }
 }

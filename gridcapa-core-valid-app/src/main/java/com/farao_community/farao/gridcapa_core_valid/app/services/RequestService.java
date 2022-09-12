@@ -52,7 +52,7 @@ public class RequestService {
         MDC.put("gridcapa-task-id", coreValidRequest.getId());
         try {
             streamBridge.send(TASK_STATUS_UPDATE, new TaskStatusUpdate(UUID.fromString(coreValidRequest.getId()), TaskStatus.RUNNING));
-            LOGGER.info("Cse request received : {}", coreValidRequest);
+            LOGGER.info("Core valid request received : {}", coreValidRequest);
             GenericThreadLauncher<CoreValidHandler, CoreValidResponse> launcher = new GenericThreadLauncher<>(coreValidHandler, coreValidRequest.getId(), coreValidRequest);
             launcher.start();
             ThreadLauncherResult<CoreValidResponse> coreValidResponse = launcher.getResult();

@@ -22,7 +22,7 @@ public class RequestConfiguration {
 
     @Bean
     public Function<Flux<byte[]>, Flux<byte[]>> request(RequestService requestService) {
-        return cseRequestFlux -> cseRequestFlux
+        return coreRequestFlux -> coreRequestFlux
                 .map(requestService::launchCoreValidRequest)
                 .log();
     }

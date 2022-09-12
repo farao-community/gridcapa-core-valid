@@ -1,6 +1,6 @@
 logback:
   amqp:
-    exchange: task-manager-logs-exchange
+    exchange: core-valid-task-manager-logs-exchange
     routing-key: "#"
 spring:
   banner:
@@ -20,17 +20,18 @@ spring:
         binder: rabbit
       bindings:
         interrupt-in-0:
-          destination: core-valid-interrupt
+          destination: core-valid-stop-task
         request-in-0:
-          destination: core-valid-requests
+          destination: core-valid-request
         request-out-0:
           destination: core-valid-response
         task-status-update:
-          destination: core-valid-task-updated
+          destination: core-valid-task-status-updated
 
 rao-runner-server:
   amqp:
-    queue-name: ${RAO_ADAPTER_SERVER_QUEUE_NAME:rao-request-queue}
+    client-app-id: core-valid-runner
+    queue-name: rao-request-queue
 
 core-valid-runner:
   async-time-out: 600000 # 10min (10*60*1000)
