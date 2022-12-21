@@ -34,7 +34,18 @@ public final class NetworkHandler {
         return network;
     }
 
-    private static void processNetworkForCore(Network network) {
+    static void processNetworkForCore(Network network) {
+        /*
+         UCTE-DEF file does not provide configuration for default nominal voltage setup.
+
+         This post processor modifies default nominal voltages in order to adapt it to FMAX
+         calculation based on IMAX.
+
+         By default, UCTE sets nominal voltage to 220 and 380kV for the voltage levels 6 and 7, whereas
+         default values of Core countries are 225 and 400 kV instead.
+         */
+        updateVoltageLevelNominalV(network);
+
         /*
         When importing an UCTE network file, powsybl merges its X-nodes into dangling lines.
         It can cause an error if a GLSK file associated to this network includes some factors on
@@ -48,7 +59,22 @@ public final class NetworkHandler {
 
     }
 
-    private static void createGeneratorOnAlegroNodes(Network network) {
+    static void updateVoltageLevelNominalV(Network network) {
+        network.getVoltageLevelStream().forEach(voltageLevel -> {
+            if (safeDoubleEquals(voltageLevel.getNominalV(), 380)) {
+                voltageLevel.setNominalV(400);
+            } else if (safeDoubleEquals(voltageLevel.getNominalV(), 220)) {
+                voltageLevel.setNominalV(225);
+            }
+            // Else it should not be changed cause is not equal to the default nominal voltage of voltage levels 6 or 7
+        });
+    }
+
+    private static boolean safeDoubleEquals(double a, double b) {
+        return Math.abs(a - b) < 1e-3;
+    }
+
+    static void createGeneratorOnAlegroNodes(Network network) {
         createGeneratorOnXnode(network, "XLI_OB1B");
         createGeneratorOnXnode(network, "XLI_OB1A");
     }

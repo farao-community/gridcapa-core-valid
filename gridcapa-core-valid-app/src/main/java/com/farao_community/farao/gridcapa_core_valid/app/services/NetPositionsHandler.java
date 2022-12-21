@@ -17,6 +17,8 @@ import com.powsybl.iidm.modification.scalable.Scalable;
 import com.powsybl.iidm.network.Country;
 import com.powsybl.iidm.network.DanglingLine;
 import com.powsybl.iidm.network.Network;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Optional;
@@ -26,6 +28,7 @@ import java.util.TreeMap;
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
 public final class NetPositionsHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(NetPositionsHandler.class);
 
     private NetPositionsHandler() {
         throw new IllegalStateException("Utility class");
@@ -58,6 +61,7 @@ public final class NetPositionsHandler {
                 } else {
                     String zone = CoreAreasId.ID_MAPPING.get(studyPointZoneId);
                     double shift = netPosition - coreNetPositions.getOrDefault(zone, 0.);
+                    LOGGER.info("Shift for zone {} : Study point {} | Ref prog {} | variation {}", zone, netPosition, coreNetPositions.getOrDefault(zone, 0.), shift);
                     String zoneEiCode = new CountryEICode(Country.valueOf(zone)).getCode();
                     Scalable scalable = scalableZonalData.getData(zoneEiCode);
                     if (scalable != null) {
