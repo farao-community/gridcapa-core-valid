@@ -34,7 +34,7 @@ public final class NetworkHandler {
         return network;
     }
 
-    private static void processNetworkForCore(Network network) {
+    static void processNetworkForCore(Network network) {
         /*
          UCTE-DEF file does not provide configuration for default nominal voltage setup.
 
@@ -59,7 +59,7 @@ public final class NetworkHandler {
 
     }
 
-    private static void updateVoltageLevelNominalV(Network network) {
+    static void updateVoltageLevelNominalV(Network network) {
         network.getVoltageLevelStream().forEach(voltageLevel -> {
             if (safeDoubleEquals(voltageLevel.getNominalV(), 380)) {
                 voltageLevel.setNominalV(400);
@@ -74,7 +74,7 @@ public final class NetworkHandler {
         return Math.abs(a - b) < 1e-3;
     }
 
-    private static void createGeneratorOnAlegroNodes(Network network) {
+    static void createGeneratorOnAlegroNodes(Network network) {
         createGeneratorOnXnode(network, "XLI_OB1B");
         createGeneratorOnXnode(network, "XLI_OB1A");
     }
