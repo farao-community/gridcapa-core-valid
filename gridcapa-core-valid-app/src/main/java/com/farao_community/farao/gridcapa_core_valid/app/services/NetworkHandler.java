@@ -7,7 +7,6 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.services;
 
-import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +28,7 @@ public final class NetworkHandler {
 
     public static Network loadNetwork(String filename, InputStream inputStream) {
         LOGGER.info("IIDM import of network : {}", filename);
-        Network network = Importers.loadNetwork(filename, inputStream);
+        Network network = Network.read(filename, inputStream);
         processNetworkForCore(network);
         return network;
     }

@@ -16,7 +16,6 @@ import com.farao_community.farao.rao_runner.starter.AsynchronousRaoRunnerClient;
 import com.powsybl.glsk.api.GlskDocument;
 import com.powsybl.glsk.api.io.GlskDocumentImporters;
 import com.powsybl.glsk.commons.ZonalData;
-import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.modification.scalable.Scalable;
 import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.BeforeEach;
@@ -73,7 +72,7 @@ class StudyPointServiceTest {
         studyPoints = StudyPointsImporter.importStudyPoints(getClass().getResourceAsStream(testDirectory + "/20210723-Points_Etudes-v01.csv"), dateTime);
         GlskDocument glskDocument = GlskDocumentImporters.importGlsk(Objects.requireNonNull(getClass().getResourceAsStream(testDirectory + "/20210723-F226-v1.xml")));
         InputStream networkStream = getClass().getResourceAsStream(testDirectory + "/20210723_0030_2D5_CGM.uct");
-        network = Importers.loadNetwork("20210723_0030_2D5_CGM.uct", networkStream);
+        network = Network.read("20210723_0030_2D5_CGM.uct", networkStream);
         scalableZonalData = glskDocument.getZonalScalable(network, dateTime.toInstant());
     }
 

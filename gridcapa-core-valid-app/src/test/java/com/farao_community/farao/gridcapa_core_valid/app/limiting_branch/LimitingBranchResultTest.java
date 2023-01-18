@@ -13,7 +13,6 @@ import com.farao_community.farao.data.crac_api.State;
 import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_creator.FbConstraintCreationContext;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
-import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,7 +60,7 @@ class LimitingBranchResultTest {
 
     @Test
     void importRaoResultTest() {
-        Network network = Importers.loadNetwork("network.uct", getClass().getResourceAsStream(raoDirectory + "/network.uct"));
+        Network network = Network.read("network.uct", getClass().getResourceAsStream(raoDirectory + "/network.uct"));
         FbConstraintCreationContext fbConstraintCreationContext = fileImporter.importCrac(getClass().getResource(raoDirectory + "/crac.xml").toExternalForm(), dateTime, network);
         List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(new StudyPoint(1, "id", null), fbConstraintCreationContext, getClass().getResource(raoDirectory + "/raoResult.json").toExternalForm());
 
