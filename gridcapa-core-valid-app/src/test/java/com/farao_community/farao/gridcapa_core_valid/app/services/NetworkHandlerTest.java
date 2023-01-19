@@ -6,7 +6,6 @@
  */
 package com.farao_community.farao.gridcapa_core_valid.app.services;
 
-import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +18,7 @@ class NetworkHandlerTest {
 
     @Test
     void updateVoltageLevelNominalV() {
-        Network network = Importers.loadNetwork("20210723_0030_2D5_CGM.uct", getClass().getResourceAsStream("/20210723/20210723_0030_2D5_CGM.uct"));
+        Network network = Network.read("20210723_0030_2D5_CGM.uct", getClass().getResourceAsStream("/20210723/20210723_0030_2D5_CGM.uct"));
         assertEquals(380, network.getVoltageLevel("BBE1AA1").getNominalV(), 1);
         assertEquals(220, network.getVoltageLevel("BBE2AA2").getNominalV(), 1);
 

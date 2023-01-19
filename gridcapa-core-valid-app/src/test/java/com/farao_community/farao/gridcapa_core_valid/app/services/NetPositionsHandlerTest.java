@@ -14,7 +14,6 @@ import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoints
 import com.powsybl.glsk.api.GlskDocument;
 import com.powsybl.glsk.api.io.GlskDocumentImporters;
 import com.powsybl.glsk.commons.ZonalData;
-import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.modification.scalable.Scalable;
 import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,7 +62,7 @@ class NetPositionsHandlerTest {
         ReferenceProgram referenceProgram = RefProgImporter.importRefProg(refProgStream, dateTime);
         Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
         InputStream networkStream = getClass().getResourceAsStream(testDirectory + "/20210723_0030_2D5_CGM.uct");
-        Network network = Importers.loadNetwork("20210723_0030_2D5_CGM.uct", networkStream);
+        Network network = Network.read("20210723_0030_2D5_CGM.uct", networkStream);
         ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, dateTime.toInstant());
         NetPositionsHandler.shiftNetPositionToStudyPoint(network, allStudyPoints.get(0), scalableZonalData, coreNetPositions);
         assertEquals(2917.5, network.getGenerator("BBE1AA1 _generator").getTargetP(), 0.01);
@@ -88,7 +87,7 @@ class NetPositionsHandlerTest {
         ReferenceProgram referenceProgram = RefProgImporter.importRefProg(refProgStream, dateTime);
         Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
         InputStream networkStream = getClass().getResourceAsStream(testDirectory + "/20210723_0430_2D5_CGM.uct");
-        Network network = Importers.loadNetwork("20210723_0430_2D5_CGM.uct", networkStream);
+        Network network = Network.read("20210723_0430_2D5_CGM.uct", networkStream);
         ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, dateTime.toInstant());
         NetPositionsHandler.shiftNetPositionToStudyPoint(network, allStudyPoints.get(1), scalableZonalData, coreNetPositions);
 
@@ -114,7 +113,7 @@ class NetPositionsHandlerTest {
         ReferenceProgram referenceProgram = RefProgImporter.importRefProg(refProgStream, dateTime);
         Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
         InputStream networkStream = getClass().getResourceAsStream(testDirectory + "/20210723_1130_2D5_CGM.uct");
-        Network network = Importers.loadNetwork("20210723_1130_2D5_CGM.uct", networkStream);
+        Network network = Network.read("20210723_1130_2D5_CGM.uct", networkStream);
         ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, dateTime.toInstant());
         NetPositionsHandler.shiftNetPositionToStudyPoint(network, allStudyPoints.get(2), scalableZonalData, coreNetPositions);
 

@@ -16,7 +16,6 @@ import com.farao_community.farao.gridcapa_core_valid.app.services.results_export
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
 import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
 import com.farao_community.farao.rao_api.parameters.RaoParameters;
-import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -124,7 +123,7 @@ class FileExporterTest {
 
     @Test
     void saveShiftedCgmWithPraTest() {
-        Network network = Importers.loadNetwork("network.uct", getClass().getResourceAsStream(raoDirectory + "/network.uct"));
+        Network network = Network.read("network.uct", getClass().getResourceAsStream(raoDirectory + "/network.uct"));
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("cgmWithPraUrl");
         String cgmWithPraUrl = fileExporter.saveShiftedCgmWithPra(network, "test");
         Mockito.verify(minioAdapter, Mockito.times(1)).uploadArtifact(Mockito.any(), Mockito.any(InputStream.class));

@@ -21,7 +21,6 @@ import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
 import com.farao_community.farao.rao_api.json.JsonRaoParameters;
 import com.farao_community.farao.rao_api.parameters.RaoParameters;
 import com.powsybl.commons.datasource.MemDataSource;
-import com.powsybl.iidm.export.Exporters;
 import com.powsybl.iidm.network.Network;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +69,7 @@ public class FileExporter {
         String networkPath = String.format(ARTIFACTS_S, fileName);
         MemDataSource memDataSource = new MemDataSource();
         NetworkHandler.removeAlegroVirtualGeneratorsFromNetwork(network);
-        Exporters.export("XIIDM", network, new Properties(), memDataSource);
+        network.write("XIIDM", new Properties(), memDataSource);
         try (InputStream is = memDataSource.newInputStream("", "xiidm")) {
             LOGGER.info("Uploading shifted cgm to {}", networkPath);
             minioAdapter.uploadArtifact(networkPath, is);
@@ -86,7 +85,7 @@ public class FileExporter {
     public String saveShiftedCgmWithPra(Network network, String filename) {
         String networkPath = String.format(ARTIFACTS_S, filename);
         MemDataSource memDataSource = new MemDataSource();
-        Exporters.export("UCTE", network, new Properties(), memDataSource);
+        network.write("UCTE", new Properties(), memDataSource);
         try (InputStream is = memDataSource.newInputStream("", "uct")) {
             LOGGER.info("Uploading shifted cgm with pra to {}", networkPath);
             minioAdapter.uploadArtifact(networkPath, is);

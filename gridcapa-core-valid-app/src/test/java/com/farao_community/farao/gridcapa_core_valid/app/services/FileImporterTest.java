@@ -13,7 +13,6 @@ import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_c
 import com.farao_community.farao.data.refprog.reference_program.ReferenceProgram;
 import com.powsybl.glsk.api.GlskDocument;
 import com.powsybl.glsk.ucte.UcteGlskDocument;
-import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.Assertions;
 
@@ -60,7 +59,7 @@ class FileImporterTest {
     @Test
     void importCrac() {
         InputStream networkStream = getClass().getResourceAsStream(testDirectory + "/20210723_0030_2D5_CGM.uct");
-        Network network = Importers.loadNetwork("20210723_0030_2D5_CGM.uct", networkStream);
+        Network network = Network.read("20210723_0030_2D5_CGM.uct", networkStream);
         CoreValidFileResource cbcoraFile = createFileResource("cbcora",  getClass().getResource(testDirectory + "/20210723-F301_CBCORA_hvdcvh-outage.xml"));
         FbConstraintCreationContext fbConstraintCreationContext = fileImporter.importCrac(cbcoraFile.getUrl(), dateTime, network);
         Crac crac = fbConstraintCreationContext.getCrac();
