@@ -72,7 +72,7 @@
         <logstash.version>7.2</logstash.version>
         <maven.jaxb2.version>0.14.0</maven.jaxb2.version>
         <maven.jvnet.jaxb2-basics.version>1.11.1</maven.jvnet.jaxb2-basics.version>
-        <minio.adapter.version>0.2.0</minio.adapter.version>
+        <minio.adapter.version>1.0.0</minio.adapter.version>
         <opencsv.version>5.6</opencsv.version>
         <task-manager.version>1.11.0</task-manager.version>
     </properties>
