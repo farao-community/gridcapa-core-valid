@@ -65,8 +65,8 @@ public class LimitingBranchResultService {
         Double ramBefore = raoResult.getMargin(OptimizationState.INITIAL, cnec, Unit.MEGAWATT);
         Double ramAfter = raoResult.getMargin(OptimizationState.afterOptimizing(cnec.getState()), cnec, Unit.MEGAWATT);
         Side cnecSide = cnec.getMonitoredSides().stream().collect(toOne());
-        Double flowBefore = raoResult.getFlow(OptimizationState.INITIAL, cnec, cnecSide, Unit.MEGAWATT);
-        Double flowAfter = raoResult.getFlow(OptimizationState.afterOptimizing(cnec.getState()), cnec, cnecSide, Unit.MEGAWATT);
+        Double flowBefore = getFlow(raoResult, OptimizationState.INITIAL, cnec, cnecSide);
+        Double flowAfter = getFlow(raoResult, OptimizationState.afterOptimizing(cnec.getState()), cnec, cnecSide);
         Set<RemedialAction<?>> remedialActions = getRemedialActions(raoResult, cnec);
         String criticalBranchName = cnec.getName();
         State state = cnec.getState();
@@ -81,6 +81,20 @@ public class LimitingBranchResultService {
                 criticalBranchName,
                 state
         );
+    }
+
+    private static double getFlow(RaoResult raoResult, OptimizationState optimizationState, FlowCnec cnec, Side cnecSide) {
+        Optional<Double> upperBound = cnec.getUpperBound(cnecSide, Unit.MEGAWATT);
+        Optional<Double> lowerBound = cnec.getLowerBound(cnecSide, Unit.MEGAWATT);
+
+        double flow = raoResult.getFlow(optimizationState, cnec, cnecSide, Unit.MEGAWATT);
+        if (upperBound.isEmpty() && lowerBound.isPresent()) {
+            flow = -flow;
+        } else if (upperBound.isPresent() && lowerBound.isPresent()) {
+            flow = Math.abs(flow);
+        }
+
+        return flow;
     }
 
     private Set<RemedialAction<?>> getRemedialActions(RaoResult raoResult, Cnec<?> cnec) {
