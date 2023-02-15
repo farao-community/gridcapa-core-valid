@@ -7,13 +7,14 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.limiting_branch;
 
-import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInvalidDataException;
 import com.farao_community.farao.data.crac_api.Instant;
 import com.farao_community.farao.data.crac_api.State;
 import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_creator.FbConstraintCreationContext;
+import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInvalidDataException;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.powsybl.iidm.network.Network;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -32,8 +33,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 class LimitingBranchResultTest {
 
-    private final String raoDirectory = "/rao-result";
-    private final OffsetDateTime dateTime = OffsetDateTime.parse("2021-07-22T22:30Z");
     private State state;
     private LimitingBranchResult limitingBranchResult;
 
@@ -60,9 +59,11 @@ class LimitingBranchResultTest {
 
     @Test
     void importRaoResultTest() {
-        Network network = Network.read("network.uct", getClass().getResourceAsStream(raoDirectory + "/network.uct"));
-        FbConstraintCreationContext fbConstraintCreationContext = fileImporter.importCrac(getClass().getResource(raoDirectory + "/crac.xml").toExternalForm(), dateTime, network);
-        List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(new StudyPoint(1, "id", null), fbConstraintCreationContext, getClass().getResource(raoDirectory + "/raoResult.json").toExternalForm());
+        final String directory = "/rao-result";
+        final OffsetDateTime dateTime = OffsetDateTime.parse("2021-07-22T22:30Z");
+        Network network = Network.read("network.uct", getClass().getResourceAsStream(directory + "/network.uct"));
+        FbConstraintCreationContext fbConstraintCreationContext = fileImporter.importCrac(getClass().getResource(directory + "/crac.xml").toExternalForm(), dateTime, network);
+        List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(new StudyPoint(1, "id", null), fbConstraintCreationContext, getClass().getResource(directory + "/raoResult.json").toExternalForm());
 
         assertEquals(6, limitingBranchResults.size());
         assertEquals("BE_CBCO_000003", limitingBranchResults.get(4).getCriticalBranchId());
@@ -73,6 +74,29 @@ class LimitingBranchResultTest {
         assertEquals(-1564, Math.floor(limitingBranchResults.get(4).getRamBefore()));
         assertEquals(1939, Math.floor(limitingBranchResults.get(4).getFlowAfter()));
         assertEquals(1939, Math.floor(limitingBranchResults.get(4).getFlowBefore()));
+    }
+
+    @Test
+    void ramPlusFlowIsConstantTest() {
+        final int delta = 1;
+        final String directory = "/rao-result-bis";
+        final OffsetDateTime dateTime = OffsetDateTime.parse("2023-01-18T00:30Z");
+        Network network = Network.read("network.uct", getClass().getResourceAsStream(directory + "/network.uct"));
+        FbConstraintCreationContext fbConstraintCreationContext = fileImporter.importCrac(getClass().getResource(directory + "/crac.xml").toExternalForm(), dateTime, network);
+        List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(new StudyPoint(1, "id", null), fbConstraintCreationContext, getClass().getResource(directory + "/raoResult.json").toExternalForm());
+
+        limitingBranchResults.removeIf(result -> result.getRamAfter().equals(result.getRamBefore()));
+
+        SoftAssertions assertions = new SoftAssertions();
+
+        assertions.assertThat(limitingBranchResults).isNotEmpty();
+        for (LimitingBranchResult result : limitingBranchResults) {
+            assertions.assertThat(result.getRamAfter()).isNotEqualTo(result.getRamBefore());
+            assertions.assertThat(result.getFlowAfter()).isNotEqualTo(result.getFlowBefore());
+            assertions.assertThat(Math.abs((result.getRamAfter() + result.getFlowAfter()) - (result.getRamBefore() + result.getFlowBefore()))).isLessThanOrEqualTo(delta);
+        }
+
+        assertions.assertAll();
     }
 
     @Test
