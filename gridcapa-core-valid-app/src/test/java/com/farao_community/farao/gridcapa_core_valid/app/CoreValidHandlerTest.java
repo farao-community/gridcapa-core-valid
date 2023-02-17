@@ -51,8 +51,6 @@ class CoreValidHandlerTest {
     @MockBean
     private FileImporter fileImporter;
 
-    private final String testDirectory = "/20210723";
-
     @Test
     void handleCoreValidRequestTest() {
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("http://url");
@@ -62,12 +60,13 @@ class CoreValidHandlerTest {
         RaoResponse raoResponse = new RaoResponse("id", "instant", "praUrl", "cracUrl", "raoUrl", Instant.now(), Instant.now());
         Mockito.when(studyPointService.computeStudyPointRao(Mockito.any(), Mockito.any())).thenReturn(future);
         future.complete(raoResponse);
-        Mockito.when(fileExporter.exportStudyPointResult(Mockito.any(), Mockito.any())).thenReturn(new HashMap<>());
+        Mockito.when(fileExporter.exportStudyPointResult(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(new HashMap<>());
         Mockito.when(fileImporter.importNetworkFromUrl(Mockito.any())).thenReturn(null);
         Mockito.when(fileExporter.saveShiftedCgmWithPra(Mockito.any(), Mockito.any())).thenReturn("");
 
         String requestId = "Test request";
         String networkFileName = "20210723_0030_2D5_CGM_limits.uct";
+        String testDirectory = "/20210723";
         CoreValidFileResource networkFile = createFileResource(networkFileName, getClass().getResource(testDirectory + "/" + networkFileName));
 
         OffsetDateTime dateTime = OffsetDateTime.parse("2021-07-22T22:30Z");

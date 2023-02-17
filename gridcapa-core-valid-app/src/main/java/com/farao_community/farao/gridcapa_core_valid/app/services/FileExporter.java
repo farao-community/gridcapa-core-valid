@@ -7,13 +7,14 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.services;
 
+import com.farao_community.farao.data.crac_api.Crac;
+import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_creator.FbConstraintCreationContext;
+import com.farao_community.farao.data.crac_io_api.CracExporters;
 import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInternalException;
 import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
-import com.farao_community.farao.data.crac_api.Crac;
-import com.farao_community.farao.data.crac_io_api.CracExporters;
 import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.MainResultFileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.RemedialActionsFileExporter;
-import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.ResultFileExporter;
+import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.ResultType;
 import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.RexResultFileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
@@ -26,9 +27,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.time.OffsetDateTime;
-import java.util.*;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author Alexandre Montigny {@literal <alexandre.montigny at rte-france.com>}
@@ -39,6 +47,7 @@ public class FileExporter {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileExporter.class);
     public static final String ARTIFACTS_S = "artifacts/%s";
     private static final String RAO_PARAMETERS_FILE_NAME = "raoParameters.json";
+
     private final MinioAdapter minioAdapter;
     private final MainResultFileExporter mainResultFileExporter;
     private final RemedialActionsFileExporter remedialActionsFileExporter;
@@ -52,13 +61,13 @@ public class FileExporter {
     }
 
     //region Export of Results
-    public Map<ResultFileExporter.ResultType, String> exportStudyPointResult(List<StudyPointResult> studyPointResults, CoreValidRequest coreValidRequest) {
-        Map<ResultFileExporter.ResultType, String> resultMap = new EnumMap<>(ResultFileExporter.ResultType.class);
+    public Map<ResultType, String> exportStudyPointResult(List<StudyPointResult> studyPointResults, CoreValidRequest coreValidRequest, FbConstraintCreationContext cracCreationContext) {
+        Map<ResultType, String> resultMap = new EnumMap<>(ResultType.class);
         if (coreValidRequest.getLaunchedAutomatically()) {
-            resultMap.put(ResultFileExporter.ResultType.MAIN_RESULT, mainResultFileExporter.exportStudyPointResult(studyPointResults, coreValidRequest.getTimestamp()));
+            resultMap.put(ResultType.MAIN_RESULT, mainResultFileExporter.exportStudyPointResult(studyPointResults, coreValidRequest.getTimestamp()));
         }
-        resultMap.put(ResultFileExporter.ResultType.REX_RESULT, rexResultFileExporter.exportStudyPointResult(studyPointResults, coreValidRequest.getTimestamp()));
-        resultMap.put(ResultFileExporter.ResultType.REMEDIAL_ACTIONS_RESULT, remedialActionsFileExporter.exportStudyPointResult(studyPointResults, coreValidRequest.getTimestamp()));
+        resultMap.put(ResultType.REX_RESULT, rexResultFileExporter.exportStudyPointResult(studyPointResults, coreValidRequest.getTimestamp()));
+        resultMap.put(ResultType.REMEDIAL_ACTIONS_RESULT, remedialActionsFileExporter.exportStudyPointResult(studyPointResults, coreValidRequest.getTimestamp(), cracCreationContext));
         return resultMap;
     }
     //endregion
@@ -78,7 +87,6 @@ public class FileExporter {
         }
         return minioAdapter.generatePreSignedUrl(networkPath);
     }
-
     //endregion
 
     //region Shifted CGM with Pra uploading on minIO
@@ -94,7 +102,6 @@ public class FileExporter {
         }
         return minioAdapter.generatePreSignedUrl(networkPath);
     }
-
     //endregion
 
     //region RaoParameters uploading on minIO
