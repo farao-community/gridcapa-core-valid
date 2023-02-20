@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<FlowBasedConstraintDocument xmlns="flowbased" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" DtdRelease="0"
+                             DtdVersion="1" xsi:noNamespaceSchemaLocation="flowbasedconstraintdocument-18.xsd">
+    <DocumentIdentification v="CORE_CBCORA-F301-20230118-v1"/>
+    <DocumentVersion v="1"/>
+    <DocumentType v="B06"/>
+    <ProcessType v="A01"/>
+    <SenderIdentification codingScheme="A01" v="10XFR-RTE------Q"/>
+    <SenderRole v="A04"/>
+    <ReceiverIdentification codingScheme="A01" v="17XTSO-CS------W"/>
+    <ReceiverRole v="A36"/>
+    <CreationDateTime v="2023-01-16T17:03:00Z"/>
+    <ConstraintTimeInterval v="2023-01-17T23:00Z/2023-01-18T23:00Z"/>
+    <Domain codingScheme="A01" v="10YFR-RTE------C"/>
+    <criticalBranches>
+        <criticalBranch id="FR_CBCO_00001">
+            <timeInterval v="2023-01-17T23:00Z/2023-01-18T23:00Z"/>
+            <branch eic="10T-DE-FR-000068" elementName="ELEMT 4" from="XFRDE11" name="[DE-FR] DDE1 - FFR1 [DIR] [FR]"
+                    to="FFR1AA1"/>
+            <imaxType>SEASONAL</imaxType>
+            <permanentImaxFactor>1</permanentImaxFactor>
+            <temporaryImaxA>3150</temporaryImaxA>
+            <frmMw>321.0</frmMw>
+            <minRAMfactor>70</minRAMfactor>
+            <CNEC>true</CNEC>
+            <MNEC>true</MNEC>
+            <direction>DIRECT</direction>
+            <tsoOrigin>FR</tsoOrigin>
+            <outage id="DE-FR_CO_00001" location="DE-FR" name="N-1 DE - FR ELEMT 2">
+                <branch eic="10T-DE-FR-00005A" elementName="ELEMT 3" from="XFRDE11" to="FFR1AA1"/>
+                <branch eic="10T-DE-FR-00005A" elementName="ELEMT 2" from="DDE1AA1" to="XFRDE11"/>
+            </outage>
+        </criticalBranch>
+        <criticalBranch id="FR_CBCO_00002">
+            <timeInterval v="2023-01-17T23:00Z/2023-01-18T23:00Z"/>
+            <branch eic="10T-DE-FR-000068" elementName="ELEMT 4" from="XFRDE11" name="[DE-FR] DDE1 - FFR1 [OPP] [FR]"
+                    to="FFR1AA1"/>
+            <imaxType>SEASONAL</imaxType>
+            <permanentImaxFactor>1</permanentImaxFactor>
+            <temporaryImaxA>3150</temporaryImaxA>
+            <frmMw>165.0</frmMw>
+            <minRAMfactor>70</minRAMfactor>
+            <CNEC>true</CNEC>
+            <MNEC>true</MNEC>
+            <direction>OPPOSITE</direction>
+            <tsoOrigin>FR</tsoOrigin>
+            <outage id="DE-FR_CO_00001" location="DE-FR" name="N-1 DE - FR ELEMT 2">
+                <branch eic="10T-DE-FR-00005A" elementName="ELEMT 3" from="XFRDE11" to="FFR1AA1"/>
+                <branch eic="10T-DE-FR-00005A" elementName="ELEMT 2" from="DDE1AA1" to="XFRDE11"/>
+            </outage>
+        </criticalBranch>
+        <criticalBranch id="FR_CBCO_00003">
+            <timeInterval v="2023-01-17T23:00Z/2023-01-18T23:00Z"/>
+            <branch eic="10T-DE-FR-00005A" elementName="ELEMT 3" from="XFRDE11" name="[DE-FR] DDE1 - FFR1 [DIR] [FR]"
+                    to="FFR1AA1"/>
+            <imaxType>SEASONAL</imaxType>
+            <permanentImaxFactor>1</permanentImaxFactor>
+            <temporaryImaxA>3150</temporaryImaxA>
+            <frmMw>325.0</frmMw>
+            <minRAMfactor>70</minRAMfactor>
+            <CNEC>true</CNEC>
+            <MNEC>true</MNEC>
+            <direction>DIRECT</direction>
+            <tsoOrigin>FR</tsoOrigin>
+            <outage id="DE-FR_CO_00002" location="DE-FR" name="N-1 DE - FR ELEMT 1">
+                <branch eic="10T-DE-FR-000068" elementName="ELEMT 1" from="DDE1AA1" to="XFRDE11"/>
+                <branch eic="10T-DE-FR-000068" elementName="ELEMT 4" from="XFRDE11" to="FFR1AA1"/>
+            </outage>
+        </criticalBranch>
+        <criticalBranch id="FR_CBCO_00004">
+            <timeInterval v="2023-01-17T23:00Z/2023-01-18T23:00Z"/>
+            <branch eic="10T-DE-FR-00005A" elementName="ELEMT 3" from="XFRDE11" name="[DE-FR] DDE1 - FFR1 [OPP] [FR]"
+                    to="FFR1AA1"/>
+            <imaxType>SEASONAL</imaxType>
+            <permanentImaxFactor>1</permanentImaxFactor>
+            <temporaryImaxA>3150</temporaryImaxA>
+            <frmMw>178.0</frmMw>
+            <minRAMfactor>70</minRAMfactor>
+            <CNEC>true</CNEC>
+            <MNEC>true</MNEC>
+            <direction>OPPOSITE</direction>
+            <tsoOrigin>FR</tsoOrigin>
+            <outage id="DE-FR_CO_00002" location="DE-FR" name="N-1 DE - FR ELEMT 1">
+                <branch eic="10T-DE-FR-000068" elementName="ELEMT 1" from="DDE1AA1" to="XFRDE11"/>
+                <branch eic="10T-DE-FR-000068" elementName="ELEMT 4" from="XFRDE11" to="FFR1AA1"/>
+            </outage>
+        </criticalBranch>
+    </criticalBranches>
+    <complexVariants>
+        <complexVariant id="FR_RA_00001" name="TOP_COMPLEX_CRA">
+            <timeInterval v="2023-01-17T23:00Z/2023-01-18T23:00Z"/>
+            <tsoOrigin>FR</tsoOrigin>
+            <actionsSet>
+                <preventive>false</preventive>
+                <curative>true</curative>
+                <enforced>false</enforced>
+                <afterCOList>
+                    <afterCOId>DE-FR_CO_00001</afterCOId>
+                </afterCOList>
+                <action type="STATUS">
+                    <branch elementName="TRC-1A-1B" from="FFR1AA1" to="FFR1AA1"/>
+                    <value>CLOSE</value>
+                </action>
+            </actionsSet>
+        </complexVariant>
+    </complexVariants>
+</FlowBasedConstraintDocument>

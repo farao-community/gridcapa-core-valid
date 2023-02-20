@@ -8,7 +8,9 @@
 package com.farao_community.farao.gridcapa_core_valid.app.services;
 
 import com.farao_community.farao.data.crac_api.Crac;
+import com.farao_community.farao.data.crac_api.RemedialAction;
 import com.farao_community.farao.data.crac_api.State;
+import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_creator.FbConstraintCreationContext;
 import com.farao_community.farao.data.crac_impl.CracImpl;
 import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResult;
@@ -32,6 +34,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -44,6 +47,8 @@ class FileExporterTest {
 
     @Autowired
     private FileExporter fileExporter;
+    @Autowired
+    private FileImporter fileImporter;
 
     @MockBean
     private MinioAdapter minioAdapter;
@@ -66,6 +71,28 @@ class FileExporterTest {
         assertEquals("Period;Vertice ID;Branch ID;Branch Status;RAM before;RAM after\r\n;;;;0;0\r\n", new String(resultsBaos.get(0).readAllBytes()));
         assertEquals("Period;Vertice ID;Branch ID;Branch Name;Outage Name;Branch Status;RAM before;RAM after;flow before;flow after\r\n;;;;;;0;0;0;0\r\n", new String(resultsBaos.get(1).readAllBytes()));
         assertEquals("resultUrl", resultUrl);
+    }
+
+    @Test
+    void exportRemedialActionsStudyPointResultTest() throws IOException {
+        final OffsetDateTime dateTime = OffsetDateTime.parse("2023-01-18T00:30Z");
+        final String directory = "/rao-result-remedial-action";
+
+        Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("resultUrl");
+        List<StudyPointResult> studyPointsResult = List.of(mockStudyPointResultWithRemedialAction());
+        CoreValidRequest coreValidRequest = Mockito.mock(CoreValidRequest.class);
+        Mockito.when(coreValidRequest.getTimestamp()).thenReturn(dateTime);
+        Mockito.when(coreValidRequest.getLaunchedAutomatically()).thenReturn(true);
+
+        Network network = Network.read("network.uct", getClass().getResourceAsStream(directory + "/network.uct"));
+        FbConstraintCreationContext fbConstraintCreationContext = fileImporter.importCrac(getClass().getResource(directory + "/crac.xml").toExternalForm(), dateTime, network);
+
+        fileExporter.exportStudyPointResult(studyPointsResult, coreValidRequest, fbConstraintCreationContext);
+
+        ArgumentCaptor<InputStream> argumentCaptor = ArgumentCaptor.forClass(InputStream.class);
+        Mockito.verify(minioAdapter, Mockito.times(3)).uploadOutputForTimestamp(Mockito.any(), argumentCaptor.capture(), Mockito.any(), Mockito.any(), Mockito.any());
+        List<InputStream> resultsBaos = argumentCaptor.getAllValues();
+        assertEquals("Period;Vertice ID;State;RA ID;RA name\r\nperiod;vertice ID;N-1 DE - FR ELEMT 2;RemedialActionId;RemedialActionName\r\n", new String(resultsBaos.get(2).readAllBytes()));
     }
 
     @Test
@@ -103,6 +130,29 @@ class FileExporterTest {
         List<LimitingBranchResult> limitingBranchResults = Collections.singletonList(limitingBranchResult);
         StudyPointResult studyPointResult = Mockito.mock(StudyPointResult.class);
         Mockito.when(studyPointResult.getListLimitingBranchResult()).thenReturn(limitingBranchResults);
+        return studyPointResult;
+    }
+
+    private StudyPointResult mockStudyPointResultWithRemedialAction() {
+        State state = Mockito.mock(State.class);
+        LimitingBranchResult limitingBranchResult = Mockito.mock(LimitingBranchResult.class);
+        Mockito.when(limitingBranchResult.getBranchStatus()).thenReturn("branchStatus");
+        Mockito.when(limitingBranchResult.getCriticalBranchId()).thenReturn("FR_CBCO_00001");
+        Mockito.when(limitingBranchResult.getCriticalBranchName()).thenReturn("criticalBranchName");
+        Mockito.when(limitingBranchResult.getFlowAfter()).thenReturn(0.0);
+        Mockito.when(limitingBranchResult.getFlowBefore()).thenReturn(0.0);
+        Mockito.when(limitingBranchResult.getRamBefore()).thenReturn(0.0);
+        Mockito.when(limitingBranchResult.getRamAfter()).thenReturn(0.0);
+        Mockito.when(limitingBranchResult.getState()).thenReturn(state);
+        Mockito.when(limitingBranchResult.getVerticeId()).thenReturn("verticeId");
+        RemedialAction<?> remedialActionMock = Mockito.mock(RemedialAction.class);
+        Mockito.when(remedialActionMock.getId()).thenReturn("RemedialActionId");
+        Mockito.when(remedialActionMock.getName()).thenReturn("RemedialActionName");
+        Mockito.when(limitingBranchResult.getRemedialActions()).thenReturn(Set.of(remedialActionMock));
+        StudyPointResult studyPointResult = Mockito.mock(StudyPointResult.class);
+        Mockito.when(studyPointResult.getListLimitingBranchResult()).thenReturn(List.of(limitingBranchResult));
+        Mockito.when(studyPointResult.getPeriod()).thenReturn("period");
+        Mockito.when(studyPointResult.getId()).thenReturn("vertice ID");
         return studyPointResult;
     }
 
