@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -78,13 +78,13 @@ public class RemedialActionsFileExporter extends AbstractResultFileExporter {
         return minioAdapter.generatePreSignedUrl(filePath);
     }
 
-    private List<List<String>> getResultCsvItemsFromStudyPointResult(StudyPointResult studyPointResult, FbConstraintCreationContext cracCreationContext) {
+    private static List<List<String>> getResultCsvItemsFromStudyPointResult(StudyPointResult studyPointResult, FbConstraintCreationContext cracCreationContext) {
         return studyPointResult.getListLimitingBranchResult().stream()
             .map(limitingBranchResult -> getResultCsvItemsFromLimitingBranchResult(limitingBranchResult, studyPointResult, cracCreationContext))
             .collect(Collectors.toList());
     }
 
-    private List<String> getResultCsvItemsFromLimitingBranchResult(LimitingBranchResult limitingBranchResult, StudyPointResult studyPointResult, FbConstraintCreationContext cracCreationContext) {
+    private static List<String> getResultCsvItemsFromLimitingBranchResult(LimitingBranchResult limitingBranchResult, StudyPointResult studyPointResult, FbConstraintCreationContext cracCreationContext) {
         return limitingBranchResult.getRemedialActions().stream()
             .map(remedialAction -> getRemedialActionResultFields(limitingBranchResult, studyPointResult, cracCreationContext, remedialAction))
             .flatMap(Collection::stream)

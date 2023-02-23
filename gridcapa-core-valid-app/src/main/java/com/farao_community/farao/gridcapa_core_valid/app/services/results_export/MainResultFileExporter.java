@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -56,7 +56,7 @@ public class MainResultFileExporter extends AbstractResultFileExporter {
             CSVPrinter resultCsvPrinter = new CSVPrinter(new OutputStreamWriter(resultBaos), MAIN_CSV_FORMAT);
 
             List<List<String>> resultCsvItems = studyPointResults.stream()
-                .map(this::getResultCsvItemsFromStudyPointResult)
+                .map(MainResultFileExporter::getResultCsvItemsFromStudyPointResult)
                 .flatMap(Collection::stream)
                 .distinct()
                 .collect(Collectors.toList());
@@ -77,7 +77,7 @@ public class MainResultFileExporter extends AbstractResultFileExporter {
         return minioAdapter.generatePreSignedUrl(filePath);
     }
 
-    private List<List<String>> getResultCsvItemsFromStudyPointResult(StudyPointResult studyPointResult) {
+    private static List<List<String>> getResultCsvItemsFromStudyPointResult(StudyPointResult studyPointResult) {
         return studyPointResult.getListLimitingBranchResult().stream()
             .map(limitingBranchResult -> getMainResultFields(limitingBranchResult, studyPointResult))
             .collect(Collectors.toList());
