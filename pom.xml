@@ -64,7 +64,7 @@
         <commons.lang.version>3.12.0</commons.lang.version>
         <commons.io.version>2.11.0</commons.io.version>
         <farao.dependencies.version>1.9.0</farao.dependencies.version>
-        <gridcapa.rao.runner.starter.version>1.9.0</gridcapa.rao.runner.starter.version>
+        <gridcapa.rao.runner.starter.version>1.11.0</gridcapa.rao.runner.starter.version>
         <jackson-datatype.version>2.13.2</jackson-datatype.version>
         <jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
         <jaxb-runtime.version>2.4.0-b180830.0438</jaxb-runtime.version>
@@ -72,9 +72,9 @@
         <logstash.version>7.2</logstash.version>
         <maven.jaxb2.version>0.14.0</maven.jaxb2.version>
         <maven.jvnet.jaxb2-basics.version>1.11.1</maven.jvnet.jaxb2-basics.version>
-        <minio.adapter.version>0.2.0</minio.adapter.version>
+        <minio.adapter.version>1.0.0</minio.adapter.version>
         <opencsv.version>5.6</opencsv.version>
-        <task-manager.version>1.11.0</task-manager.version>
+        <task-manager.version>1.13.0</task-manager.version>
     </properties>
 
     <build>
