@@ -81,13 +81,13 @@ public class RemedialActionsFileExporter extends AbstractResultFileExporter {
     private static List<List<String>> getResultCsvItemsFromStudyPointResult(StudyPointResult studyPointResult, FbConstraintCreationContext cracCreationContext) {
         return studyPointResult.getListLimitingBranchResult().stream()
             .map(limitingBranchResult -> getResultCsvItemsFromLimitingBranchResult(limitingBranchResult, studyPointResult, cracCreationContext))
+            .flatMap(Collection::stream)
             .collect(Collectors.toList());
     }
 
-    private static List<String> getResultCsvItemsFromLimitingBranchResult(LimitingBranchResult limitingBranchResult, StudyPointResult studyPointResult, FbConstraintCreationContext cracCreationContext) {
+    private static List<List<String>> getResultCsvItemsFromLimitingBranchResult(LimitingBranchResult limitingBranchResult, StudyPointResult studyPointResult, FbConstraintCreationContext cracCreationContext) {
         return limitingBranchResult.getRemedialActions().stream()
             .map(remedialAction -> getRemedialActionResultFields(limitingBranchResult, studyPointResult, cracCreationContext, remedialAction))
-            .flatMap(Collection::stream)
             .collect(Collectors.toList());
     }
 
