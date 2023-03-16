@@ -96,7 +96,7 @@ public class RemedialActionsFileExporter extends AbstractResultFileExporter {
         CriticalBranchCreationContext branchCnecCreationContext = cracCreationContext.getBranchCnecCreationContext(limitingBranchResult.getCriticalBranchId());
         String contingencyName = branchCnecCreationContext.getContingencyId()
             .map(id -> cracCreationContext.getCrac().getContingency(id).getName())
-            .orElse(branchCnecCreationContext.getNativeId());
+            .orElse("BASECASE");
 
         remedialActionResultFields.add(studyPointResult.getPeriod());
         remedialActionResultFields.add(studyPointResult.getId());
