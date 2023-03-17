@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023, RTE (http://www.rte-france.com)
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -49,6 +49,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  * @author Theo Pascoli {@literal <theo.pascoli at rte-france.com>}
+ * @author Vincent Bochet {@literal <vincent.bochet at rte-france.com>}
  */
 @Component
 public class CoreValidHandler {
@@ -64,15 +65,6 @@ public class CoreValidHandler {
     private final SearchTreeRaoConfiguration searchTreeRaoConfiguration;
     private final StudyPointService studyPointService;
 
-    private final Map<StudyPoint, CompletableFuture<RaoResponse>> studyPointCompletableFutures = new HashMap<>();
-    private final Map<StudyPoint, RaoRequest> studyPointRaoRequests = new HashMap<>();
-    private final List<StudyPointResult> studyPointResults = new ArrayList<>();
-    private Instant computationStartInstant;
-    private Instant computationEndInstant;
-    private String formattedTimestamp;
-    private List<StudyPoint> studyPoints;
-    private Map<ResultType, String> resultFileUrls;
-
     public CoreValidHandler(StudyPointService studyPointService, FileImporter fileImporter, FileExporter fileExporter, SearchTreeRaoConfiguration searchTreeRaoConfiguration, MinioAdapter minioAdapter, Logger eventsLogger) {
         this.studyPointService = studyPointService;
         this.fileImporter = fileImporter;
@@ -83,12 +75,19 @@ public class CoreValidHandler {
     }
 
     public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
+        final String formattedTimestamp = setUpEventLogging(coreValidRequest);
+
         try {
             Network network = fileImporter.importNetwork(coreValidRequest.getCgm());
             FbConstraintCreationContext cracCreationContext = fileImporter.importCrac(coreValidRequest.getCbcora().getUrl(), coreValidRequest.getTimestamp(), network);
-            preTreatment(coreValidRequest);
-            computeStudyPoints(coreValidRequest, network, cracCreationContext);
-            postTreatment(coreValidRequest, cracCreationContext);
+
+            Instant computationStartInstant = Instant.now();
+            List<StudyPointResult> studyPointResults = computeStudyPoints(coreValidRequest, network, cracCreationContext, formattedTimestamp);
+            Instant computationEndInstant = Instant.now();
+
+            Map<ResultType, String> resultFileUrls = postTreatment(studyPointResults, coreValidRequest, cracCreationContext, formattedTimestamp);
+
+            return new CoreValidResponse(coreValidRequest.getId(), resultFileUrls.get(ResultType.MAIN_RESULT), resultFileUrls.get(ResultType.REX_RESULT), resultFileUrls.get(ResultType.REMEDIAL_ACTIONS_RESULT), computationStartInstant, computationEndInstant);
         } catch (InterruptedException e) {
             eventsLogger.error("Error during core request running for timestamp {}.", formattedTimestamp);
             Thread.currentThread().interrupt();
@@ -97,45 +96,27 @@ public class CoreValidHandler {
             eventsLogger.error("Error during core request running for timestamp {}.", formattedTimestamp);
             throw new CoreValidInternalException(String.format("Error during core request running for timestamp '%s'", coreValidRequest.getTimestamp()), e);
         }
-        return new CoreValidResponse(coreValidRequest.getId(), resultFileUrls.get(ResultType.MAIN_RESULT), resultFileUrls.get(ResultType.REX_RESULT), resultFileUrls.get(ResultType.REMEDIAL_ACTIONS_RESULT), computationStartInstant, computationEndInstant);
     }
 
-    private void preTreatment(CoreValidRequest coreValidRequest) {
-        clearData();
-        setUpEventLogging(coreValidRequest);
-        computationStartInstant = Instant.now();
-    }
-
-    private void clearData() {
-        if (studyPoints != null) {
-            studyPoints.clear();
-        }
-        if (resultFileUrls != null) {
-            resultFileUrls.clear();
-        }
-        studyPointCompletableFutures.clear();
-        studyPointRaoRequests.clear();
-        studyPointResults.clear();
-    }
-
-    private void setUpEventLogging(CoreValidRequest coreValidRequest) {
+    private String setUpEventLogging(CoreValidRequest coreValidRequest) {
         MDC.put("gridcapa-task-id", coreValidRequest.getId());
-        formattedTimestamp = TIMESTAMP_FORMATTER.format(coreValidRequest.getTimestamp());
+        return TIMESTAMP_FORMATTER.format(coreValidRequest.getTimestamp());
     }
 
-    private void computeStudyPoints(CoreValidRequest coreValidRequest, Network network, FbConstraintCreationContext cracCreationContext) throws InterruptedException, ExecutionException {
-        importStudyPoints(coreValidRequest);
+    private List<StudyPointResult> computeStudyPoints(CoreValidRequest coreValidRequest, Network network, FbConstraintCreationContext cracCreationContext, String formattedTimestamp) throws InterruptedException, ExecutionException {
+        Map<StudyPoint, RaoRequest> studyPointRaoRequests = new HashMap<>();
+        Map<StudyPoint, CompletableFuture<RaoResponse>> studyPointCompletableFutures = new HashMap<>();
+        List<StudyPointResult> studyPointResults = new ArrayList<>();
+
+        List<StudyPoint> studyPoints = fileImporter.importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
         if (!studyPoints.isEmpty()) {
             StudyPointData studyPointData = fillStudyPointData(coreValidRequest, network, cracCreationContext);
             studyPoints.forEach(studyPoint -> studyPointRaoRequests.put(studyPoint, studyPointService.computeStudyPointShift(studyPoint, studyPointData, coreValidRequest.getTimestamp(), coreValidRequest.getId())));
             eventsLogger.info("All studypoints shifts are done for timestamp {}", formattedTimestamp);
-            runRaoForEachStudyPoint();
-            fillResultsForEachStudyPoint(studyPointData);
+            runRaoForEachStudyPoint(studyPointRaoRequests, studyPointCompletableFutures);
+            studyPointResults = fillResultsForEachStudyPoint(studyPointData, studyPointCompletableFutures);
         }
-    }
-
-    private void importStudyPoints(CoreValidRequest coreValidRequest) {
-        studyPoints = fileImporter.importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
+        return studyPointResults;
     }
 
     private StudyPointData fillStudyPointData(CoreValidRequest coreValidRequest, Network network, FbConstraintCreationContext cracCreationContext) {
@@ -165,7 +146,7 @@ public class CoreValidHandler {
         searchTreeRaoParameters.setMaxCurativeRaPerTso(searchTreeRaoConfiguration.getMaxCurativeRaPerTso());
     }
 
-    private void runRaoForEachStudyPoint() throws ExecutionException, InterruptedException {
+    private void runRaoForEachStudyPoint(Map<StudyPoint, RaoRequest> studyPointRaoRequests, Map<StudyPoint, CompletableFuture<RaoResponse>> studyPointCompletableFutures) throws ExecutionException, InterruptedException {
         studyPointRaoRequests.forEach((studyPoint, raoRequest) -> {
             CompletableFuture<RaoResponse> raoResponse = studyPointService.computeStudyPointRao(studyPoint, raoRequest);
             studyPointCompletableFutures.put(studyPoint, raoResponse);
@@ -181,7 +162,8 @@ public class CoreValidHandler {
         CompletableFuture.allOf(studyPointCompletableFutures.values().toArray(new CompletableFuture[0])).get();
     }
 
-    private void fillResultsForEachStudyPoint(StudyPointData studyPointData) throws InterruptedException, ExecutionException {
+    private List<StudyPointResult> fillResultsForEachStudyPoint(StudyPointData studyPointData, Map<StudyPoint, CompletableFuture<RaoResponse>> studyPointCompletableFutures) throws InterruptedException, ExecutionException {
+        List<StudyPointResult> studyPointResults = new ArrayList<>();
         for (Map.Entry<StudyPoint, CompletableFuture<RaoResponse>> entry : studyPointCompletableFutures.entrySet()) {
             StudyPoint studyPoint = entry.getKey();
             RaoResponse raoResponse = entry.getValue().get();
@@ -190,15 +172,16 @@ public class CoreValidHandler {
             fileExporter.saveShiftedCgmWithPra(networkWithPra, fileName);
             studyPointResults.add(studyPointService.postTreatRaoResult(studyPoint, studyPointData, raoResponse));
         }
+        return studyPointResults;
     }
 
-    private void postTreatment(CoreValidRequest coreValidRequest, FbConstraintCreationContext cracCreationContext) {
-        computationEndInstant = Instant.now();
-        resultFileUrls = saveProcessOutputs(studyPointResults, coreValidRequest, cracCreationContext);
+    private Map<ResultType, String> postTreatment(List<StudyPointResult> studyPointResults, CoreValidRequest coreValidRequest, FbConstraintCreationContext cracCreationContext, String formattedTimestamp) {
+        Map<ResultType, String> resultFileUrls = saveProcessOutputs(studyPointResults, coreValidRequest, cracCreationContext);
         if (coreValidRequest.getLaunchedAutomatically()) {
             deleteArtifacts(coreValidRequest);
         }
         eventsLogger.info("Process done for timestamp {}.", formattedTimestamp);
+        return resultFileUrls;
     }
 
     private Map<ResultType, String> saveProcessOutputs(List<StudyPointResult> studyPointResults, CoreValidRequest coreValidRequest, FbConstraintCreationContext cracCreationContext) {
