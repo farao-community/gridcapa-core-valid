@@ -98,7 +98,7 @@ public class CoreValidHandler {
         }
     }
 
-    private String setUpEventLogging(CoreValidRequest coreValidRequest) {
+    private static String setUpEventLogging(CoreValidRequest coreValidRequest) {
         MDC.put("gridcapa-task-id", coreValidRequest.getId());
         return TIMESTAMP_FORMATTER.format(coreValidRequest.getTimestamp());
     }
