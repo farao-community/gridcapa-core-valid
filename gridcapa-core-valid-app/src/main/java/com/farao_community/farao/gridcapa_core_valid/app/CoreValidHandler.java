@@ -13,7 +13,6 @@ import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInte
 import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidRaoException;
 import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidResponse;
-import com.farao_community.farao.gridcapa_core_valid.app.configuration.SearchTreeRaoConfiguration;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.NetPositionsHandler;
@@ -26,7 +25,6 @@ import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
 import com.farao_community.farao.rao_api.parameters.RaoParameters;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
-import com.farao_community.farao.search_tree_rao.castor.parameters.SearchTreeRaoParameters;
 import com.powsybl.glsk.api.GlskDocument;
 import com.powsybl.glsk.commons.ZonalData;
 import com.powsybl.iidm.modification.scalable.Scalable;
@@ -62,14 +60,12 @@ public class CoreValidHandler {
     private final FileExporter fileExporter;
     private final FileImporter fileImporter;
     private final MinioAdapter minioAdapter;
-    private final SearchTreeRaoConfiguration searchTreeRaoConfiguration;
     private final StudyPointService studyPointService;
 
-    public CoreValidHandler(StudyPointService studyPointService, FileImporter fileImporter, FileExporter fileExporter, SearchTreeRaoConfiguration searchTreeRaoConfiguration, MinioAdapter minioAdapter, Logger eventsLogger) {
+    public CoreValidHandler(StudyPointService studyPointService, FileImporter fileImporter, FileExporter fileExporter, MinioAdapter minioAdapter, Logger eventsLogger) {
         this.studyPointService = studyPointService;
         this.fileImporter = fileImporter;
         this.fileExporter = fileExporter;
-        this.searchTreeRaoConfiguration = searchTreeRaoConfiguration;
         this.minioAdapter = minioAdapter;
         this.eventsLogger = eventsLogger;
     }
@@ -125,25 +121,9 @@ public class CoreValidHandler {
         GlskDocument glskDocument = fileImporter.importGlskFile(coreValidRequest.getGlsk());
         ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
         String jsonCracUrl = fileExporter.saveCracInJsonFormat(cracCreationContext.getCrac(), coreValidRequest.getTimestamp());
-        RaoParameters raoParameters = getRaoParameters();
+        RaoParameters raoParameters = RaoParameters.load();
         String raoParametersUrl = fileExporter.saveRaoParametersAndGetUrl(raoParameters);
         return new StudyPointData(network, coreNetPositions, scalableZonalData, cracCreationContext, jsonCracUrl, raoParametersUrl);
-    }
-
-    private RaoParameters getRaoParameters() {
-        RaoParameters raoParameters = RaoParameters.load();
-        SearchTreeRaoParameters searchTreeRaoParameters = raoParameters.getExtension(SearchTreeRaoParameters.class);
-
-        addParametersToSearchTreeRao(searchTreeRaoParameters);
-
-        raoParameters.addExtension(SearchTreeRaoParameters.class, searchTreeRaoParameters);
-        return raoParameters;
-    }
-
-    private void addParametersToSearchTreeRao(SearchTreeRaoParameters searchTreeRaoParameters) {
-        searchTreeRaoParameters.setMaxCurativePstPerTso(searchTreeRaoConfiguration.getMaxCurativePstPerTso());
-        searchTreeRaoParameters.setMaxCurativeTopoPerTso(searchTreeRaoConfiguration.getMaxCurativeTopoPerTso());
-        searchTreeRaoParameters.setMaxCurativeRaPerTso(searchTreeRaoConfiguration.getMaxCurativeRaPerTso());
     }
 
     private void runRaoForEachStudyPoint(Map<StudyPoint, RaoRequest> studyPointRaoRequests, Map<StudyPoint, CompletableFuture<RaoResponse>> studyPointCompletableFutures) throws ExecutionException, InterruptedException {

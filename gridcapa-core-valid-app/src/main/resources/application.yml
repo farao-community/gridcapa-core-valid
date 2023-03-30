@@ -36,13 +36,6 @@ core-valid-runner:
     - http://localhost:9000
     - http://minio:9000
     - file:/
-  search-tree-rao-parameters:
-    max-curative-topo-per-tso:
-      FR: 1
-    max-curative-pst-per-tso:
-      FR: 0
-    max-curative-ra-per-tso:
-      FR: 1
 
 minio-adapter:
   bucket: gridcapa
