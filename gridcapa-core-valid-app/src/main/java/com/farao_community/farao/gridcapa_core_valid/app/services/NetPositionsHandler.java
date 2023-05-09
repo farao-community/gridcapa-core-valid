@@ -14,6 +14,7 @@ import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.powsybl.glsk.commons.CountryEICode;
 import com.powsybl.glsk.commons.ZonalData;
 import com.powsybl.iidm.modification.scalable.Scalable;
+import com.powsybl.iidm.modification.scalable.ScalingParameters;
 import com.powsybl.iidm.network.Country;
 import com.powsybl.iidm.network.DanglingLine;
 import com.powsybl.iidm.network.Network;
@@ -65,7 +66,9 @@ public final class NetPositionsHandler {
                     String zoneEiCode = new CountryEICode(Country.valueOf(zone)).getCode();
                     Scalable scalable = scalableZonalData.getData(zoneEiCode);
                     if (scalable != null) {
-                        scalable.scale(network, shift);
+                        ScalingParameters iterativeScalingParameters = new ScalingParameters();
+                        iterativeScalingParameters.setIterative(true);
+                        scalable.scale(network, shift, iterativeScalingParameters);
                     }
                 }
             } catch (Exception e) {
