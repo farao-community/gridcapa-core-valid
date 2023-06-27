@@ -74,7 +74,7 @@
         <maven.jvnet.jaxb2-basics.version>1.11.1</maven.jvnet.jaxb2-basics.version>
         <minio.adapter.version>1.0.0</minio.adapter.version>
         <opencsv.version>5.6</opencsv.version>
-        <task-manager.version>1.16.0</task-manager.version>
+        <task-manager.version>1.18.0</task-manager.version>
     </properties>
 
     <build>
