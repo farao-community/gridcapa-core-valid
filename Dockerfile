@@ -1,4 +1,4 @@
-FROM farao/farao-computation-base:1.2.0
+FROM farao/farao-computation-base:1.6.0
 
 ARG JAR_FILE=gridcapa-core-valid-app/target/*.jar
 COPY ${JAR_FILE} app.jar
