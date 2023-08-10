@@ -66,17 +66,17 @@
         <farao.dependencies.version>1.18.0</farao.dependencies.version>
         <gridcapa.rao.runner.starter.version>1.15.0</gridcapa.rao.runner.starter.version>
         <jackson-datatype.version>2.13.2</jackson-datatype.version>
-        <jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
-        <jaxb-runtime.version>2.4.0-b180830.0438</jaxb-runtime.version>
+        <jakarta.xml.bind.version>4.0.0</jakarta.xml.bind.version>
+        <jaxb-runtime.version>4.0.0</jaxb-runtime.version>
+        <jaxb.impl.version>4.0.0</jaxb.impl.version>
+        <jakarta.activation-api.version>2.1.0</jakarta.activation-api.version>
         <jsonapi.converter.version>0.11</jsonapi.converter.version>
         <logstash.version>7.2</logstash.version>
-        <maven.jaxb2.version>0.14.0</maven.jaxb2.version>
-        <maven.jvnet.jaxb2-basics.version>1.11.1</maven.jvnet.jaxb2-basics.version>
+        <maven.jaxb2.version>3.1.0</maven.jaxb2.version>
         <minio.adapter.version>1.0.0</minio.adapter.version>
         <opencsv.version>5.6</opencsv.version>
         <task-manager.version>1.19.0</task-manager.version>
     </properties>
-
     <build>
         <pluginManagement>
             <plugins>
@@ -101,11 +101,6 @@
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons.io.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.xml.bind</groupId>
-                <artifactId>jaxb-api</artifactId>
-                <version>${jaxb-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -150,10 +145,20 @@
 
             <!-- RUNTIME -->
             <dependency>
-                <groupId>org.glassfish.jaxb</groupId>
-                <artifactId>jaxb-runtime</artifactId>
-                <version>${jaxb-runtime.version}</version>
+                <groupId>jakarta.xml.bind</groupId>
+                <artifactId>jakarta.xml.bind-api</artifactId>
+                <version>${jakarta.xml.bind.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-impl</artifactId>
+                <version>${jaxb.impl.version}</version>
                 <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.activation</groupId>
+                <artifactId>jakarta.activation-api</artifactId>
+                <version>${jakarta.activation-api.version}</version>
             </dependency>
 
             <!-- IMPORTED DEPENDENCIES -->

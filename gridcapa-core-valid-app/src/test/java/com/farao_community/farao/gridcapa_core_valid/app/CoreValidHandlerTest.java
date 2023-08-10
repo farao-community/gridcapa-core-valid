@@ -16,12 +16,19 @@ import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointS
 import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
+import com.powsybl.glsk.api.GlskDocument;
+import com.powsybl.glsk.api.io.GlskDocumentImporters;
+import com.powsybl.glsk.cse.CseGlskDocumentImporter;
+import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.net.URL;
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -65,15 +72,15 @@ class CoreValidHandlerTest {
         Mockito.when(fileExporter.saveShiftedCgmWithPra(Mockito.any(), Mockito.any())).thenReturn("");
 
         String requestId = "Test request";
-        String networkFileName = "20210723_0030_2D5_CGM_limits.uct";
-        String testDirectory = "/20210723";
+        String networkFileName = "20230703_0030_2D5_CGM_limits.uct";
+        String testDirectory = "/20230703";
         CoreValidFileResource networkFile = createFileResource(networkFileName, getClass().getResource(testDirectory + "/" + networkFileName));
 
         OffsetDateTime dateTime = OffsetDateTime.parse("2021-07-22T22:30Z");
-        CoreValidFileResource refProgFile = createFileResource("", getClass().getResource(testDirectory + "/20210723-F110.xml"));
-        CoreValidFileResource studyPointsFile = createFileResource("", getClass().getResource(testDirectory + "/20210723-Points_Etudes-v01.csv"));
-        CoreValidFileResource glskFile = createFileResource("", getClass().getResource(testDirectory + "/20210723-F226-v1.xml"));
-        CoreValidFileResource cbcoraFile = createFileResource("cbcora",  getClass().getResource(testDirectory + "/20210723-F301_CBCORA_hvdcvh-outage.xml"));
+        CoreValidFileResource refProgFile = createFileResource("", getClass().getResource(testDirectory + "/20230703-F110.xml"));
+        CoreValidFileResource studyPointsFile = createFileResource("", getClass().getResource(testDirectory + "/20230703-Points_Etudes-v01.csv"));
+        CoreValidFileResource glskFile = createFileResource("", getClass().getResource(testDirectory + "/20230703-F226-v1.xml"));
+        CoreValidFileResource cbcoraFile = createFileResource("cbcora",  getClass().getResource(testDirectory + "/20230703-F301_CBCORA_hvdcvh-outage.xml"));
 
         CoreValidRequest request = new CoreValidRequest(requestId, dateTime, networkFile, cbcoraFile, glskFile,  refProgFile, studyPointsFile, true);
         CoreValidResponse response = coreValidHandler.handleCoreValidRequest(request);
@@ -83,5 +90,23 @@ class CoreValidHandlerTest {
 
     private CoreValidFileResource createFileResource(String filename, URL resource) {
         return new CoreValidFileResource(filename, resource.toExternalForm());
+    }
+
+    @Test
+    void testRobin() {
+        String testDirectory = "/testRobin";
+        String networkFileName = "20230703_1230_F119.uct";
+        CoreValidFileResource networkFile = createFileResource(networkFileName, getClass().getResource(testDirectory + "/" + networkFileName));
+        CoreValidFileResource refProgFile = createFileResource("", getClass().getResource(testDirectory + "/20230703-F110.xml"));
+        CoreValidFileResource studyPointsFile = createFileResource("", getClass().getResource(testDirectory + "/20230703-Points_Etude-v01.csv"));
+        CoreValidFileResource glskFile = createFileResource("", getClass().getResource(testDirectory + "/20230703-F226.xml"));
+        CoreValidFileResource cbcoraFile = createFileResource("cbcora",  getClass().getResource(testDirectory + "/20230703-F301-1.xml"));
+
+        String requestId = "Test request";
+        OffsetDateTime dateTime = OffsetDateTime.parse("2023-07-03T10:30Z");
+
+        CoreValidRequest request = new CoreValidRequest(requestId, dateTime, networkFile, cbcoraFile, glskFile,  refProgFile, studyPointsFile, true);
+        CoreValidResponse coreValidResponse = coreValidHandler.handleCoreValidRequest(request);
+
     }
 }

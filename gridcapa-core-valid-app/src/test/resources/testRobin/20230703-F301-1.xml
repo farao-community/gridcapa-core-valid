@@ -1,0 +1,3431 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<FlowBasedConstraintDocument xmlns="flowbased" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" DtdRelease="0" DtdVersion="1" xsi:noNamespaceSchemaLocation="flowbasedconstraintdocument-18.xsd">
+  <DocumentIdentification v="CORE_CBCORA-F301-20230703-v1"/>
+  <DocumentVersion v="1"/>
+  <DocumentType v="B06"/>
+  <ProcessType v="A01"/>
+  <SenderIdentification codingScheme="A01" v="10XFR-RTE------Q"/>
+  <SenderRole v="A04"/>
+  <ReceiverIdentification codingScheme="A01" v="17XTSO-CS------W"/>
+  <ReceiverRole v="A36"/>
+  <CreationDateTime v="2023-07-01T15:58:54Z"/>
+  <ConstraintTimeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+  <Domain codingScheme="A01" v="10YFR-RTE------C"/>
+  <criticalBranches>
+    <criticalBranch id="FR_CBCO_00001">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 1 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00002">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 1 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00004" location="FR-FR" name="N-1 Avelin - Mastaing 1">
+        <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" to="FMASTA1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00003">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 1 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00045" location="FR-FR" name="N-1 Avelin - Gavrelle 2">
+        <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" to="FGAVRE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00004">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 1 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00005" location="BE-FR" name="N-1 Avelgem - Avelin 380.80">
+        <branch eic="10T-BE-FR-000031" elementName="DI   380  80" from="XAV_AV1" to="BAVLGM1"/>
+        <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" to="FAVELI1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00005">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 1 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00002" location="BE-FR" name="N-1 Achene - Lonny 380.19">
+        <branch eic="10T-BE-FR-000015" elementName="DI   380  19" from="BACHEN1" to="XAC_LO1"/>
+        <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" to="FLONNY1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00006">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 1 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00005" location="FR-FR" name="N-1 Avelin - Mastaing 2">
+        <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" to="FMASTA1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00007">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 1 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00036" location="FR-FR" name="N-1 Revigny - Vigy">
+        <branch eic="17T-FR-000000341" elementName="REVIG71VIGY" from="FVIGY 1" to="FREVIG1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00008">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 1 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00044" location="FR-FR" name="N-1 Faux Fresnay - Mery">
+        <branch eic="17T000001005111N" elementName="F.FRE71VESLE" from="FF.FRE1" to="FVESLE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00009">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 1 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00008" location="BE-FR" name="N-1 Avelgem - Mastaing 380.79">
+        <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" to="FMASTA1"/>
+        <branch eic="10T-BE-FR-10004U" elementName="DI   380  79" from="XAV_MA1" to="BAVLGM1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00010">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 1 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00014" location="FR-FR" name="N-1 Chevalet - Warande 2">
+        <branch eic="17T-FR-000000155" elementName="CHEVA72WARAN" from="FCHEVA1" to="FWARAN1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00011">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 1 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00013" location="FR-FR" name="N-1 Chevalet - Warande 1">
+        <branch eic="17T-FR-000000139" elementName="CHEVA71WARAN" from="FCHEVA1" to="FWARAN1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00012">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-FR-IT-00001U" elementName=".RODP71ALBER" from="XAL_RO1" name="[NCL] [FR-IT] Albertville - Rondissone 1 [FR] [FR-IT]" to="FALBER1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00013">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-CH-FR-00001Y" elementName=".BASS71MAMBE" from="XBA_MA1" name="[NCL] Mambelin - Bassecourt [FR] [FR-CH]" to="FMAMBE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00014">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-ES-FR-00003X" elementName=".BIES61PRAGN" from="XBI_PR2" name="[NCL] Pragneres - Biescas [FR] [FR-ES]" to="FPRAGN2"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00015">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-CH-FR-00005Q" elementName=".RIDD61CORNI" from="XRI_CO2" name="[NCL] [FR-CH] Cornier - Riddes [FR] [FR-CH]" to="FCORNI2"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00016">
+      <timeInterval v="2023-07-03T05:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000021A" elementName="LOGEL71MUHLB" from="FLOGEL1" name="[FR-FR] Logelbach - Muhlbach [DIR]" to="FMUHLB1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3025</temporaryImaxA>
+      <frmMw>154</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00017">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T1001C--00019X" elementName=".ROMA71B.TOL" from="XRO_B.1" name="[NCL] [FR-CH] Bois Tollot - Romanel [FR] [FR-CH]" to="FB.TOL1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00018">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-FR-IT-00004O" elementName=".CAMP61ZMENT" from="XB._CA2" name="[NCL] [FR-IT] Trinite Victor - Camporosso [FR] [FR-IT]" to="FZMENT2"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00019">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" name="[BE-FR] Avelgem - Mastaing 79 [DIR] [FR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4361</temporaryImaxA>
+      <frmMw>230</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00020">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" name="[BE-FR] Avelgem - Mastaing 79 [OPP] [FR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4361</temporaryImaxA>
+      <frmMw>98</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00021">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" name="[BE-FR] Avelgem - Mastaing 79 [DIR] [FR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4361</temporaryImaxA>
+      <frmMw>230</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00004" location="FR-FR" name="N-1 Avelin - Mastaing 1">
+        <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" to="FMASTA1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00022">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" name="[BE-FR] Avelgem - Mastaing 79 [OPP] [FR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4361</temporaryImaxA>
+      <frmMw>98</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00004" location="FR-FR" name="N-1 Avelin - Mastaing 1">
+        <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" to="FMASTA1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00023">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" name="[BE-FR] Avelgem - Mastaing 79 [DIR] [FR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4361</temporaryImaxA>
+      <frmMw>230</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00045" location="FR-FR" name="N-1 Avelin - Gavrelle 2">
+        <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" to="FGAVRE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00024">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" name="[BE-FR] Avelgem - Mastaing 79 [OPP] [FR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4361</temporaryImaxA>
+      <frmMw>98</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00045" location="FR-FR" name="N-1 Avelin - Gavrelle 2">
+        <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" to="FGAVRE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00025">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" name="[BE-FR] Avelgem - Mastaing 79 [DIR] [FR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4361</temporaryImaxA>
+      <frmMw>230</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00005" location="BE-FR" name="N-1 Avelgem - Avelin 380.80">
+        <branch eic="10T-BE-FR-000031" elementName="DI   380  80" from="XAV_AV1" to="BAVLGM1"/>
+        <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" to="FAVELI1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00026">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" name="[BE-FR] Avelgem - Mastaing 79 [OPP] [FR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4361</temporaryImaxA>
+      <frmMw>98</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00005" location="BE-FR" name="N-1 Avelgem - Avelin 380.80">
+        <branch eic="10T-BE-FR-000031" elementName="DI   380  80" from="XAV_AV1" to="BAVLGM1"/>
+        <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" to="FAVELI1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00027">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" name="[BE-FR] Avelgem - Mastaing 79 [DIR] [FR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4361</temporaryImaxA>
+      <frmMw>230</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00002" location="BE-FR" name="N-1 Achene - Lonny 380.19">
+        <branch eic="10T-BE-FR-000015" elementName="DI   380  19" from="BACHEN1" to="XAC_LO1"/>
+        <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" to="FLONNY1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00028">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" name="[BE-FR] Avelgem - Mastaing 79 [OPP] [FR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4361</temporaryImaxA>
+      <frmMw>98</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00002" location="BE-FR" name="N-1 Achene - Lonny 380.19">
+        <branch eic="10T-BE-FR-000015" elementName="DI   380  19" from="BACHEN1" to="XAC_LO1"/>
+        <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" to="FLONNY1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00029">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" name="[BE-FR] Avelgem - Mastaing 79 [DIR] [FR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4361</temporaryImaxA>
+      <frmMw>230</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00005" location="FR-FR" name="N-1 Avelin - Mastaing 2">
+        <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" to="FMASTA1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00030">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" name="[BE-FR] Avelgem - Mastaing 79 [OPP] [FR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4361</temporaryImaxA>
+      <frmMw>98</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00005" location="FR-FR" name="N-1 Avelin - Mastaing 2">
+        <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" to="FMASTA1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00031">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" name="[BE-FR] Avelgem - Mastaing 79 [DIR] [FR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4361</temporaryImaxA>
+      <frmMw>230</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00003" location="FR-FR" name="N-1 Avelin - Gavrelle 1">
+        <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" to="FGAVRE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00032">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" name="[BE-FR] Avelgem - Mastaing 79 [OPP] [FR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4361</temporaryImaxA>
+      <frmMw>98</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00003" location="FR-FR" name="N-1 Avelin - Gavrelle 1">
+        <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" to="FGAVRE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00033">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" name="[BE-FR] Avelgem - Mastaing 79 [DIR] [FR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4361</temporaryImaxA>
+      <frmMw>230</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00036" location="FR-FR" name="N-1 Revigny - Vigy">
+        <branch eic="17T-FR-000000341" elementName="REVIG71VIGY" from="FVIGY 1" to="FREVIG1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00034">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" name="[BE-FR] Avelgem - Mastaing 79 [OPP] [FR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4361</temporaryImaxA>
+      <frmMw>98</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00036" location="FR-FR" name="N-1 Revigny - Vigy">
+        <branch eic="17T-FR-000000341" elementName="REVIG71VIGY" from="FVIGY 1" to="FREVIG1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00035">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" name="[BE-FR] Avelgem - Mastaing 79 [DIR] [FR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4361</temporaryImaxA>
+      <frmMw>230</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00044" location="FR-FR" name="N-1 Faux Fresnay - Mery">
+        <branch eic="17T000001005111N" elementName="F.FRE71VESLE" from="FF.FRE1" to="FVESLE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00036">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" name="[BE-FR] Avelgem - Mastaing 79 [OPP] [FR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4361</temporaryImaxA>
+      <frmMw>98</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00044" location="FR-FR" name="N-1 Faux Fresnay - Mery">
+        <branch eic="17T000001005111N" elementName="F.FRE71VESLE" from="FF.FRE1" to="FVESLE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00037">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" name="[BE-FR] Avelgem - Mastaing 79 [DIR] [FR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4361</temporaryImaxA>
+      <frmMw>230</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00008" location="BE-FR" name="N-1 Avelgem - Mastaing 380.79">
+        <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" to="FMASTA1"/>
+        <branch eic="10T-BE-FR-10004U" elementName="DI   380  79" from="XAV_MA1" to="BAVLGM1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00038">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" name="[BE-FR] Avelgem - Mastaing 79 [OPP] [FR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4361</temporaryImaxA>
+      <frmMw>98</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00008" location="BE-FR" name="N-1 Avelgem - Mastaing 380.79">
+        <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" to="FMASTA1"/>
+        <branch eic="10T-BE-FR-10004U" elementName="DI   380  79" from="XAV_MA1" to="BAVLGM1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00039">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 1 [DIR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3654</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00040">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 1 [OPP]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3654</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00042">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 1 [DIR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3654</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00045" location="FR-FR" name="N-1 Avelin - Gavrelle 2">
+        <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" to="FGAVRE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00043">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 1 [OPP]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3654</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00045" location="FR-FR" name="N-1 Avelin - Gavrelle 2">
+        <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" to="FGAVRE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00044">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 1 [DIR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3654</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00005" location="BE-FR" name="N-1 Avelgem - Avelin 380.80">
+        <branch eic="10T-BE-FR-000031" elementName="DI   380  80" from="XAV_AV1" to="BAVLGM1"/>
+        <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" to="FAVELI1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00045">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 1 [OPP]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3654</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00005" location="BE-FR" name="N-1 Avelgem - Avelin 380.80">
+        <branch eic="10T-BE-FR-000031" elementName="DI   380  80" from="XAV_AV1" to="BAVLGM1"/>
+        <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" to="FAVELI1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00046">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 1 [DIR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3654</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00002" location="BE-FR" name="N-1 Achene - Lonny 380.19">
+        <branch eic="10T-BE-FR-000015" elementName="DI   380  19" from="BACHEN1" to="XAC_LO1"/>
+        <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" to="FLONNY1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00047">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 1 [OPP]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3654</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00002" location="BE-FR" name="N-1 Achene - Lonny 380.19">
+        <branch eic="10T-BE-FR-000015" elementName="DI   380  19" from="BACHEN1" to="XAC_LO1"/>
+        <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" to="FLONNY1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00048">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 1 [DIR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3654</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00005" location="FR-FR" name="N-1 Avelin - Mastaing 2">
+        <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" to="FMASTA1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00049">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 1 [OPP]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3654</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00005" location="FR-FR" name="N-1 Avelin - Mastaing 2">
+        <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" to="FMASTA1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00050">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 1 [DIR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3654</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00003" location="FR-FR" name="N-1 Avelin - Gavrelle 1">
+        <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" to="FGAVRE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00051">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 1 [OPP]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3654</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00003" location="FR-FR" name="N-1 Avelin - Gavrelle 1">
+        <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" to="FGAVRE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00052">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 1 [DIR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3654</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00036" location="FR-FR" name="N-1 Revigny - Vigy">
+        <branch eic="17T-FR-000000341" elementName="REVIG71VIGY" from="FVIGY 1" to="FREVIG1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00053">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 1 [OPP]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3654</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00036" location="FR-FR" name="N-1 Revigny - Vigy">
+        <branch eic="17T-FR-000000341" elementName="REVIG71VIGY" from="FVIGY 1" to="FREVIG1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00054">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 1 [DIR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3654</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00044" location="FR-FR" name="N-1 Faux Fresnay - Mery">
+        <branch eic="17T000001005111N" elementName="F.FRE71VESLE" from="FF.FRE1" to="FVESLE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00055">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 1 [OPP]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3654</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00044" location="FR-FR" name="N-1 Faux Fresnay - Mery">
+        <branch eic="17T000001005111N" elementName="F.FRE71VESLE" from="FF.FRE1" to="FVESLE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00056">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 1 [DIR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3654</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00008" location="BE-FR" name="N-1 Avelgem - Mastaing 380.79">
+        <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" to="FMASTA1"/>
+        <branch eic="10T-BE-FR-10004U" elementName="DI   380  79" from="XAV_MA1" to="BAVLGM1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00057">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 1 [OPP]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3654</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00008" location="BE-FR" name="N-1 Avelgem - Mastaing 380.79">
+        <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" to="FMASTA1"/>
+        <branch eic="10T-BE-FR-10004U" elementName="DI   380  79" from="XAV_MA1" to="BAVLGM1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00058">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-000000341" elementName="REVIG71VIGY" from="FREVIG1" name="[FR-FR] Revigny - Vigy [OPP]" to="FVIGY 1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3025</temporaryImaxA>
+      <frmMw>190</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00059">
+      <timeInterval v="2023-07-03T05:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-000000163" elementName="HOUDR71LOGEL" from="FHOUDR1" name="[FR-FR] Houdreville - Logelbach [DIR]" to="FLOGEL1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3025</temporaryImaxA>
+      <frmMw>144</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00060">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-FR-IT-00002S" elementName=".RODP72ALBER" from="XAL_RO1" name="[NCL] [FR-IT] Albertville - Rondissone 2 [FR] [FR-IT]" to="FALBER1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00061">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-ES-FR-000010" elementName=".ARKA61ARGIA" from="XAR_AR2" name="[NCL] [FR-ES] Argia - Arkale [FR] [FR-ES]" to="FARGIA2"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00062">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-DE-FR-00001I" elementName=".ASPH71SIERE" from="XAS_SI1" name="[NCL] [FR-CH] Sierentz - Asphard [FR] [FR-CH]" to="FSIERE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00063">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-ES-FR-00009L" elementName="BAIXA9.STLL2" from="XLL_BA1" name="[NCL] [FR-ES] Baixas - Santa Llogaia 2 [FR] [FR-ES]" to="FBAIXA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00064">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-CH-FR-00006O" elementName=".SSTR61CORNI" from="XS._CO2" name="[NCL] [FR-CH] Cornier - St Triphon [FR] [FR-CH]" to="FCORNI2"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00065">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 2 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00066">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 2 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00004" location="FR-FR" name="N-1 Avelin - Mastaing 1">
+        <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" to="FMASTA1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00067">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 2 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00005" location="BE-FR" name="N-1 Avelgem - Avelin 380.80">
+        <branch eic="10T-BE-FR-000031" elementName="DI   380  80" from="XAV_AV1" to="BAVLGM1"/>
+        <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" to="FAVELI1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00068">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 2 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00002" location="BE-FR" name="N-1 Achene - Lonny 380.19">
+        <branch eic="10T-BE-FR-000015" elementName="DI   380  19" from="BACHEN1" to="XAC_LO1"/>
+        <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" to="FLONNY1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00069">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 2 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00005" location="FR-FR" name="N-1 Avelin - Mastaing 2">
+        <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" to="FMASTA1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00070">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 2 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00003" location="FR-FR" name="N-1 Avelin - Gavrelle 1">
+        <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" to="FGAVRE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00071">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 2 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00036" location="FR-FR" name="N-1 Revigny - Vigy">
+        <branch eic="17T-FR-000000341" elementName="REVIG71VIGY" from="FVIGY 1" to="FREVIG1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00072">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 2 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00044" location="FR-FR" name="N-1 Faux Fresnay - Mery">
+        <branch eic="17T000001005111N" elementName="F.FRE71VESLE" from="FF.FRE1" to="FVESLE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00073">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 2 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00008" location="BE-FR" name="N-1 Avelgem - Mastaing 380.79">
+        <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" to="FMASTA1"/>
+        <branch eic="10T-BE-FR-10004U" elementName="DI   380  79" from="XAV_MA1" to="BAVLGM1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00074">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 2 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00014" location="FR-FR" name="N-1 Chevalet - Warande 2">
+        <branch eic="17T-FR-000000155" elementName="CHEVA72WARAN" from="FCHEVA1" to="FWARAN1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00075">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" name="[FR-FR] Avelin - Gavrelle 2 [DIR]" to="FGAVRE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>6080</temporaryImaxA>
+      <frmMw>306</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00013" location="FR-FR" name="N-1 Chevalet - Warande 1">
+        <branch eic="17T-FR-000000139" elementName="CHEVA71WARAN" from="FCHEVA1" to="FWARAN1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00076">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 2 [DIR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>5130</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00077">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 2 [OPP]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>5130</temporaryImaxA>
+      <frmMw>219</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00078">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 2 [DIR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>5130</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00004" location="FR-FR" name="N-1 Avelin - Mastaing 1">
+        <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" to="FMASTA1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00079">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 2 [OPP]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>5130</temporaryImaxA>
+      <frmMw>219</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00004" location="FR-FR" name="N-1 Avelin - Mastaing 1">
+        <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" to="FMASTA1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00080">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 2 [DIR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>5130</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00045" location="FR-FR" name="N-1 Avelin - Gavrelle 2">
+        <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" to="FGAVRE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00081">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 2 [OPP]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>5130</temporaryImaxA>
+      <frmMw>219</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00045" location="FR-FR" name="N-1 Avelin - Gavrelle 2">
+        <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" to="FGAVRE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00082">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 2 [DIR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>5130</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00005" location="BE-FR" name="N-1 Avelgem - Avelin 380.80">
+        <branch eic="10T-BE-FR-000031" elementName="DI   380  80" from="XAV_AV1" to="BAVLGM1"/>
+        <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" to="FAVELI1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00083">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 2 [OPP]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>5130</temporaryImaxA>
+      <frmMw>219</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00005" location="BE-FR" name="N-1 Avelgem - Avelin 380.80">
+        <branch eic="10T-BE-FR-000031" elementName="DI   380  80" from="XAV_AV1" to="BAVLGM1"/>
+        <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" to="FAVELI1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00084">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 2 [DIR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>5130</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00002" location="BE-FR" name="N-1 Achene - Lonny 380.19">
+        <branch eic="10T-BE-FR-000015" elementName="DI   380  19" from="BACHEN1" to="XAC_LO1"/>
+        <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" to="FLONNY1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00085">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 2 [OPP]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>5130</temporaryImaxA>
+      <frmMw>219</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00002" location="BE-FR" name="N-1 Achene - Lonny 380.19">
+        <branch eic="10T-BE-FR-000015" elementName="DI   380  19" from="BACHEN1" to="XAC_LO1"/>
+        <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" to="FLONNY1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00087">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 2 [DIR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>5130</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00003" location="FR-FR" name="N-1 Avelin - Gavrelle 1">
+        <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" to="FGAVRE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00088">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 2 [OPP]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>5130</temporaryImaxA>
+      <frmMw>219</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00003" location="FR-FR" name="N-1 Avelin - Gavrelle 1">
+        <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" to="FGAVRE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00089">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 2 [DIR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>5130</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00036" location="FR-FR" name="N-1 Revigny - Vigy">
+        <branch eic="17T-FR-000000341" elementName="REVIG71VIGY" from="FVIGY 1" to="FREVIG1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00090">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 2 [OPP]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>5130</temporaryImaxA>
+      <frmMw>219</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00036" location="FR-FR" name="N-1 Revigny - Vigy">
+        <branch eic="17T-FR-000000341" elementName="REVIG71VIGY" from="FVIGY 1" to="FREVIG1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00091">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 2 [DIR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>5130</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00044" location="FR-FR" name="N-1 Faux Fresnay - Mery">
+        <branch eic="17T000001005111N" elementName="F.FRE71VESLE" from="FF.FRE1" to="FVESLE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00092">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 2 [OPP]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>5130</temporaryImaxA>
+      <frmMw>219</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00044" location="FR-FR" name="N-1 Faux Fresnay - Mery">
+        <branch eic="17T000001005111N" elementName="F.FRE71VESLE" from="FF.FRE1" to="FVESLE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00093">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 2 [DIR]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>5130</temporaryImaxA>
+      <frmMw>180</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00008" location="BE-FR" name="N-1 Avelgem - Mastaing 380.79">
+        <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" to="FMASTA1"/>
+        <branch eic="10T-BE-FR-10004U" elementName="DI   380  79" from="XAV_MA1" to="BAVLGM1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00094">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" name="[FR-FR] Avelin - Mastaing 2 [OPP]" to="FMASTA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>5130</temporaryImaxA>
+      <frmMw>219</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00008" location="BE-FR" name="N-1 Avelgem - Mastaing 380.79">
+        <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" to="FMASTA1"/>
+        <branch eic="10T-BE-FR-10004U" elementName="DI   380  79" from="XAV_MA1" to="BAVLGM1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00095">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" name="[BE-FR] Achene - Lonny 19 [DIR] [FR]" to="FLONNY1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3025</temporaryImaxA>
+      <frmMw>172</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00096">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" name="[BE-FR] Achene - Lonny 19 [OPP] [FR]" to="FLONNY1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3025</temporaryImaxA>
+      <frmMw>159</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00097">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" name="[BE-FR] Achene - Lonny 19 [DIR] [FR]" to="FLONNY1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3025</temporaryImaxA>
+      <frmMw>172</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00005" location="FR-FR" name="N-1 Avelin - Mastaing 2">
+        <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" to="FMASTA1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00098">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" name="[BE-FR] Achene - Lonny 19 [OPP] [FR]" to="FLONNY1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3025</temporaryImaxA>
+      <frmMw>159</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00005" location="FR-FR" name="N-1 Avelin - Mastaing 2">
+        <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" to="FMASTA1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00099">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" name="[BE-FR] Achene - Lonny 19 [DIR] [FR]" to="FLONNY1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3025</temporaryImaxA>
+      <frmMw>172</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00005" location="BE-FR" name="N-1 Avelgem - Avelin 380.80">
+        <branch eic="10T-BE-FR-000031" elementName="DI   380  80" from="XAV_AV1" to="BAVLGM1"/>
+        <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" to="FAVELI1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00100">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" name="[BE-FR] Achene - Lonny 19 [OPP] [FR]" to="FLONNY1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3025</temporaryImaxA>
+      <frmMw>159</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00005" location="BE-FR" name="N-1 Avelgem - Avelin 380.80">
+        <branch eic="10T-BE-FR-000031" elementName="DI   380  80" from="XAV_AV1" to="BAVLGM1"/>
+        <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" to="FAVELI1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00101">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" name="[BE-FR] Achene - Lonny 19 [DIR] [FR]" to="FLONNY1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3025</temporaryImaxA>
+      <frmMw>172</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00004" location="FR-FR" name="N-1 Avelin - Mastaing 1">
+        <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" to="FMASTA1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00102">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" name="[BE-FR] Achene - Lonny 19 [OPP] [FR]" to="FLONNY1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3025</temporaryImaxA>
+      <frmMw>159</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00004" location="FR-FR" name="N-1 Avelin - Mastaing 1">
+        <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" to="FMASTA1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00103">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" name="[BE-FR] Achene - Lonny 19 [DIR] [FR]" to="FLONNY1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3025</temporaryImaxA>
+      <frmMw>172</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00008" location="BE-FR" name="N-1 Avelgem - Mastaing 380.79">
+        <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" to="FMASTA1"/>
+        <branch eic="10T-BE-FR-10004U" elementName="DI   380  79" from="XAV_MA1" to="BAVLGM1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00104">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" name="[BE-FR] Achene - Lonny 19 [OPP] [FR]" to="FLONNY1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3025</temporaryImaxA>
+      <frmMw>159</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00008" location="BE-FR" name="N-1 Avelgem - Mastaing 380.79">
+        <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" to="FMASTA1"/>
+        <branch eic="10T-BE-FR-10004U" elementName="DI   380  79" from="XAV_MA1" to="BAVLGM1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00105">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" name="[BE-FR] Avelgem - Avelin 80 [DIR] [FR]" to="FAVELI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4143</temporaryImaxA>
+      <frmMw>334</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00106">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" name="[BE-FR] Avelgem - Avelin 80 [OPP] [FR]" to="FAVELI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4143</temporaryImaxA>
+      <frmMw>160</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00107">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" name="[BE-FR] Avelgem - Avelin 80 [DIR] [FR]" to="FAVELI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4143</temporaryImaxA>
+      <frmMw>334</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00004" location="FR-FR" name="N-1 Avelin - Mastaing 1">
+        <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" to="FMASTA1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00108">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" name="[BE-FR] Avelgem - Avelin 80 [OPP] [FR]" to="FAVELI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4143</temporaryImaxA>
+      <frmMw>160</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00004" location="FR-FR" name="N-1 Avelin - Mastaing 1">
+        <branch eic="17T-FR-00000055U" elementName="AVELI71MASTA" from="FAVELI1" to="FMASTA1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00109">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" name="[BE-FR] Avelgem - Avelin 80 [DIR] [FR]" to="FAVELI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4143</temporaryImaxA>
+      <frmMw>334</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00045" location="FR-FR" name="N-1 Avelin - Gavrelle 2">
+        <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" to="FGAVRE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00110">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" name="[BE-FR] Avelgem - Avelin 80 [OPP] [FR]" to="FAVELI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4143</temporaryImaxA>
+      <frmMw>160</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00045" location="FR-FR" name="N-1 Avelin - Gavrelle 2">
+        <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" to="FGAVRE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00111">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" name="[BE-FR] Avelgem - Avelin 80 [DIR] [FR]" to="FAVELI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4143</temporaryImaxA>
+      <frmMw>334</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00005" location="BE-FR" name="N-1 Avelgem - Avelin 380.80">
+        <branch eic="10T-BE-FR-000031" elementName="DI   380  80" from="XAV_AV1" to="BAVLGM1"/>
+        <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" to="FAVELI1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00112">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" name="[BE-FR] Avelgem - Avelin 80 [OPP] [FR]" to="FAVELI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4143</temporaryImaxA>
+      <frmMw>160</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00005" location="BE-FR" name="N-1 Avelgem - Avelin 380.80">
+        <branch eic="10T-BE-FR-000031" elementName="DI   380  80" from="XAV_AV1" to="BAVLGM1"/>
+        <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" to="FAVELI1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00113">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" name="[BE-FR] Avelgem - Avelin 80 [DIR] [FR]" to="FAVELI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4143</temporaryImaxA>
+      <frmMw>334</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00002" location="BE-FR" name="N-1 Achene - Lonny 380.19">
+        <branch eic="10T-BE-FR-000015" elementName="DI   380  19" from="BACHEN1" to="XAC_LO1"/>
+        <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" to="FLONNY1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00114">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" name="[BE-FR] Avelgem - Avelin 80 [OPP] [FR]" to="FAVELI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4143</temporaryImaxA>
+      <frmMw>160</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00002" location="BE-FR" name="N-1 Achene - Lonny 380.19">
+        <branch eic="10T-BE-FR-000015" elementName="DI   380  19" from="BACHEN1" to="XAC_LO1"/>
+        <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" to="FLONNY1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00115">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" name="[BE-FR] Avelgem - Avelin 80 [DIR] [FR]" to="FAVELI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4143</temporaryImaxA>
+      <frmMw>334</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00005" location="FR-FR" name="N-1 Avelin - Mastaing 2">
+        <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" to="FMASTA1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00116">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" name="[BE-FR] Avelgem - Avelin 80 [OPP] [FR]" to="FAVELI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4143</temporaryImaxA>
+      <frmMw>160</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00005" location="FR-FR" name="N-1 Avelin - Mastaing 2">
+        <branch eic="17T-FR-000000058" elementName="AVELI72MASTA" from="FAVELI1" to="FMASTA1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00117">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" name="[BE-FR] Avelgem - Avelin 80 [DIR] [FR]" to="FAVELI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4143</temporaryImaxA>
+      <frmMw>334</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00003" location="FR-FR" name="N-1 Avelin - Gavrelle 1">
+        <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" to="FGAVRE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00118">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" name="[BE-FR] Avelgem - Avelin 80 [OPP] [FR]" to="FAVELI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4143</temporaryImaxA>
+      <frmMw>160</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00003" location="FR-FR" name="N-1 Avelin - Gavrelle 1">
+        <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" to="FGAVRE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00119">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" name="[BE-FR] Avelgem - Avelin 80 [DIR] [FR]" to="FAVELI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4143</temporaryImaxA>
+      <frmMw>334</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00036" location="FR-FR" name="N-1 Revigny - Vigy">
+        <branch eic="17T-FR-000000341" elementName="REVIG71VIGY" from="FVIGY 1" to="FREVIG1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00120">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" name="[BE-FR] Avelgem - Avelin 80 [OPP] [FR]" to="FAVELI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4143</temporaryImaxA>
+      <frmMw>160</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00036" location="FR-FR" name="N-1 Revigny - Vigy">
+        <branch eic="17T-FR-000000341" elementName="REVIG71VIGY" from="FVIGY 1" to="FREVIG1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00121">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" name="[BE-FR] Avelgem - Avelin 80 [DIR] [FR]" to="FAVELI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4143</temporaryImaxA>
+      <frmMw>334</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00044" location="FR-FR" name="N-1 Faux Fresnay - Mery">
+        <branch eic="17T000001005111N" elementName="F.FRE71VESLE" from="FF.FRE1" to="FVESLE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00122">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" name="[BE-FR] Avelgem - Avelin 80 [OPP] [FR]" to="FAVELI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4143</temporaryImaxA>
+      <frmMw>160</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00044" location="FR-FR" name="N-1 Faux Fresnay - Mery">
+        <branch eic="17T000001005111N" elementName="F.FRE71VESLE" from="FF.FRE1" to="FVESLE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00123">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" name="[BE-FR] Avelgem - Avelin 80 [DIR] [FR]" to="FAVELI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4143</temporaryImaxA>
+      <frmMw>334</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00008" location="BE-FR" name="N-1 Avelgem - Mastaing 380.79">
+        <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" to="FMASTA1"/>
+        <branch eic="10T-BE-FR-10004U" elementName="DI   380  79" from="XAV_MA1" to="BAVLGM1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00124">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-BE-FR-000031" elementName=".AVEL72AVELI" from="XAV_AV1" name="[BE-FR] Avelgem - Avelin 80 [OPP] [FR]" to="FAVELI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>4143</temporaryImaxA>
+      <frmMw>160</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00008" location="BE-FR" name="N-1 Avelgem - Mastaing 380.79">
+        <branch eic="10T-BE-FR-10004U" elementName=".AVEL71MASTA" from="XAV_MA1" to="FMASTA1"/>
+        <branch eic="10T-BE-FR-10004U" elementName="DI   380  79" from="XAV_MA1" to="BAVLGM1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00125">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-DE-FR-000068" elementName=".ENSD72VIGY" from="XEN_VI1" name="[D7-FR] Ensdorf - Vigy VIGY2 S [DIR] [FR]" to="FVIGY 1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3150</temporaryImaxA>
+      <frmMw>321</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00126">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-DE-FR-000068" elementName=".ENSD72VIGY" from="XEN_VI1" name="[D7-FR] Ensdorf - Vigy VIGY2 S [OPP] [FR]" to="FVIGY 1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3150</temporaryImaxA>
+      <frmMw>165</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00127">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-DE-FR-000068" elementName=".ENSD72VIGY" from="XEN_VI1" name="[D7-FR] Ensdorf - Vigy VIGY2 S [DIR] [FR]" to="FVIGY 1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3150</temporaryImaxA>
+      <frmMw>321</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="D7-FR_CO_00001" location="D7-FR" name="N-1 Ensdorf - Vigy VIGY1 N">
+        <branch eic="10T-DE-FR-00005A" elementName=".ENSD71VIGY" from="XEN_VI1" to="FVIGY 1"/>
+        <branch eic="10T-DE-FR-00005A" elementName="VIGY1 N" from="D7ENSD1" to="XEN_VI1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00128">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-DE-FR-000068" elementName=".ENSD72VIGY" from="XEN_VI1" name="[D7-FR] Ensdorf - Vigy VIGY2 S [OPP] [FR]" to="FVIGY 1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3150</temporaryImaxA>
+      <frmMw>165</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="D7-FR_CO_00001" location="D7-FR" name="N-1 Ensdorf - Vigy VIGY1 N">
+        <branch eic="10T-DE-FR-00005A" elementName=".ENSD71VIGY" from="XEN_VI1" to="FVIGY 1"/>
+        <branch eic="10T-DE-FR-00005A" elementName="VIGY1 N" from="D7ENSD1" to="XEN_VI1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00129">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-DE-FR-000068" elementName=".ENSD72VIGY" from="XEN_VI1" name="[D7-FR] Ensdorf - Vigy VIGY2 S [DIR] [FR]" to="FVIGY 1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3150</temporaryImaxA>
+      <frmMw>321</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00002" location="BE-FR" name="N-1 Achene - Lonny 380.19">
+        <branch eic="10T-BE-FR-000015" elementName="DI   380  19" from="BACHEN1" to="XAC_LO1"/>
+        <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" to="FLONNY1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00130">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-DE-FR-000068" elementName=".ENSD72VIGY" from="XEN_VI1" name="[D7-FR] Ensdorf - Vigy VIGY2 S [OPP] [FR]" to="FVIGY 1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3150</temporaryImaxA>
+      <frmMw>165</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00002" location="BE-FR" name="N-1 Achene - Lonny 380.19">
+        <branch eic="10T-BE-FR-000015" elementName="DI   380  19" from="BACHEN1" to="XAC_LO1"/>
+        <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" to="FLONNY1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00131">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-DE-FR-000068" elementName=".ENSD72VIGY" from="XEN_VI1" name="[D7-FR] Ensdorf - Vigy VIGY2 S [DIR] [FR]" to="FVIGY 1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3150</temporaryImaxA>
+      <frmMw>321</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="D7-FR_CO_00002" location="D7-FR" name="N-1 Ensdorf - Vigy VIGY2 S">
+        <branch eic="10T-DE-FR-000068" elementName="VIGY2 S" from="D7ENSD1" to="XEN_VI1"/>
+        <branch eic="10T-DE-FR-000068" elementName=".ENSD72VIGY" from="XEN_VI1" to="FVIGY 1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00132">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-DE-FR-000068" elementName=".ENSD72VIGY" from="XEN_VI1" name="[D7-FR] Ensdorf - Vigy VIGY2 S [OPP] [FR]" to="FVIGY 1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3150</temporaryImaxA>
+      <frmMw>165</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="D7-FR_CO_00002" location="D7-FR" name="N-1 Ensdorf - Vigy VIGY2 S">
+        <branch eic="10T-DE-FR-000068" elementName="VIGY2 S" from="D7ENSD1" to="XEN_VI1"/>
+        <branch eic="10T-DE-FR-000068" elementName=".ENSD72VIGY" from="XEN_VI1" to="FVIGY 1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00133">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-DE-FR-00002G" elementName=".EICH71MUHLB" from="XEI_MU1" name="[D4-FR] Eichstetten - Muhlbach [DIR] [FR]" to="FMUHLB1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>2559</temporaryImaxA>
+      <frmMw>246</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00134">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-DE-FR-00002G" elementName=".EICH71MUHLB" from="XEI_MU1" name="[D4-FR] Eichstetten - Muhlbach [OPP] [FR]" to="FMUHLB1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>2559</temporaryImaxA>
+      <frmMw>229</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00135">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-CH-FR-00007M" elementName="PRESS61VALLO" from="XVA_PR2" name="[NCL] [FR-CH] Vallorcine - Batiaz [FR] [FR-CH]" to="FPRESS2"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00136">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-ES-FR-00006R" elementName=".VICH71BAIXA" from="XVI_BA1" name="[NCL] [FR-ES] Baixas - Vich [FR] [FR-ES]" to="FBAIXA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00137">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-CH-FR-00002W" elementName=".BASS71SIERE" from="XBA_SI1" name="[NCL] Sierentz - Bassecourt [FR] [FR-CH]" to="FSIERE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00138">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-CH-FR-00004S" elementName=".LAUF71SIERE" from="XLA_SI1" name="[NCL] [FR-CH] Sierentz - Laufenbourg [FR] [FR-CH]" to="FSIERE1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00139">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-ES-FR-00004V" elementName=".HERN71ARGIA" from="XHE_AR1" name="[NCL] [FR-ES] Argia - Hernani [FR] [FR-ES]" to="FARGIA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00140">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-CH-FR-00008K" elementName=".VERB71B.TOL" from="XVE_B.1" name="[NCL] [FR-CH] Bois Tollot - Verbois [FR] [FR-CH]" to="FB.TOL1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00141">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-CH-FR-00009I" elementName=".VERB61GEN.P" from="XVE_GE2" name="[NCL] [FR-CH] Genissiat - Verbois 1 [FR] [FR-CH]" to="FGEN.P2"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00142">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-CH-FR-00010X" elementName=".VERB62GEN.P" from="XVE_GE2" name="[NCL] [FR-CH] Genissiat - Verbois 2 [FR] [FR-CH]" to="FGEN.P2"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00143">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-DE-FR-00005A" elementName=".ENSD71VIGY" from="XEN_VI1" name="[D7-FR] Ensdorf - Vigy VIGY1 N [DIR] [FR]" to="FVIGY 1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3150</temporaryImaxA>
+      <frmMw>325</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00144">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-DE-FR-00005A" elementName=".ENSD71VIGY" from="XEN_VI1" name="[D7-FR] Ensdorf - Vigy VIGY1 N [OPP] [FR]" to="FVIGY 1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3150</temporaryImaxA>
+      <frmMw>178</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00145">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-DE-FR-00005A" elementName=".ENSD71VIGY" from="XEN_VI1" name="[D7-FR] Ensdorf - Vigy VIGY1 N [DIR] [FR]" to="FVIGY 1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3150</temporaryImaxA>
+      <frmMw>325</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="D7-FR_CO_00001" location="D7-FR" name="N-1 Ensdorf - Vigy VIGY1 N">
+        <branch eic="10T-DE-FR-00005A" elementName=".ENSD71VIGY" from="XEN_VI1" to="FVIGY 1"/>
+        <branch eic="10T-DE-FR-00005A" elementName="VIGY1 N" from="D7ENSD1" to="XEN_VI1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00146">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-DE-FR-00005A" elementName=".ENSD71VIGY" from="XEN_VI1" name="[D7-FR] Ensdorf - Vigy VIGY1 N [OPP] [FR]" to="FVIGY 1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3150</temporaryImaxA>
+      <frmMw>178</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="D7-FR_CO_00001" location="D7-FR" name="N-1 Ensdorf - Vigy VIGY1 N">
+        <branch eic="10T-DE-FR-00005A" elementName=".ENSD71VIGY" from="XEN_VI1" to="FVIGY 1"/>
+        <branch eic="10T-DE-FR-00005A" elementName="VIGY1 N" from="D7ENSD1" to="XEN_VI1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00147">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-DE-FR-00005A" elementName=".ENSD71VIGY" from="XEN_VI1" name="[D7-FR] Ensdorf - Vigy VIGY1 N [DIR] [FR]" to="FVIGY 1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3150</temporaryImaxA>
+      <frmMw>325</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00002" location="BE-FR" name="N-1 Achene - Lonny 380.19">
+        <branch eic="10T-BE-FR-000015" elementName="DI   380  19" from="BACHEN1" to="XAC_LO1"/>
+        <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" to="FLONNY1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00148">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-DE-FR-00005A" elementName=".ENSD71VIGY" from="XEN_VI1" name="[D7-FR] Ensdorf - Vigy VIGY1 N [OPP] [FR]" to="FVIGY 1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3150</temporaryImaxA>
+      <frmMw>178</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="BE-FR_CO_00002" location="BE-FR" name="N-1 Achene - Lonny 380.19">
+        <branch eic="10T-BE-FR-000015" elementName="DI   380  19" from="BACHEN1" to="XAC_LO1"/>
+        <branch eic="10T-BE-FR-000015" elementName=".ACHE71LONNY" from="XAC_LO1" to="FLONNY1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00149">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-DE-FR-00005A" elementName=".ENSD71VIGY" from="XEN_VI1" name="[D7-FR] Ensdorf - Vigy VIGY1 N [DIR] [FR]" to="FVIGY 1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3150</temporaryImaxA>
+      <frmMw>325</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="D7-FR_CO_00002" location="D7-FR" name="N-1 Ensdorf - Vigy VIGY2 S">
+        <branch eic="10T-DE-FR-000068" elementName="VIGY2 S" from="D7ENSD1" to="XEN_VI1"/>
+        <branch eic="10T-DE-FR-000068" elementName=".ENSD72VIGY" from="XEN_VI1" to="FVIGY 1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00150">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-DE-FR-00005A" elementName=".ENSD71VIGY" from="XEN_VI1" name="[D7-FR] Ensdorf - Vigy VIGY1 N [OPP] [FR]" to="FVIGY 1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3150</temporaryImaxA>
+      <frmMw>178</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="D7-FR_CO_00002" location="D7-FR" name="N-1 Ensdorf - Vigy VIGY2 S">
+        <branch eic="10T-DE-FR-000068" elementName="VIGY2 S" from="D7ENSD1" to="XEN_VI1"/>
+        <branch eic="10T-DE-FR-000068" elementName=".ENSD72VIGY" from="XEN_VI1" to="FVIGY 1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00151">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T000001005111N" elementName="F.FRE71M.SEI" from="FF.FRE1" name="[FR-FR] Faux Fresnay - Mery sur Seine 1 [DIR]" to="FM.SEI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3395</temporaryImaxA>
+      <frmMw>166</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00152">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T000001005111N" elementName="F.FRE71M.SEI" from="FF.FRE1" name="[FR-FR] Faux Fresnay - Mery sur Seine 1 [DIR]" to="FM.SEI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3395</temporaryImaxA>
+      <frmMw>166</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00036" location="FR-FR" name="N-1 Revigny - Vigy">
+        <branch eic="17T-FR-000000341" elementName="REVIG71VIGY" from="FVIGY 1" to="FREVIG1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00153">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T000001005111N" elementName="F.FRE71M.SEI" from="FF.FRE1" name="[FR-FR] Faux Fresnay - Mery sur Seine 1 [DIR]" to="FM.SEI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3395</temporaryImaxA>
+      <frmMw>166</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00003" location="FR-FR" name="N-1 Avelin - Gavrelle 1">
+        <branch eic="17T-FR-00000002E" elementName="AVELI71GAVRE" from="FAVELI1" to="FGAVRE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00154">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="17T000001005111N" elementName="F.FRE71M.SEI" from="FF.FRE1" name="[FR-FR] Faux Fresnay - Mery sur Seine 1 [DIR]" to="FM.SEI1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>3395</temporaryImaxA>
+      <frmMw>166</frmMw>
+      <minRAMfactor>70</minRAMfactor>
+      <CNEC>true</CNEC>
+      <MNEC>true</MNEC>
+      <direction>DIRECT</direction>
+      <tsoOrigin>FR</tsoOrigin>
+      <outage id="FR_CO_00045" location="FR-FR" name="N-1 Avelin - Gavrelle 2">
+        <branch eic="17T000000016584E" elementName="AVELI72GAVRE" from="FAVELI1" to="FGAVRE1"/>
+      </outage>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00155">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-ES-FR-00008N" elementName="BAIXA9.STLL1" from="XLL_BA1" name="[NCL] [FR-ES] Baixas - Santa Llogaia 1 [FR] [FR-ES]" to="FBAIXA1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+    <criticalBranch id="FR_CBCO_00156">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <branch eic="10T-FR-IT-00003Q" elementName=".VENA71VLARO" from="XVL_VE1" name="[NCL] [FR-IT] Villarodin - Venaus [FR] [FR-IT]" to="FVLARO1"/>
+      <imaxType>SEASONAL</imaxType>
+      <permanentImaxFactor>1</permanentImaxFactor>
+      <temporaryImaxA>9999</temporaryImaxA>
+      <frmMw>0</frmMw>
+      <minRAMfactor>0</minRAMfactor>
+      <CNEC>false</CNEC>
+      <MNEC>false</MNEC>
+      <direction>OPPOSITE</direction>
+      <tsoOrigin>FR</tsoOrigin>
+    </criticalBranch>
+  </criticalBranches>
+  <complexVariants>
+    <complexVariant id="FR_RA_00026" name="TOP_COMPLEX_VIGY_quarterbar2B_CRA">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <tsoOrigin>FR</tsoOrigin>
+      <actionsSet>
+        <preventive>false</preventive>
+        <curative>true</curative>
+        <enforced>false</enforced>
+        <afterCOList>
+          <afterCOId>BE-FR_CO_00002</afterCOId>
+          <afterCOId>BE-FR_CO_00002_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00003</afterCOId>
+          <afterCOId>BE-FR_CO_00003_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00004</afterCOId>
+          <afterCOId>BE-FR_CO_00004_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00005</afterCOId>
+          <afterCOId>BE-FR_CO_00005_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00008</afterCOId>
+          <afterCOId>BE-FR_CO_00008_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00011</afterCOId>
+          <afterCOId>CH-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00002</afterCOId>
+          <afterCOId>D7-FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00001</afterCOId>
+          <afterCOId>FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00003</afterCOId>
+          <afterCOId>FR_CO_00004</afterCOId>
+          <afterCOId>FR_CO_00005</afterCOId>
+          <afterCOId>FR_CO_00006</afterCOId>
+          <afterCOId>FR_CO_00007</afterCOId>
+          <afterCOId>FR_CO_00008</afterCOId>
+          <afterCOId>FR_CO_00009</afterCOId>
+          <afterCOId>FR_CO_00010</afterCOId>
+          <afterCOId>FR_CO_00011</afterCOId>
+          <afterCOId>FR_CO_00012</afterCOId>
+          <afterCOId>FR_CO_00013</afterCOId>
+          <afterCOId>FR_CO_00014</afterCOId>
+          <afterCOId>FR_CO_00015</afterCOId>
+          <afterCOId>FR_CO_00016</afterCOId>
+          <afterCOId>FR_CO_00017</afterCOId>
+          <afterCOId>FR_CO_00018</afterCOId>
+          <afterCOId>FR_CO_00019</afterCOId>
+          <afterCOId>FR_CO_00020</afterCOId>
+          <afterCOId>FR_CO_00021</afterCOId>
+          <afterCOId>FR_CO_00022</afterCOId>
+          <afterCOId>FR_CO_00023</afterCOId>
+          <afterCOId>FR_CO_00024</afterCOId>
+          <afterCOId>FR_CO_00025</afterCOId>
+          <afterCOId>FR_CO_00026</afterCOId>
+          <afterCOId>FR_CO_00027</afterCOId>
+          <afterCOId>FR_CO_00028</afterCOId>
+          <afterCOId>FR_CO_00029</afterCOId>
+          <afterCOId>FR_CO_00030</afterCOId>
+          <afterCOId>FR_CO_00031</afterCOId>
+          <afterCOId>FR_CO_00033</afterCOId>
+          <afterCOId>FR_CO_00034</afterCOId>
+          <afterCOId>FR_CO_00035</afterCOId>
+          <afterCOId>FR_CO_00036</afterCOId>
+          <afterCOId>FR_CO_00037</afterCOId>
+          <afterCOId>FR_CO_00039</afterCOId>
+          <afterCOId>FR_CO_00040</afterCOId>
+          <afterCOId>FR_CO_00041</afterCOId>
+          <afterCOId>FR_CO_00042</afterCOId>
+          <afterCOId>FR_CO_00043</afterCOId>
+          <afterCOId>FR_CO_00044</afterCOId>
+          <afterCOId>FR_CO_00045</afterCOId>
+        </afterCOList>
+        <action type="STATUS">
+          <branch elementName="TRC-2A-2B" from="FVIGY 1" to="FVIGY 1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="CPL-1B-2B" from="FVIGY 1" to="FVIGY 1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-1A-1B" from="FVIGY 1" to="FVIGY 1"/>
+          <value>CLOSE</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="CPL-1A-2A" from="FVIGY 1" to="FVIGY 1"/>
+          <value>CLOSE</value>
+        </action>
+      </actionsSet>
+    </complexVariant>
+    <complexVariant id="FR_RA_00031" name="TOP_2N_BEZAUMONT_CRA">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <tsoOrigin>FR</tsoOrigin>
+      <actionsSet>
+        <preventive>false</preventive>
+        <curative>true</curative>
+        <enforced>false</enforced>
+        <afterCOList>
+          <afterCOId>BE-FR_CO_00002</afterCOId>
+          <afterCOId>BE-FR_CO_00002_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00003</afterCOId>
+          <afterCOId>BE-FR_CO_00003_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00004</afterCOId>
+          <afterCOId>BE-FR_CO_00004_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00005</afterCOId>
+          <afterCOId>BE-FR_CO_00005_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00008</afterCOId>
+          <afterCOId>BE-FR_CO_00008_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00011</afterCOId>
+          <afterCOId>CH-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00002</afterCOId>
+          <afterCOId>D7-FR_CO_00001</afterCOId>
+          <afterCOId>D7-FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00001</afterCOId>
+          <afterCOId>FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00003</afterCOId>
+          <afterCOId>FR_CO_00004</afterCOId>
+          <afterCOId>FR_CO_00005</afterCOId>
+          <afterCOId>FR_CO_00006</afterCOId>
+          <afterCOId>FR_CO_00007</afterCOId>
+          <afterCOId>FR_CO_00008</afterCOId>
+          <afterCOId>FR_CO_00009</afterCOId>
+          <afterCOId>FR_CO_00010</afterCOId>
+          <afterCOId>FR_CO_00011</afterCOId>
+          <afterCOId>FR_CO_00012</afterCOId>
+          <afterCOId>FR_CO_00013</afterCOId>
+          <afterCOId>FR_CO_00014</afterCOId>
+          <afterCOId>FR_CO_00015</afterCOId>
+          <afterCOId>FR_CO_00016</afterCOId>
+          <afterCOId>FR_CO_00017</afterCOId>
+          <afterCOId>FR_CO_00018</afterCOId>
+          <afterCOId>FR_CO_00019</afterCOId>
+          <afterCOId>FR_CO_00020</afterCOId>
+          <afterCOId>FR_CO_00021</afterCOId>
+          <afterCOId>FR_CO_00022</afterCOId>
+          <afterCOId>FR_CO_00023</afterCOId>
+          <afterCOId>FR_CO_00024</afterCOId>
+          <afterCOId>FR_CO_00025</afterCOId>
+          <afterCOId>FR_CO_00026</afterCOId>
+          <afterCOId>FR_CO_00027</afterCOId>
+          <afterCOId>FR_CO_00028</afterCOId>
+          <afterCOId>FR_CO_00029</afterCOId>
+          <afterCOId>FR_CO_00030</afterCOId>
+          <afterCOId>FR_CO_00031</afterCOId>
+          <afterCOId>FR_CO_00033</afterCOId>
+          <afterCOId>FR_CO_00034</afterCOId>
+          <afterCOId>FR_CO_00035</afterCOId>
+          <afterCOId>FR_CO_00036</afterCOId>
+          <afterCOId>FR_CO_00037</afterCOId>
+          <afterCOId>FR_CO_00038</afterCOId>
+          <afterCOId>FR_CO_00039</afterCOId>
+          <afterCOId>FR_CO_00040</afterCOId>
+          <afterCOId>FR_CO_00041</afterCOId>
+          <afterCOId>FR_CO_00042</afterCOId>
+          <afterCOId>FR_CO_00043</afterCOId>
+          <afterCOId>FR_CO_00044</afterCOId>
+          <afterCOId>FR_CO_00045</afterCOId>
+        </afterCOList>
+        <action type="STATUS">
+          <branch elementName="CPL-1-2" from="FBEZAU1" to="FBEZAU1"/>
+          <value>OPEN</value>
+        </action>
+      </actionsSet>
+    </complexVariant>
+    <complexVariant id="FR_RA_00068" name="TOP_2N_BEZAUMONT_PRA">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <tsoOrigin>FR</tsoOrigin>
+      <actionsSet>
+        <preventive>true</preventive>
+        <curative>false</curative>
+        <enforced>false</enforced>
+        <action type="STATUS">
+          <branch elementName="CPL-1-2" from="FBEZAU1" to="FBEZAU1"/>
+          <value>OPEN</value>
+        </action>
+      </actionsSet>
+    </complexVariant>
+    <complexVariant id="FR_RA_00020" name="TOP_2N_LONNY_tronconnement_CRA">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <tsoOrigin>FR</tsoOrigin>
+      <actionsSet>
+        <preventive>false</preventive>
+        <curative>true</curative>
+        <enforced>false</enforced>
+        <afterCOList>
+          <afterCOId>BE-FR_CO_00002</afterCOId>
+          <afterCOId>BE-FR_CO_00002_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00003</afterCOId>
+          <afterCOId>BE-FR_CO_00003_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00004</afterCOId>
+          <afterCOId>BE-FR_CO_00004_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00005</afterCOId>
+          <afterCOId>BE-FR_CO_00005_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00008</afterCOId>
+          <afterCOId>BE-FR_CO_00008_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00011</afterCOId>
+          <afterCOId>CH-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00002</afterCOId>
+          <afterCOId>D7-FR_CO_00001</afterCOId>
+          <afterCOId>D7-FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00001</afterCOId>
+          <afterCOId>FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00003</afterCOId>
+          <afterCOId>FR_CO_00004</afterCOId>
+          <afterCOId>FR_CO_00005</afterCOId>
+          <afterCOId>FR_CO_00006</afterCOId>
+          <afterCOId>FR_CO_00007</afterCOId>
+          <afterCOId>FR_CO_00008</afterCOId>
+          <afterCOId>FR_CO_00009</afterCOId>
+          <afterCOId>FR_CO_00010</afterCOId>
+          <afterCOId>FR_CO_00011</afterCOId>
+          <afterCOId>FR_CO_00012</afterCOId>
+          <afterCOId>FR_CO_00013</afterCOId>
+          <afterCOId>FR_CO_00014</afterCOId>
+          <afterCOId>FR_CO_00015</afterCOId>
+          <afterCOId>FR_CO_00016</afterCOId>
+          <afterCOId>FR_CO_00017</afterCOId>
+          <afterCOId>FR_CO_00018</afterCOId>
+          <afterCOId>FR_CO_00019</afterCOId>
+          <afterCOId>FR_CO_00020</afterCOId>
+          <afterCOId>FR_CO_00021</afterCOId>
+          <afterCOId>FR_CO_00022</afterCOId>
+          <afterCOId>FR_CO_00023</afterCOId>
+          <afterCOId>FR_CO_00024</afterCOId>
+          <afterCOId>FR_CO_00025</afterCOId>
+          <afterCOId>FR_CO_00026</afterCOId>
+          <afterCOId>FR_CO_00027</afterCOId>
+          <afterCOId>FR_CO_00028</afterCOId>
+          <afterCOId>FR_CO_00029</afterCOId>
+          <afterCOId>FR_CO_00030</afterCOId>
+          <afterCOId>FR_CO_00031</afterCOId>
+          <afterCOId>FR_CO_00033</afterCOId>
+          <afterCOId>FR_CO_00034</afterCOId>
+          <afterCOId>FR_CO_00035</afterCOId>
+          <afterCOId>FR_CO_00036</afterCOId>
+          <afterCOId>FR_CO_00037</afterCOId>
+          <afterCOId>FR_CO_00038</afterCOId>
+          <afterCOId>FR_CO_00039</afterCOId>
+          <afterCOId>FR_CO_00040</afterCOId>
+          <afterCOId>FR_CO_00041</afterCOId>
+          <afterCOId>FR_CO_00042</afterCOId>
+          <afterCOId>FR_CO_00043</afterCOId>
+          <afterCOId>FR_CO_00044</afterCOId>
+          <afterCOId>FR_CO_00045</afterCOId>
+        </afterCOList>
+        <action type="STATUS">
+          <branch elementName="CPL-1B-2B" from="FLONNY1" to="FLONNY1"/>
+          <value>CLOSE</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-2B-2A" from="FLONNY1" to="FLONNY1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-1B-1A" from="FLONNY1" to="FLONNY1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="CPL-1A-2A" from="FLONNY1" to="FLONNY1"/>
+          <value>CLOSE</value>
+        </action>
+      </actionsSet>
+    </complexVariant>
+    <complexVariant id="FR_RA_00019" name="TOP_2N_LONNY_tronconnement_PRA">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <tsoOrigin>FR</tsoOrigin>
+      <actionsSet>
+        <preventive>true</preventive>
+        <curative>false</curative>
+        <enforced>false</enforced>
+        <action type="STATUS">
+          <branch elementName="CPL-1B-2B" from="FLONNY1" to="FLONNY1"/>
+          <value>CLOSE</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-2B-2A" from="FLONNY1" to="FLONNY1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-1B-1A" from="FLONNY1" to="FLONNY1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="CPL-1A-2A" from="FLONNY1" to="FLONNY1"/>
+          <value>CLOSE</value>
+        </action>
+      </actionsSet>
+    </complexVariant>
+    <complexVariant id="FR_RA_00114" name="TOP_COMPLEX_AVELIN_quarterbar2A_CRA">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <tsoOrigin>FR</tsoOrigin>
+      <actionsSet>
+        <preventive>false</preventive>
+        <curative>true</curative>
+        <enforced>false</enforced>
+        <afterCOList>
+          <afterCOId>BE-FR_CO_00002</afterCOId>
+          <afterCOId>BE-FR_CO_00002_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00003</afterCOId>
+          <afterCOId>BE-FR_CO_00003_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00004</afterCOId>
+          <afterCOId>BE-FR_CO_00004_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00008</afterCOId>
+          <afterCOId>BE-FR_CO_00008_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00011</afterCOId>
+          <afterCOId>CH-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00002</afterCOId>
+          <afterCOId>D7-FR_CO_00001</afterCOId>
+          <afterCOId>D7-FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00001</afterCOId>
+          <afterCOId>FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00003</afterCOId>
+          <afterCOId>FR_CO_00004</afterCOId>
+          <afterCOId>FR_CO_00005</afterCOId>
+          <afterCOId>FR_CO_00006</afterCOId>
+          <afterCOId>FR_CO_00007</afterCOId>
+          <afterCOId>FR_CO_00008</afterCOId>
+          <afterCOId>FR_CO_00009</afterCOId>
+          <afterCOId>FR_CO_00010</afterCOId>
+          <afterCOId>FR_CO_00011</afterCOId>
+          <afterCOId>FR_CO_00012</afterCOId>
+          <afterCOId>FR_CO_00013</afterCOId>
+          <afterCOId>FR_CO_00014</afterCOId>
+          <afterCOId>FR_CO_00015</afterCOId>
+          <afterCOId>FR_CO_00016</afterCOId>
+          <afterCOId>FR_CO_00017</afterCOId>
+          <afterCOId>FR_CO_00018</afterCOId>
+          <afterCOId>FR_CO_00019</afterCOId>
+          <afterCOId>FR_CO_00020</afterCOId>
+          <afterCOId>FR_CO_00021</afterCOId>
+          <afterCOId>FR_CO_00022</afterCOId>
+          <afterCOId>FR_CO_00023</afterCOId>
+          <afterCOId>FR_CO_00024</afterCOId>
+          <afterCOId>FR_CO_00025</afterCOId>
+          <afterCOId>FR_CO_00026</afterCOId>
+          <afterCOId>FR_CO_00027</afterCOId>
+          <afterCOId>FR_CO_00028</afterCOId>
+          <afterCOId>FR_CO_00029</afterCOId>
+          <afterCOId>FR_CO_00030</afterCOId>
+          <afterCOId>FR_CO_00031</afterCOId>
+          <afterCOId>FR_CO_00033</afterCOId>
+          <afterCOId>FR_CO_00034</afterCOId>
+          <afterCOId>FR_CO_00035</afterCOId>
+          <afterCOId>FR_CO_00036</afterCOId>
+          <afterCOId>FR_CO_00037</afterCOId>
+          <afterCOId>FR_CO_00038</afterCOId>
+          <afterCOId>FR_CO_00039</afterCOId>
+          <afterCOId>FR_CO_00040</afterCOId>
+          <afterCOId>FR_CO_00041</afterCOId>
+          <afterCOId>FR_CO_00042</afterCOId>
+          <afterCOId>FR_CO_00043</afterCOId>
+          <afterCOId>FR_CO_00044</afterCOId>
+          <afterCOId>FR_CO_00045</afterCOId>
+        </afterCOList>
+        <action type="STATUS">
+          <branch elementName="CPL-1A-2A" from="FAVELI1" to="FAVELI1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-2B-2A" from="FAVELI1" to="FAVELI1"/>
+          <value>OPEN</value>
+        </action>
+      </actionsSet>
+    </complexVariant>
+    <complexVariant id="FR_RA_00024" name="TOP_COMPLEX_VIGY_quarterbar2A_CRA">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <tsoOrigin>FR</tsoOrigin>
+      <actionsSet>
+        <preventive>false</preventive>
+        <curative>true</curative>
+        <enforced>false</enforced>
+        <afterCOList>
+          <afterCOId>BE-FR_CO_00002</afterCOId>
+          <afterCOId>BE-FR_CO_00002_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00003</afterCOId>
+          <afterCOId>BE-FR_CO_00003_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00004</afterCOId>
+          <afterCOId>BE-FR_CO_00004_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00005</afterCOId>
+          <afterCOId>BE-FR_CO_00005_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00008</afterCOId>
+          <afterCOId>BE-FR_CO_00008_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00011</afterCOId>
+          <afterCOId>CH-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00002</afterCOId>
+          <afterCOId>D7-FR_CO_00001</afterCOId>
+          <afterCOId>FR_CO_00001</afterCOId>
+          <afterCOId>FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00003</afterCOId>
+          <afterCOId>FR_CO_00004</afterCOId>
+          <afterCOId>FR_CO_00005</afterCOId>
+          <afterCOId>FR_CO_00006</afterCOId>
+          <afterCOId>FR_CO_00007</afterCOId>
+          <afterCOId>FR_CO_00008</afterCOId>
+          <afterCOId>FR_CO_00009</afterCOId>
+          <afterCOId>FR_CO_00010</afterCOId>
+          <afterCOId>FR_CO_00011</afterCOId>
+          <afterCOId>FR_CO_00012</afterCOId>
+          <afterCOId>FR_CO_00013</afterCOId>
+          <afterCOId>FR_CO_00014</afterCOId>
+          <afterCOId>FR_CO_00015</afterCOId>
+          <afterCOId>FR_CO_00016</afterCOId>
+          <afterCOId>FR_CO_00017</afterCOId>
+          <afterCOId>FR_CO_00018</afterCOId>
+          <afterCOId>FR_CO_00019</afterCOId>
+          <afterCOId>FR_CO_00020</afterCOId>
+          <afterCOId>FR_CO_00021</afterCOId>
+          <afterCOId>FR_CO_00022</afterCOId>
+          <afterCOId>FR_CO_00023</afterCOId>
+          <afterCOId>FR_CO_00024</afterCOId>
+          <afterCOId>FR_CO_00025</afterCOId>
+          <afterCOId>FR_CO_00026</afterCOId>
+          <afterCOId>FR_CO_00027</afterCOId>
+          <afterCOId>FR_CO_00028</afterCOId>
+          <afterCOId>FR_CO_00029</afterCOId>
+          <afterCOId>FR_CO_00030</afterCOId>
+          <afterCOId>FR_CO_00031</afterCOId>
+          <afterCOId>FR_CO_00033</afterCOId>
+          <afterCOId>FR_CO_00034</afterCOId>
+          <afterCOId>FR_CO_00035</afterCOId>
+          <afterCOId>FR_CO_00036</afterCOId>
+          <afterCOId>FR_CO_00037</afterCOId>
+          <afterCOId>FR_CO_00038</afterCOId>
+          <afterCOId>FR_CO_00040</afterCOId>
+          <afterCOId>FR_CO_00041</afterCOId>
+          <afterCOId>FR_CO_00042</afterCOId>
+          <afterCOId>FR_CO_00043</afterCOId>
+          <afterCOId>FR_CO_00044</afterCOId>
+          <afterCOId>FR_CO_00045</afterCOId>
+        </afterCOList>
+        <action type="STATUS">
+          <branch elementName="CPL-1A-2A" from="FVIGY 1" to="FVIGY 1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-1A-1B" from="FVIGY 1" to="FVIGY 1"/>
+          <value>CLOSE</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-2A-2B" from="FVIGY 1" to="FVIGY 1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="CPL-1B-2B" from="FVIGY 1" to="FVIGY 1"/>
+          <value>CLOSE</value>
+        </action>
+      </actionsSet>
+    </complexVariant>
+    <complexVariant id="FR_RA_00013" name="TOP_COMPLEX_MASTAING_quarterbar1B_CRA">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <tsoOrigin>FR</tsoOrigin>
+      <actionsSet>
+        <preventive>false</preventive>
+        <curative>true</curative>
+        <enforced>false</enforced>
+        <afterCOList>
+          <afterCOId>BE-FR_CO_00002</afterCOId>
+          <afterCOId>BE-FR_CO_00002_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00003</afterCOId>
+          <afterCOId>BE-FR_CO_00003_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00004</afterCOId>
+          <afterCOId>BE-FR_CO_00004_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00005</afterCOId>
+          <afterCOId>BE-FR_CO_00005_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00008_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00011</afterCOId>
+          <afterCOId>CH-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00002</afterCOId>
+          <afterCOId>D7-FR_CO_00001</afterCOId>
+          <afterCOId>D7-FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00001</afterCOId>
+          <afterCOId>FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00003</afterCOId>
+          <afterCOId>FR_CO_00004</afterCOId>
+          <afterCOId>FR_CO_00005</afterCOId>
+          <afterCOId>FR_CO_00006</afterCOId>
+          <afterCOId>FR_CO_00007</afterCOId>
+          <afterCOId>FR_CO_00008</afterCOId>
+          <afterCOId>FR_CO_00009</afterCOId>
+          <afterCOId>FR_CO_00010</afterCOId>
+          <afterCOId>FR_CO_00011</afterCOId>
+          <afterCOId>FR_CO_00012</afterCOId>
+          <afterCOId>FR_CO_00013</afterCOId>
+          <afterCOId>FR_CO_00014</afterCOId>
+          <afterCOId>FR_CO_00015</afterCOId>
+          <afterCOId>FR_CO_00016</afterCOId>
+          <afterCOId>FR_CO_00017</afterCOId>
+          <afterCOId>FR_CO_00018</afterCOId>
+          <afterCOId>FR_CO_00019</afterCOId>
+          <afterCOId>FR_CO_00020</afterCOId>
+          <afterCOId>FR_CO_00021</afterCOId>
+          <afterCOId>FR_CO_00022</afterCOId>
+          <afterCOId>FR_CO_00023</afterCOId>
+          <afterCOId>FR_CO_00024</afterCOId>
+          <afterCOId>FR_CO_00025</afterCOId>
+          <afterCOId>FR_CO_00026</afterCOId>
+          <afterCOId>FR_CO_00027</afterCOId>
+          <afterCOId>FR_CO_00028</afterCOId>
+          <afterCOId>FR_CO_00029</afterCOId>
+          <afterCOId>FR_CO_00030</afterCOId>
+          <afterCOId>FR_CO_00031</afterCOId>
+          <afterCOId>FR_CO_00033</afterCOId>
+          <afterCOId>FR_CO_00034</afterCOId>
+          <afterCOId>FR_CO_00035</afterCOId>
+          <afterCOId>FR_CO_00036</afterCOId>
+          <afterCOId>FR_CO_00037</afterCOId>
+          <afterCOId>FR_CO_00038</afterCOId>
+          <afterCOId>FR_CO_00039</afterCOId>
+          <afterCOId>FR_CO_00040</afterCOId>
+          <afterCOId>FR_CO_00041</afterCOId>
+          <afterCOId>FR_CO_00042</afterCOId>
+          <afterCOId>FR_CO_00043</afterCOId>
+          <afterCOId>FR_CO_00044</afterCOId>
+          <afterCOId>FR_CO_00045</afterCOId>
+        </afterCOList>
+        <action type="STATUS">
+          <branch elementName="CPL-1A-2A" from="FMASTA1" to="FMASTA1"/>
+          <value>CLOSE</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="CPL-1B-2B" from="FMASTA1" to="FMASTA1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-2A-2B" from="FMASTA1" to="FMASTA1"/>
+          <value>CLOSE</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-1A-1B" from="FMASTA1" to="FMASTA1"/>
+          <value>OPEN</value>
+        </action>
+      </actionsSet>
+    </complexVariant>
+    <complexVariant id="FR_RA_00120" name="TOP_2N_MASTAING_couplage_CRA">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <tsoOrigin>FR</tsoOrigin>
+      <actionsSet>
+        <preventive>false</preventive>
+        <curative>true</curative>
+        <enforced>false</enforced>
+        <afterCOList>
+          <afterCOId>BE-FR_CO_00002</afterCOId>
+          <afterCOId>BE-FR_CO_00002_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00003</afterCOId>
+          <afterCOId>BE-FR_CO_00003_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00004</afterCOId>
+          <afterCOId>BE-FR_CO_00004_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00005</afterCOId>
+          <afterCOId>BE-FR_CO_00005_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00008</afterCOId>
+          <afterCOId>BE-FR_CO_00008_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00011</afterCOId>
+          <afterCOId>CH-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00002</afterCOId>
+          <afterCOId>D7-FR_CO_00001</afterCOId>
+          <afterCOId>D7-FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00001</afterCOId>
+          <afterCOId>FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00003</afterCOId>
+          <afterCOId>FR_CO_00004</afterCOId>
+          <afterCOId>FR_CO_00005</afterCOId>
+          <afterCOId>FR_CO_00006</afterCOId>
+          <afterCOId>FR_CO_00007</afterCOId>
+          <afterCOId>FR_CO_00008</afterCOId>
+          <afterCOId>FR_CO_00009</afterCOId>
+          <afterCOId>FR_CO_00010</afterCOId>
+          <afterCOId>FR_CO_00011</afterCOId>
+          <afterCOId>FR_CO_00012</afterCOId>
+          <afterCOId>FR_CO_00013</afterCOId>
+          <afterCOId>FR_CO_00014</afterCOId>
+          <afterCOId>FR_CO_00015</afterCOId>
+          <afterCOId>FR_CO_00016</afterCOId>
+          <afterCOId>FR_CO_00017</afterCOId>
+          <afterCOId>FR_CO_00018</afterCOId>
+          <afterCOId>FR_CO_00019</afterCOId>
+          <afterCOId>FR_CO_00020</afterCOId>
+          <afterCOId>FR_CO_00021</afterCOId>
+          <afterCOId>FR_CO_00022</afterCOId>
+          <afterCOId>FR_CO_00023</afterCOId>
+          <afterCOId>FR_CO_00024</afterCOId>
+          <afterCOId>FR_CO_00025</afterCOId>
+          <afterCOId>FR_CO_00026</afterCOId>
+          <afterCOId>FR_CO_00027</afterCOId>
+          <afterCOId>FR_CO_00028</afterCOId>
+          <afterCOId>FR_CO_00029</afterCOId>
+          <afterCOId>FR_CO_00030</afterCOId>
+          <afterCOId>FR_CO_00031</afterCOId>
+          <afterCOId>FR_CO_00033</afterCOId>
+          <afterCOId>FR_CO_00034</afterCOId>
+          <afterCOId>FR_CO_00035</afterCOId>
+          <afterCOId>FR_CO_00036</afterCOId>
+          <afterCOId>FR_CO_00037</afterCOId>
+          <afterCOId>FR_CO_00038</afterCOId>
+          <afterCOId>FR_CO_00039</afterCOId>
+          <afterCOId>FR_CO_00040</afterCOId>
+          <afterCOId>FR_CO_00041</afterCOId>
+          <afterCOId>FR_CO_00042</afterCOId>
+          <afterCOId>FR_CO_00043</afterCOId>
+          <afterCOId>FR_CO_00044</afterCOId>
+          <afterCOId>FR_CO_00045</afterCOId>
+        </afterCOList>
+        <action type="STATUS">
+          <branch elementName="CPL-1A-2A" from="FMASTA1" to="FMASTA1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-1A-1B" from="FMASTA1" to="FMASTA1"/>
+          <value>CLOSE</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-2A-2B" from="FMASTA1" to="FMASTA1"/>
+          <value>CLOSE</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="CPL-1B-2B" from="FMASTA1" to="FMASTA1"/>
+          <value>OPEN</value>
+        </action>
+      </actionsSet>
+    </complexVariant>
+    <complexVariant id="FR_RA_00119" name="TOP_2N_MASTAING_couplage_PRA">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <tsoOrigin>FR</tsoOrigin>
+      <actionsSet>
+        <preventive>true</preventive>
+        <curative>false</curative>
+        <enforced>false</enforced>
+        <action type="STATUS">
+          <branch elementName="CPL-1A-2A" from="FMASTA1" to="FMASTA1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-1A-1B" from="FMASTA1" to="FMASTA1"/>
+          <value>CLOSE</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-2A-2B" from="FMASTA1" to="FMASTA1"/>
+          <value>CLOSE</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="CPL-1B-2B" from="FMASTA1" to="FMASTA1"/>
+          <value>OPEN</value>
+        </action>
+      </actionsSet>
+    </complexVariant>
+    <complexVariant id="FR_RA_00011" name="TOP_2N_GAVRELLE_CRA">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <tsoOrigin>FR</tsoOrigin>
+      <actionsSet>
+        <preventive>false</preventive>
+        <curative>true</curative>
+        <enforced>false</enforced>
+        <afterCOList>
+          <afterCOId>BE-FR_CO_00002</afterCOId>
+          <afterCOId>BE-FR_CO_00002_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00003</afterCOId>
+          <afterCOId>BE-FR_CO_00003_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00004</afterCOId>
+          <afterCOId>BE-FR_CO_00004_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00005</afterCOId>
+          <afterCOId>BE-FR_CO_00005_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00008</afterCOId>
+          <afterCOId>BE-FR_CO_00008_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00011</afterCOId>
+          <afterCOId>CH-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00002</afterCOId>
+          <afterCOId>D7-FR_CO_00001</afterCOId>
+          <afterCOId>D7-FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00001</afterCOId>
+          <afterCOId>FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00003</afterCOId>
+          <afterCOId>FR_CO_00004</afterCOId>
+          <afterCOId>FR_CO_00005</afterCOId>
+          <afterCOId>FR_CO_00006</afterCOId>
+          <afterCOId>FR_CO_00007</afterCOId>
+          <afterCOId>FR_CO_00008</afterCOId>
+          <afterCOId>FR_CO_00009</afterCOId>
+          <afterCOId>FR_CO_00010</afterCOId>
+          <afterCOId>FR_CO_00011</afterCOId>
+          <afterCOId>FR_CO_00012</afterCOId>
+          <afterCOId>FR_CO_00013</afterCOId>
+          <afterCOId>FR_CO_00014</afterCOId>
+          <afterCOId>FR_CO_00015</afterCOId>
+          <afterCOId>FR_CO_00016</afterCOId>
+          <afterCOId>FR_CO_00017</afterCOId>
+          <afterCOId>FR_CO_00018</afterCOId>
+          <afterCOId>FR_CO_00019</afterCOId>
+          <afterCOId>FR_CO_00020</afterCOId>
+          <afterCOId>FR_CO_00021</afterCOId>
+          <afterCOId>FR_CO_00022</afterCOId>
+          <afterCOId>FR_CO_00023</afterCOId>
+          <afterCOId>FR_CO_00024</afterCOId>
+          <afterCOId>FR_CO_00025</afterCOId>
+          <afterCOId>FR_CO_00026</afterCOId>
+          <afterCOId>FR_CO_00027</afterCOId>
+          <afterCOId>FR_CO_00028</afterCOId>
+          <afterCOId>FR_CO_00029</afterCOId>
+          <afterCOId>FR_CO_00030</afterCOId>
+          <afterCOId>FR_CO_00031</afterCOId>
+          <afterCOId>FR_CO_00033</afterCOId>
+          <afterCOId>FR_CO_00034</afterCOId>
+          <afterCOId>FR_CO_00035</afterCOId>
+          <afterCOId>FR_CO_00036</afterCOId>
+          <afterCOId>FR_CO_00037</afterCOId>
+          <afterCOId>FR_CO_00038</afterCOId>
+          <afterCOId>FR_CO_00039</afterCOId>
+          <afterCOId>FR_CO_00040</afterCOId>
+          <afterCOId>FR_CO_00041</afterCOId>
+          <afterCOId>FR_CO_00042</afterCOId>
+          <afterCOId>FR_CO_00043</afterCOId>
+          <afterCOId>FR_CO_00044</afterCOId>
+          <afterCOId>FR_CO_00045</afterCOId>
+        </afterCOList>
+        <action type="STATUS">
+          <branch elementName="CPL-1.1-2.1" from="FGAVRE1" to="FGAVRE1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="CPL-1.2-2.2" from="FGAVRE1" to="FGAVRE1"/>
+          <value>OPEN</value>
+        </action>
+      </actionsSet>
+    </complexVariant>
+    <complexVariant id="FR_RA_00010" name="TOP_2N_GAVRELLE_PRA">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <tsoOrigin>FR</tsoOrigin>
+      <actionsSet>
+        <preventive>true</preventive>
+        <curative>false</curative>
+        <enforced>false</enforced>
+        <action type="STATUS">
+          <branch elementName="CPL-1.1-2.1" from="FGAVRE1" to="FGAVRE1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="CPL-1.2-2.2" from="FGAVRE1" to="FGAVRE1"/>
+          <value>OPEN</value>
+        </action>
+      </actionsSet>
+    </complexVariant>
+    <complexVariant id="FR_RA_00017" name="TOP_COMPLEX_LONNY_quarterbar1B_CRA">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <tsoOrigin>FR</tsoOrigin>
+      <actionsSet>
+        <preventive>false</preventive>
+        <curative>true</curative>
+        <enforced>false</enforced>
+        <afterCOList>
+          <afterCOId>BE-FR_CO_00002_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00003</afterCOId>
+          <afterCOId>BE-FR_CO_00003_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00004</afterCOId>
+          <afterCOId>BE-FR_CO_00004_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00005</afterCOId>
+          <afterCOId>BE-FR_CO_00005_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00008</afterCOId>
+          <afterCOId>BE-FR_CO_00008_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00011</afterCOId>
+          <afterCOId>CH-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00002</afterCOId>
+          <afterCOId>D7-FR_CO_00001</afterCOId>
+          <afterCOId>D7-FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00001</afterCOId>
+          <afterCOId>FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00003</afterCOId>
+          <afterCOId>FR_CO_00004</afterCOId>
+          <afterCOId>FR_CO_00005</afterCOId>
+          <afterCOId>FR_CO_00006</afterCOId>
+          <afterCOId>FR_CO_00007</afterCOId>
+          <afterCOId>FR_CO_00008</afterCOId>
+          <afterCOId>FR_CO_00009</afterCOId>
+          <afterCOId>FR_CO_00010</afterCOId>
+          <afterCOId>FR_CO_00011</afterCOId>
+          <afterCOId>FR_CO_00012</afterCOId>
+          <afterCOId>FR_CO_00013</afterCOId>
+          <afterCOId>FR_CO_00014</afterCOId>
+          <afterCOId>FR_CO_00015</afterCOId>
+          <afterCOId>FR_CO_00016</afterCOId>
+          <afterCOId>FR_CO_00017</afterCOId>
+          <afterCOId>FR_CO_00018</afterCOId>
+          <afterCOId>FR_CO_00019</afterCOId>
+          <afterCOId>FR_CO_00020</afterCOId>
+          <afterCOId>FR_CO_00021</afterCOId>
+          <afterCOId>FR_CO_00022</afterCOId>
+          <afterCOId>FR_CO_00023</afterCOId>
+          <afterCOId>FR_CO_00024</afterCOId>
+          <afterCOId>FR_CO_00025</afterCOId>
+          <afterCOId>FR_CO_00026</afterCOId>
+          <afterCOId>FR_CO_00027</afterCOId>
+          <afterCOId>FR_CO_00028</afterCOId>
+          <afterCOId>FR_CO_00029</afterCOId>
+          <afterCOId>FR_CO_00030</afterCOId>
+          <afterCOId>FR_CO_00031</afterCOId>
+          <afterCOId>FR_CO_00033</afterCOId>
+          <afterCOId>FR_CO_00034</afterCOId>
+          <afterCOId>FR_CO_00035</afterCOId>
+          <afterCOId>FR_CO_00036</afterCOId>
+          <afterCOId>FR_CO_00037</afterCOId>
+          <afterCOId>FR_CO_00038</afterCOId>
+          <afterCOId>FR_CO_00039</afterCOId>
+          <afterCOId>FR_CO_00040</afterCOId>
+          <afterCOId>FR_CO_00041</afterCOId>
+          <afterCOId>FR_CO_00042</afterCOId>
+          <afterCOId>FR_CO_00043</afterCOId>
+          <afterCOId>FR_CO_00044</afterCOId>
+          <afterCOId>FR_CO_00045</afterCOId>
+        </afterCOList>
+        <action type="STATUS">
+          <branch elementName="TRC-2B-2A" from="FLONNY1" to="FLONNY1"/>
+          <value>CLOSE</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="CPL-1A-2A" from="FLONNY1" to="FLONNY1"/>
+          <value>CLOSE</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-1B-1A" from="FLONNY1" to="FLONNY1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="CPL-1B-2B" from="FLONNY1" to="FLONNY1"/>
+          <value>OPEN</value>
+        </action>
+      </actionsSet>
+    </complexVariant>
+    <complexVariant id="FR_RA_00009" name="TOP_2N_AVELIN_tronconnement_CRA">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <tsoOrigin>FR</tsoOrigin>
+      <actionsSet>
+        <preventive>false</preventive>
+        <curative>true</curative>
+        <enforced>false</enforced>
+        <afterCOList>
+          <afterCOId>BE-FR_CO_00002</afterCOId>
+          <afterCOId>BE-FR_CO_00002_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00003</afterCOId>
+          <afterCOId>BE-FR_CO_00003_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00004</afterCOId>
+          <afterCOId>BE-FR_CO_00004_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00005</afterCOId>
+          <afterCOId>BE-FR_CO_00005_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00008</afterCOId>
+          <afterCOId>BE-FR_CO_00008_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00011</afterCOId>
+          <afterCOId>CH-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00002</afterCOId>
+          <afterCOId>D7-FR_CO_00001</afterCOId>
+          <afterCOId>D7-FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00001</afterCOId>
+          <afterCOId>FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00003</afterCOId>
+          <afterCOId>FR_CO_00004</afterCOId>
+          <afterCOId>FR_CO_00005</afterCOId>
+          <afterCOId>FR_CO_00006</afterCOId>
+          <afterCOId>FR_CO_00007</afterCOId>
+          <afterCOId>FR_CO_00008</afterCOId>
+          <afterCOId>FR_CO_00009</afterCOId>
+          <afterCOId>FR_CO_00010</afterCOId>
+          <afterCOId>FR_CO_00011</afterCOId>
+          <afterCOId>FR_CO_00012</afterCOId>
+          <afterCOId>FR_CO_00013</afterCOId>
+          <afterCOId>FR_CO_00014</afterCOId>
+          <afterCOId>FR_CO_00015</afterCOId>
+          <afterCOId>FR_CO_00016</afterCOId>
+          <afterCOId>FR_CO_00017</afterCOId>
+          <afterCOId>FR_CO_00018</afterCOId>
+          <afterCOId>FR_CO_00019</afterCOId>
+          <afterCOId>FR_CO_00020</afterCOId>
+          <afterCOId>FR_CO_00021</afterCOId>
+          <afterCOId>FR_CO_00022</afterCOId>
+          <afterCOId>FR_CO_00023</afterCOId>
+          <afterCOId>FR_CO_00024</afterCOId>
+          <afterCOId>FR_CO_00025</afterCOId>
+          <afterCOId>FR_CO_00026</afterCOId>
+          <afterCOId>FR_CO_00027</afterCOId>
+          <afterCOId>FR_CO_00028</afterCOId>
+          <afterCOId>FR_CO_00029</afterCOId>
+          <afterCOId>FR_CO_00030</afterCOId>
+          <afterCOId>FR_CO_00031</afterCOId>
+          <afterCOId>FR_CO_00033</afterCOId>
+          <afterCOId>FR_CO_00034</afterCOId>
+          <afterCOId>FR_CO_00035</afterCOId>
+          <afterCOId>FR_CO_00036</afterCOId>
+          <afterCOId>FR_CO_00037</afterCOId>
+          <afterCOId>FR_CO_00038</afterCOId>
+          <afterCOId>FR_CO_00039</afterCOId>
+          <afterCOId>FR_CO_00040</afterCOId>
+          <afterCOId>FR_CO_00041</afterCOId>
+          <afterCOId>FR_CO_00042</afterCOId>
+          <afterCOId>FR_CO_00043</afterCOId>
+          <afterCOId>FR_CO_00044</afterCOId>
+          <afterCOId>FR_CO_00045</afterCOId>
+        </afterCOList>
+        <action type="STATUS">
+          <branch elementName="CPL-1B-2B" from="FAVELI1" to="FAVELI1"/>
+          <value>CLOSE</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="CPL-1A-2A" from="FAVELI1" to="FAVELI1"/>
+          <value>CLOSE</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-3B-3A" from="FAVELI1" to="FAVELI1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-2B-2A" from="FAVELI1" to="FAVELI1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-1B-1A" from="FAVELI1" to="FAVELI1"/>
+          <value>OPEN</value>
+        </action>
+      </actionsSet>
+    </complexVariant>
+    <complexVariant id="FR_RA_00008" name="TOP_2N_AVELIN_tronconnement_PRA">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <tsoOrigin>FR</tsoOrigin>
+      <actionsSet>
+        <preventive>true</preventive>
+        <curative>false</curative>
+        <enforced>false</enforced>
+        <action type="STATUS">
+          <branch elementName="CPL-1B-2B" from="FAVELI1" to="FAVELI1"/>
+          <value>CLOSE</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="CPL-1A-2A" from="FAVELI1" to="FAVELI1"/>
+          <value>CLOSE</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-3B-3A" from="FAVELI1" to="FAVELI1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-2B-2A" from="FAVELI1" to="FAVELI1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-1B-1A" from="FAVELI1" to="FAVELI1"/>
+          <value>OPEN</value>
+        </action>
+      </actionsSet>
+    </complexVariant>
+    <complexVariant id="FR_RA_00030" name="TOP_COMPLEX_MERY_quarterbar2A_CRA">
+      <timeInterval v="2023-07-02T22:00Z/2023-07-03T22:00Z"/>
+      <tsoOrigin>FR</tsoOrigin>
+      <actionsSet>
+        <preventive>false</preventive>
+        <curative>true</curative>
+        <enforced>false</enforced>
+        <afterCOList>
+          <afterCOId>BE-FR_CO_00002</afterCOId>
+          <afterCOId>BE-FR_CO_00002_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00003</afterCOId>
+          <afterCOId>BE-FR_CO_00003_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00004</afterCOId>
+          <afterCOId>BE-FR_CO_00004_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00005</afterCOId>
+          <afterCOId>BE-FR_CO_00005_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00008</afterCOId>
+          <afterCOId>BE-FR_CO_00008_temp</afterCOId>
+          <afterCOId>BE-FR_CO_00011</afterCOId>
+          <afterCOId>CH-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00001</afterCOId>
+          <afterCOId>D4-FR_CO_00002</afterCOId>
+          <afterCOId>D7-FR_CO_00001</afterCOId>
+          <afterCOId>D7-FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00001</afterCOId>
+          <afterCOId>FR_CO_00002</afterCOId>
+          <afterCOId>FR_CO_00003</afterCOId>
+          <afterCOId>FR_CO_00004</afterCOId>
+          <afterCOId>FR_CO_00005</afterCOId>
+          <afterCOId>FR_CO_00006</afterCOId>
+          <afterCOId>FR_CO_00007</afterCOId>
+          <afterCOId>FR_CO_00008</afterCOId>
+          <afterCOId>FR_CO_00009</afterCOId>
+          <afterCOId>FR_CO_00010</afterCOId>
+          <afterCOId>FR_CO_00011</afterCOId>
+          <afterCOId>FR_CO_00012</afterCOId>
+          <afterCOId>FR_CO_00013</afterCOId>
+          <afterCOId>FR_CO_00014</afterCOId>
+          <afterCOId>FR_CO_00015</afterCOId>
+          <afterCOId>FR_CO_00016</afterCOId>
+          <afterCOId>FR_CO_00017</afterCOId>
+          <afterCOId>FR_CO_00018</afterCOId>
+          <afterCOId>FR_CO_00019</afterCOId>
+          <afterCOId>FR_CO_00020</afterCOId>
+          <afterCOId>FR_CO_00021</afterCOId>
+          <afterCOId>FR_CO_00022</afterCOId>
+          <afterCOId>FR_CO_00023</afterCOId>
+          <afterCOId>FR_CO_00024</afterCOId>
+          <afterCOId>FR_CO_00025</afterCOId>
+          <afterCOId>FR_CO_00026</afterCOId>
+          <afterCOId>FR_CO_00027</afterCOId>
+          <afterCOId>FR_CO_00028</afterCOId>
+          <afterCOId>FR_CO_00029</afterCOId>
+          <afterCOId>FR_CO_00030</afterCOId>
+          <afterCOId>FR_CO_00031</afterCOId>
+          <afterCOId>FR_CO_00033</afterCOId>
+          <afterCOId>FR_CO_00034</afterCOId>
+          <afterCOId>FR_CO_00035</afterCOId>
+          <afterCOId>FR_CO_00036</afterCOId>
+          <afterCOId>FR_CO_00037</afterCOId>
+          <afterCOId>FR_CO_00038</afterCOId>
+          <afterCOId>FR_CO_00039</afterCOId>
+          <afterCOId>FR_CO_00040</afterCOId>
+          <afterCOId>FR_CO_00041</afterCOId>
+          <afterCOId>FR_CO_00042</afterCOId>
+          <afterCOId>FR_CO_00045</afterCOId>
+        </afterCOList>
+        <action type="STATUS">
+          <branch elementName="CPL-1B-2B" from="FM.SEI1" to="FM.SEI1"/>
+          <value>CLOSE</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="CPL-1A-2A" from="FM.SEI1" to="FM.SEI1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-2A-2B" from="FM.SEI1" to="FM.SEI1"/>
+          <value>OPEN</value>
+        </action>
+        <action type="STATUS">
+          <branch elementName="TRC-1A-1B" from="FM.SEI1" to="FM.SEI1"/>
+          <value>CLOSE</value>
+        </action>
+      </actionsSet>
+    </complexVariant>
+  </complexVariants>
+</FlowBasedConstraintDocument>

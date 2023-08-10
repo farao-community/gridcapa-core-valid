@@ -57,7 +57,9 @@
         <appender-ref ref="STDOUT"/>
     </root>
 
-    <logger name="com.powsybl" level="OFF"/>
+    <logger name="com.powsybl" level="DEBUG"/>
+    <logger name="com.powsybl.ucte.converter.UcteImporter" level="OFF"/>
+    <logger name="com.powsybl.iidm.modification.scalable" level="OFF"/>
     <logger name="com.rte_france.powsybl" level="OFF"/>
 
 </configuration>

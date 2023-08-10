@@ -68,7 +68,8 @@ public final class NetPositionsHandler {
                     if (scalable != null) {
                         ScalingParameters iterativeScalingParameters = new ScalingParameters();
                         iterativeScalingParameters.setIterative(true);
-                        scalable.scale(network, shift, iterativeScalingParameters);
+                        double scaled = scalable.scale(network, shift, iterativeScalingParameters);
+                        LOGGER.info("scaled {}", scaled);
                     }
                 }
             } catch (Exception e) {

@@ -89,7 +89,7 @@ public class StudyPointResult {
         this.period = period;
     }
 
-    enum Status {
+    public enum Status {
         NOT_STARTED,
         SUCCESS,
         ERROR

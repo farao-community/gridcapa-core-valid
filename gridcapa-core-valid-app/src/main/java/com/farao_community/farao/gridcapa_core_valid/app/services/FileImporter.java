@@ -24,6 +24,7 @@ import com.powsybl.iidm.network.Network;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -38,10 +39,12 @@ import java.util.List;
  */
 @Service
 public class FileImporter {
-    private final UrlValidationService urlValidationService;
+    @Autowired
+    private UrlValidationService urlValidationService;
     private static final Logger LOGGER = LoggerFactory.getLogger(FileImporter.class);
 
     public FileImporter(UrlValidationService urlValidationService) {
+        System.out.println("fileimp");
         this.urlValidationService = urlValidationService;
     }
 
@@ -72,9 +75,11 @@ public class FileImporter {
     }
 
     public List<StudyPoint> importStudyPoints(CoreValidFileResource studyPointsFileResource, OffsetDateTime timestamp) {
-        try (InputStream studyPointsStream = urlValidationService.openUrlStream(studyPointsFileResource.getUrl())) {
+        try {
+            URL url = new URL(studyPointsFileResource.getUrl());
+            InputStream inputStream = url.openStream();
             LOGGER.info("Import of study points from {} file for timestamp {} ", studyPointsFileResource.getFilename(), timestamp);
-            return StudyPointsImporter.importStudyPoints(studyPointsStream, timestamp);
+            return StudyPointsImporter.importStudyPoints(inputStream, timestamp);
         } catch (Exception e) {
             throw new CoreValidInvalidDataException(String.format("Cannot download study points file from URL '%s'", studyPointsFileResource.getUrl()), e);
         }

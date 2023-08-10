@@ -43,8 +43,8 @@ import java.util.stream.Collectors;
 @Component
 public class StudyPointService {
     private static final Logger LOGGER = LoggerFactory.getLogger(StudyPointService.class);
-    private static final double DEFAULT_PMAX = 9999.0;
-    private static final double DEFAULT_PMIN = -9999.0;
+    public static final double DEFAULT_PMAX = 9999.0;
+    public static final double DEFAULT_PMIN = -9999.0;
     private final MinioAdapter minioAdapter;
     private final AsynchronousRaoRunnerClient asynchronousRaoRunnerClient;
     private final LimitingBranchResultService limitingBranchResultService;
@@ -156,7 +156,7 @@ public class StudyPointService {
         result.setPeriod(String.valueOf(studyPoint.getPeriod()));
     }
 
-    private static class InitGenerator {
+    public static class InitGenerator {
         double pMin;
         double pMax;
 
