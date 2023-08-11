@@ -77,8 +77,8 @@ class NetPositionsHandlerTest {
         assertEquals(716.25, network.getGenerator("NNL1AA1 _generator").getTargetP(), 0.01);
         assertEquals(-1328.75, network.getGenerator("NNL2AA1 _generator").getTargetP(), 0.01);
         assertEquals(-612.5, network.getGenerator("NNL3AA1 _generator").getTargetP(), 0.01);
-        assertEquals(-600.0, network.getDanglingLineStream().filter(dl -> dl.getUcteXnodeCode().equals("XLI_OB1B")).findAny().get().getP0(), 0.01);
-        assertEquals(600.0, network.getDanglingLineStream().filter(dl -> dl.getUcteXnodeCode().equals("XLI_OB1A")).findAny().get().getP0(), 0.01);
+        assertEquals(600.0, network.getDanglingLineStream().filter(dl -> dl.getUcteXnodeCode().equals("XLI_OB1B")).findAny().get().getP0(), 0.01);
+        assertEquals(-600.0, network.getDanglingLineStream().filter(dl -> dl.getUcteXnodeCode().equals("XLI_OB1A")).findAny().get().getP0(), 0.01);
     }
 
     @Test
@@ -129,7 +129,7 @@ class NetPositionsHandlerTest {
         assertEquals(1425.0, network.getGenerator("NNL1AA1 _generator").getTargetP(), 0.01);
         assertEquals(325.0, network.getGenerator("NNL2AA1 _generator").getTargetP(), 0.01);
         assertEquals(1750.0, network.getGenerator("NNL3AA1 _generator").getTargetP(), 0.01);
-        assertEquals(234.0, network.getDanglingLineStream().filter(dl -> dl.getUcteXnodeCode().equals("XLI_OB1B")).findAny().get().getP0(), 0.01);
-        assertEquals(-234.0, network.getDanglingLineStream().filter(dl -> dl.getUcteXnodeCode().equals("XLI_OB1A")).findAny().get().getP0(), 0.01);
+        assertEquals(-234.0, network.getDanglingLineStream().filter(dl -> dl.getUcteXnodeCode().equals("XLI_OB1B")).findAny().get().getP0(), 0.01);
+        assertEquals(234.0, network.getDanglingLineStream().filter(dl -> dl.getUcteXnodeCode().equals("XLI_OB1A")).findAny().get().getP0(), 0.01);
     }
 }
