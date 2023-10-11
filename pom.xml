@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.farao-community.farao</groupId>
         <artifactId>farao-parent-ws</artifactId>
-        <version>1.4.0</version>
+        <version>1.5.0</version>
     </parent>
 
     <artifactId>gridcapa-core-valid</artifactId>
@@ -50,6 +50,18 @@
             <organization>RTE</organization>
             <organizationUrl>http://www.rte-france.com</organizationUrl>
         </developer>
+        <developer>
+            <name>Oualid ALOUI</name>
+            <email>oualid.aloui@rte-france.com</email>
+            <organization>RTE</organization>
+            <organizationUrl>http://www.rte-france.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Vincent BOCHET</name>
+            <email>vincent.bochet@rte-france.com</email>
+            <organization>RTE</organization>
+            <organizationUrl>http://www.rte-france.com</organizationUrl>
+        </developer>
     </developers>
 
     <modules>
@@ -63,8 +75,8 @@
         <apache.commons.version>1.9.0</apache.commons.version>
         <commons.lang.version>3.12.0</commons.lang.version>
         <commons.io.version>2.11.0</commons.io.version>
-        <farao.dependencies.version>1.19.0</farao.dependencies.version>
-        <gridcapa.rao.runner.starter.version>1.16.1</gridcapa.rao.runner.starter.version>
+        <farao.dependencies.version>1.20.0</farao.dependencies.version>
+        <gridcapa.rao.runner.starter.version>1.17.1</gridcapa.rao.runner.starter.version>
         <jackson-datatype.version>2.13.2</jackson-datatype.version>
         <jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
         <jaxb-runtime.version>2.4.0-b180830.0438</jaxb-runtime.version>
@@ -72,9 +84,9 @@
         <logstash.version>7.2</logstash.version>
         <maven.jaxb2.version>0.14.0</maven.jaxb2.version>
         <maven.jvnet.jaxb2-basics.version>1.11.1</maven.jvnet.jaxb2-basics.version>
-        <minio.adapter.version>1.0.0</minio.adapter.version>
+        <minio.adapter.version>1.1.1</minio.adapter.version>
         <opencsv.version>5.6</opencsv.version>
-        <task-manager.version>1.19.0</task-manager.version>
+        <task-manager.version>1.21.0</task-manager.version>
     </properties>
 
     <build>
