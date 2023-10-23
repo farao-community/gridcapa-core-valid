@@ -53,11 +53,15 @@ public final class NetPositionsHandler {
             try {
                 if (studyPointZoneId.equals("NP_BE_ALEGrO")) {
                     // XLI_OB1B
-                    Optional<DanglingLine> danglingLine = network.getDanglingLineStream().filter(dl -> dl.getUcteXnodeCode().equals("XLI_OB1B")).findAny();
+                    Optional<DanglingLine> danglingLine = network.getDanglingLineStream()
+                            .filter(dl -> dl.getPairingKey().equals("XLI_OB1B"))
+                            .findAny();
                     danglingLine.ifPresent(dl -> dl.setP0(-netPosition));
                 } else if (studyPointZoneId.equals("NP_DE_ALEGrO")) {
                     // XLI_OB1A
-                    Optional<DanglingLine> danglingLine = network.getDanglingLineStream().filter(dl -> dl.getUcteXnodeCode().equals("XLI_OB1A")).findAny();
+                    Optional<DanglingLine> danglingLine = network.getDanglingLineStream()
+                            .filter(dl -> dl.getPairingKey().equals("XLI_OB1A"))
+                            .findAny();
                     danglingLine.ifPresent(dl -> dl.setP0(-netPosition));
                 } else {
                     String zone = CoreAreasId.ID_MAPPING.get(studyPointZoneId);
