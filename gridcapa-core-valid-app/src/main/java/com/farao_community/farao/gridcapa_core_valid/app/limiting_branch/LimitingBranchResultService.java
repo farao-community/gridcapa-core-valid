@@ -17,7 +17,6 @@ import com.farao_community.farao.data.crac_api.cnec.Side;
 import com.farao_community.farao.data.crac_api.network_action.NetworkAction;
 import com.farao_community.farao.data.crac_api.range_action.RangeAction;
 import com.farao_community.farao.data.crac_creation.creator.fb_constraint.crac_creator.FbConstraintCreationContext;
-import com.farao_community.farao.data.rao_result_api.OptimizationState;
 import com.farao_community.farao.data.rao_result_api.RaoResult;
 import com.farao_community.farao.data.rao_result_json.RaoResultImporter;
 import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInvalidDataException;
@@ -25,7 +24,12 @@ import com.farao_community.farao.gridcapa_core_valid.app.services.UrlValidationS
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -62,11 +66,11 @@ public class LimitingBranchResultService {
     }
 
     private LimitingBranchResult createLimitingBranchResult(String studyPointId, String criticalBranchId, RaoResult raoResult, FlowCnec cnec) {
-        Double ramBefore = raoResult.getMargin(OptimizationState.INITIAL, cnec, Unit.MEGAWATT);
-        Double ramAfter = raoResult.getMargin(OptimizationState.afterOptimizing(cnec.getState()), cnec, Unit.MEGAWATT);
+        Double ramBefore = raoResult.getMargin(null, cnec, Unit.MEGAWATT);
+        Double ramAfter = raoResult.getMargin(cnec.getState().getInstant(), cnec, Unit.MEGAWATT);
         Side cnecSide = cnec.getMonitoredSides().stream().collect(toOne());
-        Double flowBefore = getFlow(raoResult, OptimizationState.INITIAL, cnec, cnecSide);
-        Double flowAfter = getFlow(raoResult, OptimizationState.afterOptimizing(cnec.getState()), cnec, cnecSide);
+        Double flowBefore = getFlow(raoResult, null, cnec, cnecSide);
+        Double flowAfter = getFlow(raoResult, cnec.getState().getInstant(), cnec, cnecSide);
         Set<RemedialAction<?>> remedialActions = getRemedialActions(raoResult, cnec);
         String criticalBranchName = cnec.getName();
         State state = cnec.getState();
@@ -83,11 +87,11 @@ public class LimitingBranchResultService {
         );
     }
 
-    private static double getFlow(RaoResult raoResult, OptimizationState optimizationState, FlowCnec cnec, Side cnecSide) {
+    private static double getFlow(RaoResult raoResult, Instant optimizedInstant, FlowCnec cnec, Side cnecSide) {
         Optional<Double> upperBound = cnec.getUpperBound(cnecSide, Unit.MEGAWATT);
         Optional<Double> lowerBound = cnec.getLowerBound(cnecSide, Unit.MEGAWATT);
 
-        double flow = raoResult.getFlow(optimizationState, cnec, cnecSide, Unit.MEGAWATT);
+        double flow = raoResult.getFlow(optimizedInstant, cnec, cnecSide, Unit.MEGAWATT);
         if (upperBound.isEmpty() && lowerBound.isPresent()) {
             flow = -flow;
         } else if (upperBound.isPresent() && lowerBound.isPresent()) {
