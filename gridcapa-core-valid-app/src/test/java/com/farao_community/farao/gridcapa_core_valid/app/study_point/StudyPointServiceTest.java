@@ -120,7 +120,7 @@ class StudyPointServiceTest {
             studyPointService.computeStudyPointRao(studyPoint, raoRequest);
             fail();
         } catch (Exception e) {
-            assertEquals(exceptionMessage, e.getMessage());
+            assertEquals("Error during RAO verticeId: " + exceptionMessage, e.getMessage());
         }
     }
 }

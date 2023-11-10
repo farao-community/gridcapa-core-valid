@@ -59,7 +59,7 @@ public class CoreValidListener implements MessageListener {
             CoreValidRequest coreValidRequest = jsonApiConverter.fromJsonMessage(message.getBody(), CoreValidRequest.class);
             runCoreValidRequest(coreValidRequest, replyTo, correlationId);
         } catch (AbstractCoreValidException e) {
-            LOGGER.error("Core valid exception occured", e);
+            LOGGER.error("Core valid exception occurred", e);
             sendRequestErrorResponse(e, replyTo, correlationId);
         } catch (RuntimeException e) {
             AbstractCoreValidException wrappingException = new CoreValidInvalidDataException("Unhandled exception: " + e.getMessage(), e);
@@ -82,10 +82,10 @@ public class CoreValidListener implements MessageListener {
             CoreValidResponse coreValidResponse = coreValidHandler.handleCoreValidRequest(coreValidRequest);
             sendCoreValidResponse(coreValidResponse, replyTo, correlationId);
         } catch (AbstractCoreValidException e) {
-            LOGGER.error("Core valid exception occured", e);
+            LOGGER.error("Core valid exception occurred", e);
             sendErrorResponse(coreValidRequest.getId(), e, replyTo, correlationId);
         } catch (RuntimeException e) {
-            LOGGER.error("Unknown exception occured", e);
+            LOGGER.error("Unknown exception occurred", e);
             AbstractCoreValidException wrappingException = new CoreValidInternalException("Unknown exception", e);
             sendErrorResponse(coreValidRequest.getId(), wrappingException, replyTo, correlationId);
         }
