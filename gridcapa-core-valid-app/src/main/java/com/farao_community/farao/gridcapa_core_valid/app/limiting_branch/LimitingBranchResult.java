@@ -1,24 +1,23 @@
 /*
- * Copyright (c) 2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2024, RTE (http://www.rte-france.com)
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  */
-
 package com.farao_community.farao.gridcapa_core_valid.app.limiting_branch;
 
 import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInvalidDataException;
-import com.farao_community.farao.data.crac_api.RemedialAction;
-import com.farao_community.farao.data.crac_api.State;
+import com.powsybl.openrao.data.cracapi.RemedialAction;
+import com.powsybl.openrao.data.cracapi.State;
 
 import java.util.Set;
 
 /**
  * @author Theo Pascoli {@literal <theo.pascoli at rte-france.com>}
+ * @author Oualid Aloui {@literal <oualid.aloui at rte-france.com>}
  */
 public class LimitingBranchResult {
-
     private final String verticeId;
     private final Double ramBefore;
     private final Double ramAfter;
@@ -79,7 +78,7 @@ public class LimitingBranchResult {
 
     public String getBranchStatus() {
         String branchStatus;
-        switch (getState().getInstant()) {
+        switch (getState().getInstant().getKind()) {
             case PREVENTIVE:
                 branchStatus = "P";
                 break;
