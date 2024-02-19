@@ -1,10 +1,9 @@
 /*
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2024, RTE (http://www.rte-france.com)
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-
 package com.farao_community.farao.gridcapa_core_valid.app.study_point;
 
 import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInvalidDataException;
@@ -20,11 +19,16 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
+ * @author Oualid Aloui {@literal <oualid.aloui at rte-france.com>}
  */
 public final class StudyPointsImporter {
 

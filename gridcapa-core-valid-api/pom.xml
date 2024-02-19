@@ -16,13 +16,8 @@
     <packaging>jar</packaging>
     <version>1.11.0-SNAPSHOT</version>
 
-    <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-    </properties>
-
     <dependencies>
-        <!-- Compile dependencies -->
+        <!-- COMPILE DEPENDENCIES -->
         <dependency>
             <groupId>com.farao-community.farao</groupId>
             <artifactId>gridcapa-task-manager-api</artifactId>
@@ -48,7 +43,7 @@
             <artifactId>jackson-datatype-jdk8</artifactId>
         </dependency>
 
-        <!-- Test dependencies -->
+        <!-- TEST DEPENDENCIES -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
