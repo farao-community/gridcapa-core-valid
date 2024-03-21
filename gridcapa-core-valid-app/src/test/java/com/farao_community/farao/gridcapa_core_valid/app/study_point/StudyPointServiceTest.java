@@ -1,10 +1,9 @@
 /*
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2024, RTE (http://www.rte-france.com)
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-
 package com.farao_community.farao.gridcapa_core_valid.app.study_point;
 
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResultService;
@@ -40,6 +39,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
+ * @author Oualid Aloui {@literal <oualid.aloui at rte-france.com>}
  */
 @SpringBootTest
 class StudyPointServiceTest {
@@ -86,7 +86,15 @@ class StudyPointServiceTest {
         StudyPointData studyPointData = new StudyPointData(network, coreNetPositions, scalableZonalData, null, "", "");
         RaoRequest raoRequest = studyPointService.computeStudyPointShift(studyPoints.get(0), studyPointData, OffsetDateTime.now(), "id");
         CompletableFuture<RaoResponse> raoResponseCompletableFuture = studyPointService.computeStudyPointRao(studyPoints.get(0), raoRequest);
-        RaoResponse raoResponse = new RaoResponse("id", "instant", "praUrl", " cracUrl", "raoUrl", Instant.now(), Instant.now());
+        RaoResponse raoResponse = new RaoResponse.RaoResponseBuilder()
+                .withId("id")
+                .withInstant("instant")
+                .withNetworkWithPraFileUrl("praUrl")
+                .withCracFileUrl("cracUrl")
+                .withRaoResultFileUrl("raoUrl")
+                .withComputationStartInstant(Instant.now())
+                .withComputationEndInstant(Instant.now())
+                .build();
         raoResponseCompletableFuture.complete(raoResponse);
         studyPointService.postTreatRaoResult(studyPoints.get(0), studyPointData, raoResponse);
         StudyPointResult result = studyPoints.get(0).getStudyPointResult();

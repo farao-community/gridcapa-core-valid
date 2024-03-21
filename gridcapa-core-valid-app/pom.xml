@@ -42,6 +42,7 @@
     </build>
 
     <dependencies>
+        <!-- COMPILE DEPENDENCIES -->
         <dependency>
             <groupId>com.farao-community.farao</groupId>
             <artifactId>gridcapa-core-valid-api</artifactId>
@@ -78,40 +79,12 @@
             <artifactId>spring-amqp</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.powsybl</groupId>
-            <artifactId>powsybl-glsk-document-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.powsybl</groupId>
-            <artifactId>powsybl-glsk-document-io-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.farao-community.farao</groupId>
-            <artifactId>farao-search-tree-rao</artifactId>
+            <artifactId>gridcapa-rao-runner-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.farao-community.farao</groupId>
-            <artifactId>farao-rao-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.farao-community.farao</groupId>
-            <artifactId>farao-rao-result-json</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.farao-community.farao</groupId>
-            <artifactId>farao-reference-program</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.farao-community.farao</groupId>
-            <artifactId>farao-refprog-xml-importer</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.farao-community.farao</groupId>
-            <artifactId>farao-crac-creator-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.farao-community.farao</groupId>
-            <artifactId>farao-crac-creator-fb-constraint</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
         </dependency>
         <dependency>
             <groupId>com.farao-community.farao</groupId>
@@ -129,17 +102,50 @@
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.powsybl</groupId>
             <artifactId>powsybl-iidm-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.farao-community.farao</groupId>
-            <artifactId>gridcapa-rao-runner-spring-boot-starter</artifactId>
+            <groupId>com.powsybl</groupId>
+            <artifactId>open-rao-crac-impl</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-csv</artifactId>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-glsk-document-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-glsk-document-io-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>open-rao-search-tree-rao</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>open-rao-rao-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>open-rao-rao-result-json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>open-rao-reference-program</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>open-rao-refprog-xml-importer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>open-rao-crac-creator-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>open-rao-crac-creator-fb-constraint</artifactId>
         </dependency>
 
         <!-- RUNTIME DEPENDENCIES -->
@@ -161,15 +167,6 @@
         <dependency>
             <groupId>com.powsybl</groupId>
             <artifactId>powsybl-glsk-document-ucte</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.farao-community.farao</groupId>
-            <artifactId>farao-crac-impl</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.rte-france.powsybl</groupId>
-            <artifactId>powsybl-hades2-integration</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>

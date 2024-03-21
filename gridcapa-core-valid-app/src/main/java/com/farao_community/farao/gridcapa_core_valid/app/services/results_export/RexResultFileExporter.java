@@ -1,17 +1,16 @@
 /*
- * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2024, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-
 package com.farao_community.farao.gridcapa_core_valid.app.services.results_export;
 
-import com.farao_community.farao.data.crac_api.Contingency;
 import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInvalidDataException;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResult;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
 import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
+import com.powsybl.contingency.Contingency;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.slf4j.Logger;
@@ -37,6 +36,7 @@ import java.util.stream.Collectors;
  * </ul>
  *
  * @author Alexandre Montigny {@literal <alexandre.montigny at rte-france.com>}
+ * @author Oualid Aloui {@literal <oualid.aloui at rte-france.com>}
  */
 @Component
 public class RexResultFileExporter extends AbstractResultFileExporter {
@@ -44,9 +44,9 @@ public class RexResultFileExporter extends AbstractResultFileExporter {
     private static final Logger LOGGER = LoggerFactory.getLogger(RexResultFileExporter.class);
     private static final String REX_SAMPLE_CSV_FILE = "outputs/%s-ValidationCORE-REX-v[v].csv";
     private static final CSVFormat REX_CSV_FORMAT = CSVFormat.EXCEL.builder()
-        .setDelimiter(';')
-        .setHeader("Period", "Vertice ID", "Branch ID", "Branch Name", "Outage Name", "Branch Status", "RAM before", "RAM after", "flow before", "flow after")
-        .build();
+            .setDelimiter(';')
+            .setHeader("Period", "Vertice ID", "Branch ID", "Branch Name", "Outage Name", "Branch Status", "RAM before", "RAM after", "flow before", "flow after")
+            .build();
 
     private final MinioAdapter minioAdapter;
 
@@ -60,10 +60,10 @@ public class RexResultFileExporter extends AbstractResultFileExporter {
             CSVPrinter resultCsvPrinter = new CSVPrinter(new OutputStreamWriter(resultBaos), REX_CSV_FORMAT);
 
             List<List<String>> resultCsvItems = studyPointResults.stream()
-                .map(RexResultFileExporter::getResultCsvItemsFromStudyPointResult)
-                .flatMap(Collection::stream)
-                .distinct()
-                .collect(Collectors.toList());
+                    .map(RexResultFileExporter::getResultCsvItemsFromStudyPointResult)
+                    .flatMap(Collection::stream)
+                    .distinct()
+                    .collect(Collectors.toList());
 
             for (List<String> resultCsvItem : resultCsvItems) {
                 resultCsvPrinter.printRecord(resultCsvItem);
@@ -83,8 +83,8 @@ public class RexResultFileExporter extends AbstractResultFileExporter {
 
     private static List<List<String>> getResultCsvItemsFromStudyPointResult(StudyPointResult studyPointResult) {
         return studyPointResult.getListLimitingBranchResult().stream()
-            .map(limitingBranchResult -> getRexResultFields(limitingBranchResult, studyPointResult))
-            .collect(Collectors.toList());
+                .map(limitingBranchResult -> getRexResultFields(limitingBranchResult, studyPointResult))
+                .collect(Collectors.toList());
     }
 
     private static List<String> getRexResultFields(LimitingBranchResult limitingBranchResult, StudyPointResult studyPointResult) {
@@ -96,7 +96,7 @@ public class RexResultFileExporter extends AbstractResultFileExporter {
         rexResultFields.add(limitingBranchResult.getCriticalBranchName());
         Optional<Contingency> optionalContingency = limitingBranchResult.getState().getContingency();
         if (optionalContingency.isPresent()) {
-            rexResultFields.add(optionalContingency.get().getName());
+            rexResultFields.add(optionalContingency.get().getName().orElse(""));
         } else {
             rexResultFields.add("");
         }
