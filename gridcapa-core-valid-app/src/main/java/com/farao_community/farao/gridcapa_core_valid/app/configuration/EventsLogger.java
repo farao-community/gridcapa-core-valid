@@ -18,6 +18,6 @@ import org.springframework.context.annotation.Configuration;
 class EventsLogger {
     @Bean
     public Logger getLogger() {
-        return  LoggerFactory.getLogger("BUSINESS_LOGGER");
+        return LoggerFactory.getLogger("BUSINESS_LOGGER");
     }
 }

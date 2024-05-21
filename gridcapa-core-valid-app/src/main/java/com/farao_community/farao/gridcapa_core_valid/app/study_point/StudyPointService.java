@@ -1,10 +1,9 @@
 /*
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2024, RTE (http://www.rte-france.com)
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-
 package com.farao_community.farao.gridcapa_core_valid.app.study_point;
 
 import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidRaoException;
@@ -39,6 +38,7 @@ import java.util.stream.Collectors;
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  * @author Theo Pascoli {@literal <theo.pascoli at rte-france.com>}
+ * @author Oualid Aloui {@literal <oualid.aloui at rte-france.com>}
  */
 @Component
 public class StudyPointService {
@@ -79,7 +79,13 @@ public class StudyPointService {
             studyPoint.getStudyPointResult().setShiftedCgmUrl(shiftedCgmUrl);
             String raoDirPath = String.format("%s/artifacts/RAO-%s-%s/", minioAdapter.getProperties().getBasePath(), timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'_'HH-mm")), studyPoint.getVerticeId());
             // For rao logs dispatcher, the rao request should correspond to the core valid request
-            raoRequest = new RaoRequest(coreValidRequesttId, shiftedCgmUrl, jsonCracUrl, raoParametersUrl, raoDirPath);
+            raoRequest = new RaoRequest.RaoRequestBuilder()
+                    .withId(coreValidRequesttId)
+                    .withNetworkFileUrl(shiftedCgmUrl)
+                    .withCracFileUrl(jsonCracUrl)
+                    .withRaoParametersFileUrl(raoParametersUrl)
+                    .withResultsDestination(raoDirPath)
+                    .build();
         } catch (Exception e) {
             LOGGER.error("Error during study point {} computation", studyPoint.getVerticeId(), e);
             studyPoint.getStudyPointResult().setStatus(StudyPointResult.Status.ERROR);
@@ -109,10 +115,15 @@ public class StudyPointService {
 
     private Map<String, InitGenerator> setPminPmaxToDefaultValue(Network network, ZonalData<Scalable> scalableZonalData) {
         Map<String, InitGenerator> initGenerators = new HashMap<>();
-        CoreAreasId.getCountriesId().stream().map(zone -> new CountryEICode(Country.valueOf(zone)).getCode()).map(scalableZonalData::getData).filter(Objects::nonNull).map(scalable -> scalable.filterInjections(network).stream()
-                .filter(Generator.class::isInstance)
-                .map(Generator.class::cast)
-                .collect(Collectors.toList())).forEach(generators -> generators.forEach(generator -> {
+        CoreAreasId.getCountriesId().stream()
+                .map(zone -> new CountryEICode(Country.valueOf(zone)).getCode())
+                .map(scalableZonalData::getData)
+                .filter(Objects::nonNull)
+                .map(scalable -> scalable.filterInjections(network).stream()
+                        .filter(Generator.class::isInstance)
+                        .map(Generator.class::cast)
+                        .collect(Collectors.toList()))
+                .forEach(generators -> generators.forEach(generator -> {
                     if (Double.isNaN(generator.getTargetP())) {
                         generator.setTargetP(0.);
                     }
