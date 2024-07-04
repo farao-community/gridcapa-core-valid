@@ -1,3 +1,18 @@
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: gridcapa
+    password: gridcapa
+    template:
+      reply-timeout: 6000000
+  cloud:
+    stream:
+      bindings:
+        task-status-update:
+          binder: rabbit
+          destination: task-status-updated
+
 core-valid-runner:
   async-time-out: 600000 # 10min (10*60*1000)
   bindings:
