@@ -1,7 +1,3 @@
-logback:
-  amqp:
-    exchange: core-valid-logs-exchange
-    routing-key: "#"
 spring:
   rabbitmq:
     host: localhost
@@ -17,10 +13,6 @@ spring:
           binder: rabbit
           destination: task-status-updated
 
-rao-runner-server:
-  amqp:
-    queue-name: rao-request-queue
-
 core-valid-runner:
   async-time-out: 600000 # 10min (10*60*1000)
   bindings:
@@ -35,11 +27,8 @@ core-valid-runner:
     - http://minio:9000/
 
 minio-adapter:
-  bucket: gridcapa
-  base-path: CORE/VALID/
+  bucket: bucket-for-tests
+  base-path: base/path/for/tests
   access-key: gridcapa
-  secret-key: gridcapa
-  url: http://localhost:9000/
-
-server:
-  port: ${CORE_VALID_SERVER_PORT:8080}
+  secret-key: gridcapa-secret
+  url: https://minio.test/
