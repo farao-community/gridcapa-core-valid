@@ -11,7 +11,6 @@ package com.farao_community.farao.gridcapa_core_valid.api;
 import com.farao_community.farao.gridcapa_core_valid.api.exception.AbstractCoreValidException;
 import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInternalException;
 import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
-import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -62,7 +61,7 @@ public class JsonApiConverter {
     }
 
     private ResourceConverter createConverter() {
-        ResourceConverter converter = new ResourceConverter(objectMapper, CoreValidRequest.class, CoreValidResponse.class);
+        ResourceConverter converter = new ResourceConverter(objectMapper, CoreValidRequest.class);
         converter.disableSerializationOption(SerializationFeature.INCLUDE_META);
         return converter;
     }

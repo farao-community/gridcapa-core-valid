@@ -9,15 +9,12 @@ package com.farao_community.farao.gridcapa_core_valid.starter;
 
 import com.farao_community.farao.gridcapa_core_valid.api.JsonApiConverter;
 import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
-import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidResponse;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Message;
 
 import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -34,9 +31,7 @@ class CoreValidClientTest {
 
         Mockito.when(responseMessage.getBody()).thenReturn(getClass().getResourceAsStream("/coreValidResponse.json").readAllBytes());
         Mockito.when(amqpTemplate.sendAndReceive(Mockito.same("my-queue"), Mockito.any())).thenReturn(responseMessage);
-        CoreValidResponse response = client.run(request);
-
-        assertEquals("test", response.getId());
+        client.run(request);
     }
 
     private CoreValidClientProperties buildProperties() {

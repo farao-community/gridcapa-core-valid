@@ -54,7 +54,7 @@ public class RexResultFileExporter extends AbstractResultFileExporter {
         this.minioAdapter = minioAdapter;
     }
 
-    public String exportStudyPointResult(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp) {
+    public void exportStudyPointResult(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp) {
         ByteArrayOutputStream resultBaos = new ByteArrayOutputStream();
         try {
             CSVPrinter resultCsvPrinter = new CSVPrinter(new OutputStreamWriter(resultBaos), REX_CSV_FORMAT);
@@ -78,7 +78,6 @@ public class RexResultFileExporter extends AbstractResultFileExporter {
         InputStream inStream = new ByteArrayInputStream(resultBaos.toByteArray());
         minioAdapter.uploadOutputForTimestamp(filePath, inStream, "CORE_VALID", ResultType.REX_RESULT.getFileType(), timestamp);
         LOGGER.info("Rex result file was successfully uploaded on minIO");
-        return minioAdapter.generatePreSignedUrl(filePath);
     }
 
     private static List<List<String>> getResultCsvItemsFromStudyPointResult(StudyPointResult studyPointResult) {

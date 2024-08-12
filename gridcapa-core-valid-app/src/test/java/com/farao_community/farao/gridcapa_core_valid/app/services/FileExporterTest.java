@@ -8,7 +8,6 @@ package com.farao_community.farao.gridcapa_core_valid.app.services;
 
 import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResult;
-import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.ResultType;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
 import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
 import com.powsybl.iidm.network.Network;
@@ -32,11 +31,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -64,13 +61,12 @@ class FileExporterTest {
         CoreValidRequest coreValidRequest = Mockito.mock(CoreValidRequest.class);
         Mockito.when(coreValidRequest.getTimestamp()).thenReturn(dateTime);
         Mockito.when(coreValidRequest.getLaunchedAutomatically()).thenReturn(true);
-        String resultUrl = fileExporter.exportStudyPointResult(studyPointsResult, coreValidRequest, null).get(ResultType.MAIN_RESULT);
+        fileExporter.exportStudyPointResult(studyPointsResult, coreValidRequest, null);
         ArgumentCaptor<InputStream> argumentCaptor = ArgumentCaptor.forClass(InputStream.class);
         Mockito.verify(minioAdapter, Mockito.times(3)).uploadOutputForTimestamp(Mockito.any(), argumentCaptor.capture(), Mockito.any(), Mockito.any(), Mockito.any());
         List<InputStream> resultsBaos = argumentCaptor.getAllValues();
         assertEquals("Period;Vertice ID;Branch ID;Branch Status;RAM before;RAM after\r\n;;;;0;0\r\n", new String(resultsBaos.get(0).readAllBytes()));
         assertEquals("Period;Vertice ID;Branch ID;Branch Name;Outage Name;Branch Status;RAM before;RAM after;flow before;flow after\r\n;;;;;;0;0;0;0\r\n", new String(resultsBaos.get(1).readAllBytes()));
-        assertEquals("resultUrl", resultUrl);
     }
 
     @Test
@@ -104,14 +100,11 @@ class FileExporterTest {
         CoreValidRequest coreValidRequest = Mockito.mock(CoreValidRequest.class);
         Mockito.when(coreValidRequest.getTimestamp()).thenReturn(dateTime);
         Mockito.when(coreValidRequest.getLaunchedAutomatically()).thenReturn(false);
-        Map<ResultType, String> resultUrls = fileExporter.exportStudyPointResult(studyPointsResult, coreValidRequest, null);
-        assertNull(resultUrls.get(ResultType.MAIN_RESULT));
-        String resultUrl = resultUrls.get(ResultType.REX_RESULT);
+        fileExporter.exportStudyPointResult(studyPointsResult, coreValidRequest, null);
         ArgumentCaptor<InputStream> argumentCaptor = ArgumentCaptor.forClass(InputStream.class);
         Mockito.verify(minioAdapter, Mockito.times(2)).uploadOutputForTimestamp(Mockito.any(), argumentCaptor.capture(), Mockito.any(), Mockito.any(), Mockito.any());
         List<InputStream> resultsBaos = argumentCaptor.getAllValues();
         assertEquals("Period;Vertice ID;Branch ID;Branch Name;Outage Name;Branch Status;RAM before;RAM after;flow before;flow after\r\n;;;;;;0;0;0;0\r\n", new String(resultsBaos.get(0).readAllBytes()));
-        assertEquals("resultUrl", resultUrl);
     }
 
     private StudyPointResult mockStudyPointResult() {

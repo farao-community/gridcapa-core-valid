@@ -50,7 +50,7 @@ public class MainResultFileExporter extends AbstractResultFileExporter {
         this.minioAdapter = minioAdapter;
     }
 
-    public String exportStudyPointResult(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp) {
+    public void exportStudyPointResult(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp) {
         ByteArrayOutputStream resultBaos = new ByteArrayOutputStream();
         try {
             CSVPrinter resultCsvPrinter = new CSVPrinter(new OutputStreamWriter(resultBaos), MAIN_CSV_FORMAT);
@@ -74,7 +74,6 @@ public class MainResultFileExporter extends AbstractResultFileExporter {
         InputStream inStream = new ByteArrayInputStream(resultBaos.toByteArray());
         minioAdapter.uploadOutputForTimestamp(filePath, inStream, "CORE_VALID", ResultType.MAIN_RESULT.getFileType(), timestamp);
         LOGGER.info("Main result file was successfully uploaded on minIO");
-        return minioAdapter.generatePreSignedUrl(filePath);
     }
 
     private static List<List<String>> getResultCsvItemsFromStudyPointResult(StudyPointResult studyPointResult) {
