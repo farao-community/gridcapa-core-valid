@@ -8,7 +8,6 @@ package com.farao_community.farao.gridcapa_core_valid.app;
 
 import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
-import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidResponse;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointService;
@@ -24,10 +23,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.net.URL;
 import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -68,7 +65,6 @@ class CoreValidHandlerTest {
                 .build();
         Mockito.when(studyPointService.computeStudyPointRao(Mockito.any(), Mockito.any())).thenReturn(future);
         future.complete(raoResponse);
-        Mockito.when(fileExporter.exportStudyPointResult(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(new HashMap<>());
         Mockito.when(fileImporter.importNetworkFromUrl(Mockito.any())).thenReturn(null);
         Mockito.when(fileExporter.saveShiftedCgmWithPra(Mockito.any(), Mockito.any())).thenReturn("");
 
@@ -84,9 +80,9 @@ class CoreValidHandlerTest {
         CoreValidFileResource cbcoraFile = createFileResource("cbcora", getClass().getResource(testDirectory + "/20210723-F301_CBCORA_hvdcvh-outage.xml"));
 
         CoreValidRequest request = new CoreValidRequest(requestId, dateTime, networkFile, cbcoraFile, glskFile, refProgFile, studyPointsFile, true);
-        CoreValidResponse response = coreValidHandler.handleCoreValidRequest(request);
-        assertEquals(requestId, response.getId());
+        coreValidHandler.handleCoreValidRequest(request);
         Mockito.verify(minioAdapter, Mockito.times(1)).deleteFiles(Mockito.any());
+        Mockito.verify(fileExporter, Mockito.times(1)).exportStudyPointResult(Mockito.any(), Mockito.any(), Mockito.any());
     }
 
     private CoreValidFileResource createFileResource(String filename, URL resource) {

@@ -8,12 +8,15 @@
 package com.farao_community.farao.gridcapa_core_valid.starter;
 
 import com.farao_community.farao.gridcapa_core_valid.api.JsonApiConverter;
-import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInternalException;
 import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
-import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageBuilder;
+import org.springframework.amqp.core.MessageDeliveryMode;
+import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.core.MessagePropertiesBuilder;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -34,18 +37,13 @@ public class CoreValidClient {
         this.jsonConverter = new JsonApiConverter();
     }
 
-    public CoreValidResponse run(CoreValidRequest coreValidRequest, int priority) {
+    public void run(CoreValidRequest coreValidRequest, int priority) {
         LOGGER.info("Core valid request sent: {}", coreValidRequest);
-        Message responseMessage = amqpTemplate.sendAndReceive(coreValidClientProperties.getAmqp().getQueueName(), buildMessage(coreValidRequest, priority));
-        if (responseMessage != null) {
-            return CoreValidResponseConversionHelper.convertCoreValidResponse(responseMessage, jsonConverter);
-        } else {
-            throw new CoreValidInternalException("Core valid Runner server did not respond");
-        }
+        amqpTemplate.send(coreValidClientProperties.getAmqp().getQueueName(), buildMessage(coreValidRequest, priority));
     }
 
-    public CoreValidResponse run(CoreValidRequest coreValidRequest) {
-        return run(coreValidRequest, DEFAULT_PRIORITY);
+    public void run(CoreValidRequest coreValidRequest) {
+        run(coreValidRequest, DEFAULT_PRIORITY);
     }
 
     public Message buildMessage(CoreValidRequest coreValidRequest, int priority) {

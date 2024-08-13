@@ -51,7 +51,7 @@ public class RemedialActionsFileExporter extends AbstractResultFileExporter {
         this.minioAdapter = minioAdapter;
     }
 
-    public String exportStudyPointResult(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp, FbConstraintCreationContext cracCreationContext) {
+    public void exportStudyPointResult(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp, FbConstraintCreationContext cracCreationContext) {
         ByteArrayOutputStream resultBaos = new ByteArrayOutputStream();
         try {
             CSVPrinter resultCsvPrinter = new CSVPrinter(new OutputStreamWriter(resultBaos), REMEDIAL_ACTIONS_CSV_FORMAT);
@@ -75,7 +75,6 @@ public class RemedialActionsFileExporter extends AbstractResultFileExporter {
         InputStream inStream = new ByteArrayInputStream(resultBaos.toByteArray());
         minioAdapter.uploadOutputForTimestamp(filePath, inStream, "CORE_VALID", ResultType.REMEDIAL_ACTIONS_RESULT.getFileType(), timestamp);
         LOGGER.info("Remedial Actions result file was successfully uploaded on minIO");
-        return minioAdapter.generatePreSignedUrl(filePath);
     }
 
     private static List<List<String>> getResultCsvItemsFromStudyPointResult(StudyPointResult studyPointResult, FbConstraintCreationContext cracCreationContext) {

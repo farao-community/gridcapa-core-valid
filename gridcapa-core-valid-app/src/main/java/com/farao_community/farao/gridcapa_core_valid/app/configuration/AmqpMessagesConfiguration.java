@@ -10,7 +10,6 @@ import com.farao_community.farao.gridcapa_core_valid.app.CoreValidListener;
 import org.springframework.amqp.core.AsyncAmqpTemplate;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.AsyncRabbitTemplate;
@@ -30,10 +29,6 @@ import java.util.Optional;
 @Configuration
 public class AmqpMessagesConfiguration {
 
-    @Value("${core-valid-runner.bindings.response.destination}")
-    private String responseDestination;
-    @Value("${core-valid-runner.bindings.response.expiration}")
-    private String responseExpiration;
     @Value("${core-valid-runner.bindings.request.destination}")
     private String requestDestination;
     @Value("${core-valid-runner.bindings.request.routing-key}")
@@ -72,14 +67,5 @@ public class AmqpMessagesConfiguration {
         simpleMessageListenerContainer.setQueues(coreValidRequestQueue);
         simpleMessageListenerContainer.setMessageListener(listener);
         return simpleMessageListenerContainer;
-    }
-
-    @Bean
-    public FanoutExchange coreValidResponseExchange() {
-        return new FanoutExchange(responseDestination);
-    }
-
-    public String coreValidResponseExpiration() {
-        return responseExpiration;
     }
 }

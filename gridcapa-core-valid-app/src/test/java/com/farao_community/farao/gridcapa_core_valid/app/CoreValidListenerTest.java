@@ -8,7 +8,6 @@
 package com.farao_community.farao.gridcapa_core_valid.app;
 
 import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
-import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +28,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.Instant;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -67,11 +65,6 @@ class CoreValidListenerTest {
     void checkThatCorrectMessageIsHandledCorrectly() throws URISyntaxException, IOException {
         byte[] correctMessage = Files.readAllBytes(Paths.get(getClass().getResource("/validRequest.json").toURI()));
         Message message = MessageBuilder.withBody(correctMessage).build();
-        String resultFileUrl = "fileUrl";
-        Instant computationStartInstant = Instant.now();
-        Instant computationEndInstant = Instant.now();
-        CoreValidResponse coreValidResponse = new CoreValidResponse("c7fc89da-dcd7-40d2-8d63-b8aef0a1ecdf", resultFileUrl, resultFileUrl, resultFileUrl, computationStartInstant, computationEndInstant);
-        Mockito.when(coreValidHandler.handleCoreValidRequest(Mockito.any(CoreValidRequest.class))).thenReturn(coreValidResponse);
         coreValidListener.onMessage(message);
         Mockito.verify(streamBridge, Mockito.times(2)).send(Mockito.anyString(), Mockito.any());
         Mockito.verify(coreValidHandler, Mockito.times(1)).handleCoreValidRequest(Mockito.any(CoreValidRequest.class));

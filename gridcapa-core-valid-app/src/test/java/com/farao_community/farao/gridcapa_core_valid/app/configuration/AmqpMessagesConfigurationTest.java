@@ -8,12 +8,12 @@
 package com.farao_community.farao.gridcapa_core_valid.app.configuration;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -26,16 +26,10 @@ class AmqpMessagesConfigurationTest {
     @Autowired
     private Queue requestQueue;
 
-    @Autowired
-    private FanoutExchange responseExchange;
-
     @Test
     void checkAmqpMessageConfiguration() {
         assertNotNull(amqpConfiguration);
         assertNotNull(requestQueue);
         assertEquals("core-valid-requests", requestQueue.getName());
-        assertNotNull(responseExchange);
-        assertEquals("core-valid-response", responseExchange.getName());
-        assertEquals("600000", amqpConfiguration.coreValidResponseExpiration());
     }
 }

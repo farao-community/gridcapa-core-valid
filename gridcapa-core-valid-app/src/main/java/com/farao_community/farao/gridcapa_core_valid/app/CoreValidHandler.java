@@ -9,11 +9,9 @@ package com.farao_community.farao.gridcapa_core_valid.app;
 import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInternalException;
 import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidRaoException;
 import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
-import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidResponse;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.NetPositionsHandler;
-import com.farao_community.farao.gridcapa_core_valid.app.services.results_export.ResultType;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointData;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
@@ -33,7 +31,6 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -70,20 +67,17 @@ public class CoreValidHandler {
         this.eventsLogger = eventsLogger;
     }
 
-    public CoreValidResponse handleCoreValidRequest(CoreValidRequest coreValidRequest) {
+    public String handleCoreValidRequest(CoreValidRequest coreValidRequest) {
         final String formattedTimestamp = setUpEventLogging(coreValidRequest);
 
         try {
             Network network = fileImporter.importNetwork(coreValidRequest.getCgm());
             FbConstraintCreationContext cracCreationContext = fileImporter.importCrac(coreValidRequest.getCbcora().getUrl(), coreValidRequest.getTimestamp(), network);
 
-            Instant computationStartInstant = Instant.now();
             List<StudyPointResult> studyPointResults = computeStudyPoints(coreValidRequest, network, cracCreationContext, formattedTimestamp);
-            Instant computationEndInstant = Instant.now();
 
-            Map<ResultType, String> resultFileUrls = postTreatment(studyPointResults, coreValidRequest, cracCreationContext, formattedTimestamp);
-
-            return new CoreValidResponse(coreValidRequest.getId(), resultFileUrls.get(ResultType.MAIN_RESULT), resultFileUrls.get(ResultType.REX_RESULT), resultFileUrls.get(ResultType.REMEDIAL_ACTIONS_RESULT), computationStartInstant, computationEndInstant);
+            postTreatment(studyPointResults, coreValidRequest, cracCreationContext, formattedTimestamp);
+            return coreValidRequest.getId();
         } catch (InterruptedException e) {
             eventsLogger.error("Error during core request running for timestamp {}.", formattedTimestamp);
             Thread.currentThread().interrupt();
@@ -155,17 +149,16 @@ public class CoreValidHandler {
         return studyPointResults;
     }
 
-    private Map<ResultType, String> postTreatment(List<StudyPointResult> studyPointResults, CoreValidRequest coreValidRequest, FbConstraintCreationContext cracCreationContext, String formattedTimestamp) {
-        Map<ResultType, String> resultFileUrls = saveProcessOutputs(studyPointResults, coreValidRequest, cracCreationContext);
+    private void postTreatment(List<StudyPointResult> studyPointResults, CoreValidRequest coreValidRequest, FbConstraintCreationContext cracCreationContext, String formattedTimestamp) {
+        saveProcessOutputs(studyPointResults, coreValidRequest, cracCreationContext);
         if (coreValidRequest.getLaunchedAutomatically()) {
             deleteArtifacts(coreValidRequest);
         }
         eventsLogger.info("Process done for timestamp {}.", formattedTimestamp);
-        return resultFileUrls;
     }
 
-    private Map<ResultType, String> saveProcessOutputs(List<StudyPointResult> studyPointResults, CoreValidRequest coreValidRequest, FbConstraintCreationContext cracCreationContext) {
-        return fileExporter.exportStudyPointResult(studyPointResults, coreValidRequest, cracCreationContext);
+    private void saveProcessOutputs(List<StudyPointResult> studyPointResults, CoreValidRequest coreValidRequest, FbConstraintCreationContext cracCreationContext) {
+        fileExporter.exportStudyPointResult(studyPointResults, coreValidRequest, cracCreationContext);
     }
 
     private void deleteArtifacts(CoreValidRequest coreValidRequest) {

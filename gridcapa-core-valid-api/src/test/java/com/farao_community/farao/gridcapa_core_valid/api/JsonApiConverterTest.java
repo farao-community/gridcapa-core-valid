@@ -11,7 +11,6 @@ package com.farao_community.farao.gridcapa_core_valid.api;
 import com.farao_community.farao.gridcapa_core_valid.api.exception.AbstractCoreValidException;
 import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInternalException;
 import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
-import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidResponse;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -45,16 +44,6 @@ class JsonApiConverterTest {
         AbstractCoreValidException exception = new CoreValidInternalException("Something really bad happened");
         String expectedMessage = Files.readString(Paths.get(getClass().getResource("/coreValidInternalError.json").toURI()));
         assertEquals(expectedMessage, new String(jsonApiConverter.toJsonMessage(exception)));
-    }
-
-    @Test
-    void checkCoreValidResponseJsonConversion() throws IOException {
-        JsonApiConverter jsonApiConverter = new JsonApiConverter();
-        byte[] responseBytes = getClass().getResourceAsStream("/coreValidResponse.json").readAllBytes();
-        CoreValidResponse response = jsonApiConverter.fromJsonMessage(responseBytes, CoreValidResponse.class);
-
-        assertEquals("test", response.getId());
-
     }
 
 }
