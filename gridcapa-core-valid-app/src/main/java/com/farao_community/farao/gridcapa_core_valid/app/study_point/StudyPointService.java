@@ -59,7 +59,7 @@ public class StudyPointService {
         this.eventsLogger = eventsLogger;
     }
 
-    public RaoRequest computeStudyPointShift(StudyPoint studyPoint, StudyPointData studyPointData, OffsetDateTime timestamp, String coreValidRequesttId) {
+    public RaoRequest computeStudyPointShift(StudyPoint studyPoint, StudyPointData studyPointData, OffsetDateTime timestamp, String coreValidRequesttId, String coreValidRunId) {
         LOGGER.info("Running computation for study point {} ", studyPoint.getVerticeId());
         Network network = studyPointData.getNetwork();
         ZonalData<Scalable> scalableZonalData = studyPointData.getScalableZonalData();
@@ -81,6 +81,7 @@ public class StudyPointService {
             // For rao logs dispatcher, the rao request should correspond to the core valid request
             raoRequest = new RaoRequest.RaoRequestBuilder()
                     .withId(coreValidRequesttId)
+                    .withRunId(coreValidRunId)
                     .withNetworkFileUrl(shiftedCgmUrl)
                     .withCracFileUrl(jsonCracUrl)
                     .withRaoParametersFileUrl(raoParametersUrl)

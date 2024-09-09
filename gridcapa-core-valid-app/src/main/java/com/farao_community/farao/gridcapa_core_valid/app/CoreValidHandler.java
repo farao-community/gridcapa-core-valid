@@ -101,7 +101,7 @@ public class CoreValidHandler {
         List<StudyPoint> studyPoints = fileImporter.importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
         if (!studyPoints.isEmpty()) {
             StudyPointData studyPointData = fillStudyPointData(coreValidRequest, network, cracCreationContext);
-            studyPoints.forEach(studyPoint -> studyPointRaoRequests.put(studyPoint, studyPointService.computeStudyPointShift(studyPoint, studyPointData, coreValidRequest.getTimestamp(), coreValidRequest.getId())));
+            studyPoints.forEach(studyPoint -> studyPointRaoRequests.put(studyPoint, studyPointService.computeStudyPointShift(studyPoint, studyPointData, coreValidRequest.getTimestamp(), coreValidRequest.getId(), coreValidRequest.getCurrentRunId())));
             eventsLogger.info("All studypoints shifts are done for timestamp {}", formattedTimestamp);
             runRaoForEachStudyPoint(studyPointRaoRequests, studyPointCompletableFutures);
             studyPointResults = fillResultsForEachStudyPoint(studyPointData, studyPointCompletableFutures);
