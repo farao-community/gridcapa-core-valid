@@ -9,20 +9,22 @@ package com.farao_community.farao.gridcapa_core_valid.app.limiting_branch;
 import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInvalidDataException;
 import com.farao_community.farao.gridcapa_core_valid.app.services.UrlValidationService;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
+import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.openrao.commons.Unit;
 import com.powsybl.openrao.data.cracapi.Instant;
 import com.powsybl.openrao.data.cracapi.RemedialAction;
 import com.powsybl.openrao.data.cracapi.State;
 import com.powsybl.openrao.data.cracapi.cnec.Cnec;
 import com.powsybl.openrao.data.cracapi.cnec.FlowCnec;
-import com.powsybl.openrao.data.cracapi.cnec.Side;
 import com.powsybl.openrao.data.cracapi.networkaction.NetworkAction;
 import com.powsybl.openrao.data.cracapi.rangeaction.RangeAction;
-import com.powsybl.openrao.data.craccreation.creator.fbconstraint.craccreator.FbConstraintCreationContext;
+import com.powsybl.openrao.data.craccreation.creator.fbconstraint.FbConstraintCreationContext;
 import com.powsybl.openrao.data.raoresultapi.RaoResult;
-import com.powsybl.openrao.data.raoresultjson.RaoResultImporter;
+import com.powsybl.openrao.data.raoresultjson.RaoResultJsonImporter;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -40,35 +42,38 @@ import java.util.stream.Collectors;
 public class LimitingBranchResultService {
 
     private final UrlValidationService urlValidationService;
-    private final RaoResultImporter raoResultImporter;
 
     public LimitingBranchResultService(UrlValidationService urlValidationService) {
         this.urlValidationService = urlValidationService;
-        this.raoResultImporter = new RaoResultImporter();
     }
 
     public List<LimitingBranchResult> importRaoResult(StudyPoint studyPoint, FbConstraintCreationContext cracCreationContext, String raoResultUrl) {
         String verticeId = studyPoint.getVerticeId();
-        RaoResult raoResult = raoResultImporter.importRaoResult(urlValidationService.openUrlStream(raoResultUrl), cracCreationContext.getCrac());
-        List<LimitingBranchResult> listLimitingBranches = new ArrayList<>();
-        cracCreationContext.getBranchCnecCreationContexts().forEach(branchCnecCreationContext -> {
-            if (branchCnecCreationContext.isImported()) {
-                String criticalBranchId = branchCnecCreationContext.getNativeId();
-                Map<String, String> flowCnecsIds = branchCnecCreationContext.getCreatedCnecsIds();
-                flowCnecsIds.forEach((instant, flowCnecId) -> {
-                    FlowCnec cnec = cracCreationContext.getCrac().getFlowCnec(flowCnecId);
-                    LimitingBranchResult branchResult = createLimitingBranchResult(verticeId, criticalBranchId, raoResult, cnec);
-                    listLimitingBranches.add(branchResult);
-                });
-            }
-        });
-        return listLimitingBranches;
+        try (InputStream raoResultStream = urlValidationService.openUrlStream(raoResultUrl)) {
+
+            RaoResult raoResult = new RaoResultJsonImporter().importData(raoResultStream, cracCreationContext.getCrac());
+            List<LimitingBranchResult> listLimitingBranches = new ArrayList<>();
+            cracCreationContext.getBranchCnecCreationContexts().forEach(branchCnecCreationContext -> {
+                if (branchCnecCreationContext.isImported()) {
+                    String criticalBranchId = branchCnecCreationContext.getNativeId();
+                    Map<String, String> flowCnecsIds = branchCnecCreationContext.getCreatedCnecsIds();
+                    flowCnecsIds.forEach((instant, flowCnecId) -> {
+                        FlowCnec cnec = cracCreationContext.getCrac().getFlowCnec(flowCnecId);
+                        LimitingBranchResult branchResult = createLimitingBranchResult(verticeId, criticalBranchId, raoResult, cnec);
+                        listLimitingBranches.add(branchResult);
+                    });
+                }
+            });
+            return listLimitingBranches;
+        } catch (IOException e) {
+            throw new CoreValidInvalidDataException(String.format("Cannot import RaoResult file from URL '%s'", raoResultUrl), e);
+        }
     }
 
     private LimitingBranchResult createLimitingBranchResult(String studyPointId, String criticalBranchId, RaoResult raoResult, FlowCnec cnec) {
         Double ramBefore = raoResult.getMargin(null, cnec, Unit.MEGAWATT);
         Double ramAfter = raoResult.getMargin(cnec.getState().getInstant(), cnec, Unit.MEGAWATT);
-        Side cnecSide = cnec.getMonitoredSides().stream().collect(toOne());
+        TwoSides cnecSide = cnec.getMonitoredSides().stream().collect(toOne());
         Double flowBefore = getFlow(raoResult, null, cnec, cnecSide);
         Double flowAfter = getFlow(raoResult, cnec.getState().getInstant(), cnec, cnecSide);
         Set<RemedialAction<?>> remedialActions = getRemedialActions(raoResult, cnec);
@@ -87,7 +92,7 @@ public class LimitingBranchResultService {
         );
     }
 
-    private static double getFlow(RaoResult raoResult, Instant optimizedInstant, FlowCnec cnec, Side cnecSide) {
+    private static double getFlow(RaoResult raoResult, Instant optimizedInstant, FlowCnec cnec, TwoSides cnecSide) {
         Optional<Double> upperBound = cnec.getUpperBound(cnecSide, Unit.MEGAWATT);
         Optional<Double> lowerBound = cnec.getLowerBound(cnecSide, Unit.MEGAWATT);
 

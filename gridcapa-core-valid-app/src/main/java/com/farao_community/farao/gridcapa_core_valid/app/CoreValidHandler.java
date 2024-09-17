@@ -23,7 +23,7 @@ import com.powsybl.glsk.api.GlskDocument;
 import com.powsybl.glsk.commons.ZonalData;
 import com.powsybl.iidm.modification.scalable.Scalable;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.openrao.data.craccreation.creator.fbconstraint.craccreator.FbConstraintCreationContext;
+import com.powsybl.openrao.data.craccreation.creator.fbconstraint.FbConstraintCreationContext;
 import com.powsybl.openrao.data.refprog.referenceprogram.ReferenceProgram;
 import com.powsybl.openrao.raoapi.parameters.RaoParameters;
 import org.slf4j.Logger;
