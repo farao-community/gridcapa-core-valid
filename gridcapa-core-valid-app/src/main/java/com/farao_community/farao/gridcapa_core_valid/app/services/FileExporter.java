@@ -17,8 +17,7 @@ import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
 import com.powsybl.commons.datasource.MemDataSource;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.openrao.data.cracapi.Crac;
-import com.powsybl.openrao.data.craccreation.creator.fbconstraint.craccreator.FbConstraintCreationContext;
-import com.powsybl.openrao.data.cracioapi.CracExporters;
+import com.powsybl.openrao.data.craccreation.creator.fbconstraint.FbConstraintCreationContext;
 import com.powsybl.openrao.raoapi.json.JsonRaoParameters;
 import com.powsybl.openrao.raoapi.parameters.RaoParameters;
 import org.slf4j.Logger;
@@ -115,7 +114,7 @@ public class FileExporter {
         MemDataSource memDataSource = new MemDataSource();
         String jsonCracFileName = String.format("crac_%s.json", removeIllegalCharacter(timestamp.toString()));
         try (OutputStream os = memDataSource.newOutputStream(jsonCracFileName, false)) {
-            CracExporters.exportCrac(crac, "Json", os);
+            crac.write("JSON", os);
         } catch (IOException e) {
             throw new CoreValidInternalException("Error while trying to save converted CRAC file.", e);
         }

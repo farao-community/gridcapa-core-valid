@@ -14,7 +14,7 @@ import com.powsybl.iidm.network.Network;
 import com.powsybl.openrao.data.cracapi.Crac;
 import com.powsybl.openrao.data.cracapi.RemedialAction;
 import com.powsybl.openrao.data.cracapi.State;
-import com.powsybl.openrao.data.craccreation.creator.fbconstraint.craccreator.FbConstraintCreationContext;
+import com.powsybl.openrao.data.craccreation.creator.fbconstraint.FbConstraintCreationContext;
 import com.powsybl.openrao.data.cracimpl.CracImpl;
 import com.powsybl.openrao.raoapi.parameters.RaoParameters;
 import org.junit.jupiter.api.Test;

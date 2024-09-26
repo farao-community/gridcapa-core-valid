@@ -13,11 +13,10 @@ import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoints
 import com.powsybl.glsk.api.GlskDocument;
 import com.powsybl.glsk.api.io.GlskDocumentImporters;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.openrao.data.craccreation.creator.api.parameters.CracCreationParameters;
-import com.powsybl.openrao.data.craccreation.creator.fbconstraint.FbConstraint;
-import com.powsybl.openrao.data.craccreation.creator.fbconstraint.craccreator.FbConstraintCracCreator;
-import com.powsybl.openrao.data.craccreation.creator.fbconstraint.craccreator.FbConstraintCreationContext;
-import com.powsybl.openrao.data.craccreation.creator.fbconstraint.importer.FbConstraintImporter;
+
+import com.powsybl.openrao.data.cracapi.parameters.CracCreationParameters;
+import com.powsybl.openrao.data.craccreation.creator.fbconstraint.FbConstraintCreationContext;
+import com.powsybl.openrao.data.craccreation.creator.fbconstraint.FbConstraintImporter;
 import com.powsybl.openrao.data.refprog.referenceprogram.ReferenceProgram;
 import com.powsybl.openrao.data.refprog.refprogxmlimporter.RefProgImporter;
 import org.apache.commons.io.FilenameUtils;
@@ -82,10 +81,9 @@ public class FileImporter {
 
     public FbConstraintCreationContext importCrac(String cbcoraUrl, OffsetDateTime targetProcessDateTime, Network network) {
         CracCreationParameters cracCreationParameters = new CracCreationParameters();
-        cracCreationParameters.setDefaultMonitoredLineSide(CracCreationParameters.MonitoredLineSide.MONITOR_LINES_ON_LEFT_SIDE);
+        cracCreationParameters.setDefaultMonitoredLineSide(CracCreationParameters.MonitoredLineSide.MONITOR_LINES_ON_SIDE_ONE);
         try (InputStream cracInputStream = urlValidationService.openUrlStream(cbcoraUrl)) {
-            FbConstraint nativeCrac = new FbConstraintImporter().importNativeCrac(cracInputStream);
-            return new FbConstraintCracCreator().createCrac(nativeCrac, network, targetProcessDateTime, cracCreationParameters);
+            return (FbConstraintCreationContext) new FbConstraintImporter().importData(cracInputStream, cracCreationParameters, network, targetProcessDateTime);
         } catch (Exception e) {
             throw new CoreValidInvalidDataException(String.format("Cannot download cbcora file from URL '%s'", cbcoraUrl), e);
         }
