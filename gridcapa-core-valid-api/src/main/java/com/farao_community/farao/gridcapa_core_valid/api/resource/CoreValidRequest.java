@@ -28,7 +28,7 @@ import java.time.OffsetDateTime;
 public class CoreValidRequest {
     @Id
     private final String id;
-
+    private final String currentRunId;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @JsonSerialize(using = OffsetDateTimeSerializer.class)
     @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
@@ -42,6 +42,7 @@ public class CoreValidRequest {
 
     @JsonCreator
     public CoreValidRequest(@JsonProperty("id") String id,
+                            @JsonProperty("currentRunId") String currentRunId,
                             @JsonProperty("timestamp") OffsetDateTime timestamp,
                             @JsonProperty("cgm") CoreValidFileResource cgm,
                             @JsonProperty("cbcora") CoreValidFileResource cbcora,
@@ -50,6 +51,7 @@ public class CoreValidRequest {
                             @JsonProperty("studyPoints") CoreValidFileResource studyPoints,
                             @JsonProperty("launchedAutomatically") boolean launchedAutomatically) {
         this.id = id;
+        this.currentRunId = currentRunId;
         this.timestamp = timestamp;
         this.cgm = cgm;
         this.cbcora = cbcora;
@@ -60,17 +62,22 @@ public class CoreValidRequest {
     }
 
     public CoreValidRequest(String id,
+                            String currentRunId,
                             OffsetDateTime timestamp,
                             CoreValidFileResource cgm,
                             CoreValidFileResource cbcora,
                             CoreValidFileResource glsk,
                             CoreValidFileResource refProg,
                             CoreValidFileResource studyPoints) {
-        this(id, timestamp, cgm, cbcora, glsk, refProg, studyPoints, false);
+        this(id, currentRunId, timestamp, cgm, cbcora, glsk, refProg, studyPoints, false);
     }
 
     public String getId() {
         return id;
+    }
+
+    public String getCurrentRunId() {
+        return currentRunId;
     }
 
     public OffsetDateTime getTimestamp() {

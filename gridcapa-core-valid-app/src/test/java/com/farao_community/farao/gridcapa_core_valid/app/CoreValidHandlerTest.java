@@ -52,7 +52,7 @@ class CoreValidHandlerTest {
     void handleCoreValidRequestTest() {
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("http://url");
         RaoRequest raoRequest = Mockito.mock(RaoRequest.class);
-        Mockito.when(studyPointService.computeStudyPointShift(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(raoRequest);
+        Mockito.when(studyPointService.computeStudyPointShift(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.anyString(), Mockito.anyString())).thenReturn(raoRequest);
         CompletableFuture<RaoResponse> future = new CompletableFuture<>();
         RaoResponse raoResponse = new RaoResponse.RaoResponseBuilder()
                 .withId("id")
@@ -69,6 +69,7 @@ class CoreValidHandlerTest {
         Mockito.when(fileExporter.saveShiftedCgmWithPra(Mockito.any(), Mockito.any())).thenReturn("");
 
         String requestId = "Test request";
+        String runId = "Test run id";
         String networkFileName = "20210723_0030_2D5_CGM_limits.uct";
         String testDirectory = "/20210723";
         CoreValidFileResource networkFile = createFileResource(networkFileName, getClass().getResource(testDirectory + "/" + networkFileName));
@@ -79,7 +80,7 @@ class CoreValidHandlerTest {
         CoreValidFileResource glskFile = createFileResource("", getClass().getResource(testDirectory + "/20210723-F226-v1.xml"));
         CoreValidFileResource cbcoraFile = createFileResource("cbcora", getClass().getResource(testDirectory + "/20210723-F301_CBCORA_hvdcvh-outage.xml"));
 
-        CoreValidRequest request = new CoreValidRequest(requestId, dateTime, networkFile, cbcoraFile, glskFile, refProgFile, studyPointsFile, true);
+        CoreValidRequest request = new CoreValidRequest(requestId, runId, dateTime, networkFile, cbcoraFile, glskFile, refProgFile, studyPointsFile, true);
         coreValidHandler.handleCoreValidRequest(request);
         Mockito.verify(minioAdapter, Mockito.times(1)).deleteFiles(Mockito.any());
         Mockito.verify(fileExporter, Mockito.times(1)).exportStudyPointResult(Mockito.any(), Mockito.any(), Mockito.any());
