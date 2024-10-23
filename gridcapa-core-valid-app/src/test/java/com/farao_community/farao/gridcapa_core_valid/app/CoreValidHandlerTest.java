@@ -6,14 +6,22 @@
  */
 package com.farao_community.farao.gridcapa_core_valid.app;
 
+import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidRaoException;
 import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidFileResource;
 import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
+import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
+import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointData;
+import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointService;
 import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
+import com.farao_community.farao.rao_runner.api.resource.AbstractRaoResponse;
+import com.farao_community.farao.rao_runner.api.resource.RaoFailureResponse;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
-import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
+import com.farao_community.farao.rao_runner.api.resource.RaoSuccessResponse;
+import com.powsybl.iidm.network.Network;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +31,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.net.URL;
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -53,8 +64,8 @@ class CoreValidHandlerTest {
         Mockito.when(minioAdapter.generatePreSignedUrl(Mockito.any())).thenReturn("http://url");
         RaoRequest raoRequest = Mockito.mock(RaoRequest.class);
         Mockito.when(studyPointService.computeStudyPointShift(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.anyString(), Mockito.anyString())).thenReturn(raoRequest);
-        CompletableFuture<RaoResponse> future = new CompletableFuture<>();
-        RaoResponse raoResponse = new RaoResponse.RaoResponseBuilder()
+        CompletableFuture<AbstractRaoResponse> future = new CompletableFuture<>();
+        RaoSuccessResponse raoResponse = new RaoSuccessResponse.Builder()
                 .withId("id")
                 .withInstant("instant")
                 .withNetworkWithPraFileUrl("praUrl")
@@ -88,5 +99,42 @@ class CoreValidHandlerTest {
 
     private CoreValidFileResource createFileResource(String filename, URL resource) {
         return new CoreValidFileResource(filename, resource.toExternalForm());
+    }
+
+    @Test
+    void fillResultsForEachStudyPointWithFailedRao() {
+        final StudyPointData studyPointData = Mockito.mock(StudyPointData.class);
+        final StudyPoint studyPoint = new StudyPoint(1, "a", Map.of());
+        final RaoFailureResponse raoFailureResponse = new RaoFailureResponse.Builder()
+                .withErrorMessage("test message")
+                .build();
+        final CompletableFuture<AbstractRaoResponse> completableFuture = CompletableFuture.completedFuture(raoFailureResponse);
+        final Map<StudyPoint, CompletableFuture<AbstractRaoResponse>> studyPointCompletableFutures = Map.of(studyPoint, completableFuture);
+
+        Assertions.assertThatExceptionOfType(CoreValidRaoException.class)
+                .isThrownBy(() -> coreValidHandler.fillResultsForEachStudyPoint(studyPointData, studyPointCompletableFutures))
+                .withMessageContaining("test message");
+    }
+
+    @Test
+    void fillResultsForEachStudyPoint() throws ExecutionException, InterruptedException {
+        final StudyPointData studyPointData = Mockito.mock(StudyPointData.class);
+        final StudyPoint studyPoint = new StudyPoint(1, "a", Map.of());
+        final RaoSuccessResponse raoSuccessResponse = new RaoSuccessResponse.Builder()
+                .withId("id")
+                .withNetworkWithPraFileUrl("networkUrl")
+                .build();
+        final CompletableFuture<AbstractRaoResponse> completableFuture = CompletableFuture.completedFuture(raoSuccessResponse);
+        final Map<StudyPoint, CompletableFuture<AbstractRaoResponse>> studyPointCompletableFutures = Map.of(studyPoint, completableFuture);
+
+        final Network network = Mockito.mock(Network.class);
+        Mockito.when(fileImporter.importNetworkFromUrl("networkUrl")).thenReturn(network);
+        final StudyPointResult studyPointResult = new StudyPointResult("resultId");
+        Mockito.when(studyPointService.postTreatRaoResult(studyPoint, studyPointData, raoSuccessResponse)).thenReturn(studyPointResult);
+
+        final List<StudyPointResult> results = coreValidHandler.fillResultsForEachStudyPoint(studyPointData, studyPointCompletableFutures);
+
+        Mockito.verify(fileExporter, Mockito.times(1)).saveShiftedCgmWithPra(Mockito.eq(network), Mockito.anyString());
+        Assertions.assertThat(results).containsExactly(studyPointResult);
     }
 }

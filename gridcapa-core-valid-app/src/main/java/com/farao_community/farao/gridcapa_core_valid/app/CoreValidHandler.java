@@ -17,8 +17,10 @@ import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointD
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointService;
 import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
+import com.farao_community.farao.rao_runner.api.resource.AbstractRaoResponse;
+import com.farao_community.farao.rao_runner.api.resource.RaoFailureResponse;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
-import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
+import com.farao_community.farao.rao_runner.api.resource.RaoSuccessResponse;
 import com.powsybl.glsk.api.GlskDocument;
 import com.powsybl.glsk.commons.ZonalData;
 import com.powsybl.iidm.modification.scalable.Scalable;
@@ -95,7 +97,7 @@ public class CoreValidHandler {
 
     private List<StudyPointResult> computeStudyPoints(CoreValidRequest coreValidRequest, Network network, FbConstraintCreationContext cracCreationContext, String formattedTimestamp) throws InterruptedException, ExecutionException {
         Map<StudyPoint, RaoRequest> studyPointRaoRequests = new HashMap<>();
-        Map<StudyPoint, CompletableFuture<RaoResponse>> studyPointCompletableFutures = new HashMap<>();
+        Map<StudyPoint, CompletableFuture<AbstractRaoResponse>> studyPointCompletableFutures = new HashMap<>();
         List<StudyPointResult> studyPointResults = new ArrayList<>();
 
         List<StudyPoint> studyPoints = fileImporter.importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
@@ -120,27 +122,36 @@ public class CoreValidHandler {
         return new StudyPointData(network, coreNetPositions, scalableZonalData, cracCreationContext, jsonCracUrl, raoParametersUrl);
     }
 
-    private void runRaoForEachStudyPoint(Map<StudyPoint, RaoRequest> studyPointRaoRequests, Map<StudyPoint, CompletableFuture<RaoResponse>> studyPointCompletableFutures) throws ExecutionException, InterruptedException {
+    private void runRaoForEachStudyPoint(Map<StudyPoint, RaoRequest> studyPointRaoRequests, Map<StudyPoint, CompletableFuture<AbstractRaoResponse>> studyPointCompletableFutures) throws ExecutionException, InterruptedException {
         studyPointRaoRequests.forEach((studyPoint, raoRequest) -> {
-            CompletableFuture<RaoResponse> raoResponse = studyPointService.computeStudyPointRao(studyPoint, raoRequest);
-            studyPointCompletableFutures.put(studyPoint, raoResponse);
-            raoResponse.thenApply(raoResponse1 -> {
+            CompletableFuture<AbstractRaoResponse> futureRaoResponse = studyPointService.computeStudyPointRao(studyPoint, raoRequest);
+            studyPointCompletableFutures.put(studyPoint, futureRaoResponse);
+            futureRaoResponse.thenApply(raoResponse -> {
                 LOGGER.info("End of RAO for studypoint {} ...", studyPoint.getVerticeId());
                 return null;
             }).exceptionally(exception -> {
                 studyPoint.getStudyPointResult().setStatusToError();
-                eventsLogger.error("Error during RAO computation for studypoint {}.", studyPoint.getVerticeId());
-                throw new CoreValidRaoException(String.format("Error during RAO computation for studypoint %s .", studyPoint.getVerticeId()));
+                final String message = String.format("Error during RAO computation for studypoint %s.", studyPoint.getVerticeId());
+                eventsLogger.error(message);
+                throw new CoreValidRaoException(message);
             });
         });
         CompletableFuture.allOf(studyPointCompletableFutures.values().toArray(new CompletableFuture[0])).get();
     }
 
-    private List<StudyPointResult> fillResultsForEachStudyPoint(StudyPointData studyPointData, Map<StudyPoint, CompletableFuture<RaoResponse>> studyPointCompletableFutures) throws InterruptedException, ExecutionException {
+    List<StudyPointResult> fillResultsForEachStudyPoint(StudyPointData studyPointData, Map<StudyPoint, CompletableFuture<AbstractRaoResponse>> studyPointCompletableFutures) throws InterruptedException, ExecutionException {
         List<StudyPointResult> studyPointResults = new ArrayList<>();
-        for (Map.Entry<StudyPoint, CompletableFuture<RaoResponse>> entry : studyPointCompletableFutures.entrySet()) {
+        for (Map.Entry<StudyPoint, CompletableFuture<AbstractRaoResponse>> entry : studyPointCompletableFutures.entrySet()) {
             StudyPoint studyPoint = entry.getKey();
-            RaoResponse raoResponse = entry.getValue().get();
+
+            final AbstractRaoResponse abstractRaoResponse = entry.getValue().get();
+            if (abstractRaoResponse.isRaoFailed()) {
+                RaoFailureResponse failureResponse = (RaoFailureResponse) abstractRaoResponse;
+                final String message = String.format("Error during RAO computation for studypoint %s: %s.", studyPoint.getVerticeId(), failureResponse.getErrorMessage());
+                eventsLogger.error(message);
+                throw new CoreValidRaoException(message);
+            }
+            RaoSuccessResponse raoResponse = (RaoSuccessResponse) abstractRaoResponse;
             Network networkWithPra = fileImporter.importNetworkFromUrl(raoResponse.getNetworkWithPraFileUrl());
             String fileName = networkWithPra.getNameOrId() + "_" + studyPoint.getVerticeId() + "_withPra.uct";
             fileExporter.saveShiftedCgmWithPra(networkWithPra, fileName);
