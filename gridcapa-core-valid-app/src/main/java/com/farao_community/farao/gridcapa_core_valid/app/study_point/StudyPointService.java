@@ -13,8 +13,9 @@ import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.Limitin
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileExporter;
 import com.farao_community.farao.gridcapa_core_valid.app.services.NetPositionsHandler;
 import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
+import com.farao_community.farao.rao_runner.api.resource.AbstractRaoResponse;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
-import com.farao_community.farao.rao_runner.api.resource.RaoResponse;
+import com.farao_community.farao.rao_runner.api.resource.RaoSuccessResponse;
 import com.farao_community.farao.rao_runner.starter.AsynchronousRaoRunnerClient;
 import com.powsybl.glsk.commons.CountryEICode;
 import com.powsybl.glsk.commons.ZonalData;
@@ -97,7 +98,7 @@ public class StudyPointService {
         return raoRequest;
     }
 
-    public CompletableFuture<RaoResponse> computeStudyPointRao(StudyPoint studyPoint, RaoRequest raoRequest) {
+    public CompletableFuture<AbstractRaoResponse> computeStudyPointRao(StudyPoint studyPoint, RaoRequest raoRequest) {
         eventsLogger.info("Running RAO for studypoint {} ...", studyPoint.getVerticeId());
         try {
             return asynchronousRaoRunnerClient.runRaoAsynchronously(raoRequest);
@@ -108,7 +109,7 @@ public class StudyPointService {
         }
     }
 
-    public StudyPointResult postTreatRaoResult(StudyPoint studyPoint, StudyPointData studyPointData, RaoResponse raoResponse) {
+    public StudyPointResult postTreatRaoResult(StudyPoint studyPoint, StudyPointData studyPointData, RaoSuccessResponse raoResponse) {
         List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(studyPoint, studyPointData.getFbConstraintCreationContext(), raoResponse.getRaoResultFileUrl());
         setSuccessResult(studyPoint, raoResponse, limitingBranchResults);
         return studyPoint.getStudyPointResult();
@@ -158,7 +159,7 @@ public class StudyPointService {
         LOGGER.info("Pmax and Pmin are reset to initial values for network {}", network.getNameOrId());
     }
 
-    private void setSuccessResult(StudyPoint studyPoint, RaoResponse raoResponse, List<LimitingBranchResult> limitingBranchResults) {
+    private void setSuccessResult(StudyPoint studyPoint, RaoSuccessResponse raoResponse, List<LimitingBranchResult> limitingBranchResults) {
         StudyPointResult result = studyPoint.getStudyPointResult();
         result.setListLimitingBranchResult(limitingBranchResults);
         result.setStatus(StudyPointResult.Status.SUCCESS);
