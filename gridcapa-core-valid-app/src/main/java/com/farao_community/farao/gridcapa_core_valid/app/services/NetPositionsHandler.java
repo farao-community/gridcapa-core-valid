@@ -70,9 +70,8 @@ public final class NetPositionsHandler {
                     String zoneEiCode = new CountryEICode(Country.valueOf(zone)).getCode();
                     Scalable scalable = scalableZonalData.getData(zoneEiCode);
                     if (scalable != null) {
-                        ScalingParameters iterativeScalingParameters = new ScalingParameters();
-                        iterativeScalingParameters.setIterative(true);
-                        scalable.scale(network, shift, iterativeScalingParameters);
+                        ScalingParameters scalingParameters = new ScalingParameters().setPriority(ScalingParameters.Priority.RESPECT_OF_VOLUME_ASKED);
+                        scalable.scale(network, shift, scalingParameters);
                     }
                 }
             } catch (Exception e) {
