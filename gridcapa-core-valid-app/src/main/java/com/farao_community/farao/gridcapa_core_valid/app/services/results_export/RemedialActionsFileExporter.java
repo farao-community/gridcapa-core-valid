@@ -11,8 +11,8 @@ import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.Limitin
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
 import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
 import com.powsybl.openrao.data.cracapi.RemedialAction;
-import com.powsybl.openrao.data.craccreation.creator.fbconstraint.CriticalBranchCreationContext;
-import com.powsybl.openrao.data.craccreation.creator.fbconstraint.FbConstraintCreationContext;
+import com.powsybl.openrao.data.cracio.fbconstraint.CriticalBranchCreationContext;
+import com.powsybl.openrao.data.cracio.fbconstraint.FbConstraintCreationContext;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.slf4j.Logger;
