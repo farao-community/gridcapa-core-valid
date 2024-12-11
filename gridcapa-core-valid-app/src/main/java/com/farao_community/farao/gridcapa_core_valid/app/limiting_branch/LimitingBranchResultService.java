@@ -18,7 +18,7 @@ import com.powsybl.openrao.data.cracapi.cnec.Cnec;
 import com.powsybl.openrao.data.cracapi.cnec.FlowCnec;
 import com.powsybl.openrao.data.cracapi.networkaction.NetworkAction;
 import com.powsybl.openrao.data.cracapi.rangeaction.RangeAction;
-import com.powsybl.openrao.data.craccreation.creator.fbconstraint.FbConstraintCreationContext;
+import com.powsybl.openrao.data.cracio.fbconstraint.FbConstraintCreationContext;
 import com.powsybl.openrao.data.raoresultapi.RaoResult;
 import com.powsybl.openrao.data.raoresultjson.RaoResultJsonImporter;
 import org.springframework.stereotype.Component;
@@ -55,7 +55,7 @@ public class LimitingBranchResultService {
             List<LimitingBranchResult> listLimitingBranches = new ArrayList<>();
             cracCreationContext.getBranchCnecCreationContexts().forEach(branchCnecCreationContext -> {
                 if (branchCnecCreationContext.isImported()) {
-                    String criticalBranchId = branchCnecCreationContext.getNativeId();
+                    String criticalBranchId = branchCnecCreationContext.getNativeObjectId();
                     Map<String, String> flowCnecsIds = branchCnecCreationContext.getCreatedCnecsIds();
                     flowCnecsIds.forEach((instant, flowCnecId) -> {
                         FlowCnec cnec = cracCreationContext.getCrac().getFlowCnec(flowCnecId);
