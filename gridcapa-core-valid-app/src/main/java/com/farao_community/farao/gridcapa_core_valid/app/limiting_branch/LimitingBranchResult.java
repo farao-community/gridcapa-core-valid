@@ -8,8 +8,8 @@
 package com.farao_community.farao.gridcapa_core_valid.app.limiting_branch;
 
 import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInvalidDataException;
-import com.powsybl.openrao.data.cracapi.RemedialAction;
-import com.powsybl.openrao.data.cracapi.State;
+import com.powsybl.openrao.data.crac.api.RemedialAction;
+import com.powsybl.openrao.data.crac.api.State;
 
 import java.util.Set;
 

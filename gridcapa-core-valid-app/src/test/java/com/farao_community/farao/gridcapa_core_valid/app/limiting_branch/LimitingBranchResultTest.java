@@ -10,10 +10,10 @@ import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInva
 import com.farao_community.farao.gridcapa_core_valid.app.services.FileImporter;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoint;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.openrao.data.cracapi.Instant;
-import com.powsybl.openrao.data.cracapi.InstantKind;
-import com.powsybl.openrao.data.cracapi.State;
-import com.powsybl.openrao.data.cracio.fbconstraint.FbConstraintCreationContext;
+import com.powsybl.openrao.data.crac.api.Instant;
+import com.powsybl.openrao.data.crac.api.InstantKind;
+import com.powsybl.openrao.data.crac.api.State;
+import com.powsybl.openrao.data.crac.io.fbconstraint.FbConstraintCreationContext;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
