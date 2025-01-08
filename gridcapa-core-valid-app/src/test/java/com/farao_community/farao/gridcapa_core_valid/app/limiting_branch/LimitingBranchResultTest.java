@@ -68,14 +68,14 @@ class LimitingBranchResultTest {
         List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(new StudyPoint(1, "id", null), fbConstraintCreationContext, getClass().getResource(directory + "/raoResult.json").toExternalForm());
 
         assertEquals(6, limitingBranchResults.size());
-        assertEquals("BE_CBCO_000003", limitingBranchResults.get(4).getCriticalBranchId());
-        assertEquals("BE_CO_00001 - curative", limitingBranchResults.get(4).getState().getId());
-        assertEquals(0, limitingBranchResults.get(4).getRemedialActions().size());
-        assertEquals("id", limitingBranchResults.get(4).getVerticeId());
-        assertEquals(-1564, Math.floor(limitingBranchResults.get(4).getRamAfter()));
-        assertEquals(-1564, Math.floor(limitingBranchResults.get(4).getRamBefore()));
-        assertEquals(1939, Math.floor(limitingBranchResults.get(4).getFlowAfter()));
-        assertEquals(1939, Math.floor(limitingBranchResults.get(4).getFlowBefore()));
+        assertEquals("BE_CBCO_000003", limitingBranchResults.get(4).criticalBranchId());
+        assertEquals("BE_CO_00001 - curative", limitingBranchResults.get(4).state().getId());
+        assertEquals(0, limitingBranchResults.get(4).remedialActions().size());
+        assertEquals("id", limitingBranchResults.get(4).verticeId());
+        assertEquals(-1564, Math.floor(limitingBranchResults.get(4).ramAfter()));
+        assertEquals(-1564, Math.floor(limitingBranchResults.get(4).ramBefore()));
+        assertEquals(1939, Math.floor(limitingBranchResults.get(4).flowAfter()));
+        assertEquals(1939, Math.floor(limitingBranchResults.get(4).flowBefore()));
     }
 
     @Test
@@ -87,15 +87,15 @@ class LimitingBranchResultTest {
         FbConstraintCreationContext fbConstraintCreationContext = fileImporter.importCrac(getClass().getResource(directory + "/crac.xml").toExternalForm(), dateTime, network);
         List<LimitingBranchResult> limitingBranchResults = limitingBranchResultService.importRaoResult(new StudyPoint(1, "id", null), fbConstraintCreationContext, getClass().getResource(directory + "/raoResult.json").toExternalForm());
 
-        limitingBranchResults.removeIf(result -> result.getRamAfter().equals(result.getRamBefore()));
+        limitingBranchResults.removeIf(result -> result.ramAfter().equals(result.ramBefore()));
 
         SoftAssertions assertions = new SoftAssertions();
 
         assertions.assertThat(limitingBranchResults).isNotEmpty();
         for (LimitingBranchResult result : limitingBranchResults) {
-            assertions.assertThat(result.getRamAfter()).isNotEqualTo(result.getRamBefore());
-            assertions.assertThat(result.getFlowAfter()).isNotEqualTo(result.getFlowBefore());
-            assertions.assertThat(Math.abs((result.getRamAfter() + result.getFlowAfter()) - (result.getRamBefore() + result.getFlowBefore()))).isLessThanOrEqualTo(delta);
+            assertions.assertThat(result.ramAfter()).isNotEqualTo(result.ramBefore());
+            assertions.assertThat(result.flowAfter()).isNotEqualTo(result.flowBefore());
+            assertions.assertThat(Math.abs((result.ramAfter() + result.flowAfter()) - (result.ramBefore() + result.flowBefore()))).isLessThanOrEqualTo(delta);
         }
 
         assertions.assertAll();
@@ -103,7 +103,7 @@ class LimitingBranchResultTest {
 
     @Test
     void getCriticalBranchName() {
-        assertEquals("criticalBranchName", limitingBranchResult.getCriticalBranchName());
+        assertEquals("criticalBranchName", limitingBranchResult.criticalBranchName());
     }
 
     @Test

@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -121,11 +120,10 @@ public class StudyPointService {
                 .map(zone -> new CountryEICode(Country.valueOf(zone)).getCode())
                 .map(scalableZonalData::getData)
                 .filter(Objects::nonNull)
-                .map(scalable -> scalable.filterInjections(network).stream()
+                .flatMap(scalable -> scalable.filterInjections(network).stream()
                         .filter(Generator.class::isInstance)
-                        .map(Generator.class::cast)
-                        .collect(Collectors.toList()))
-                .forEach(generators -> generators.forEach(generator -> {
+                        .map(Generator.class::cast))
+                .forEach(generator -> {
                     if (Double.isNaN(generator.getTargetP())) {
                         generator.setTargetP(0.);
                     }
@@ -135,7 +133,7 @@ public class StudyPointService {
                     initGenerators.put(generator.getId(), initGenerator);
                     generator.setMinP(DEFAULT_PMIN);
                     generator.setMaxP(DEFAULT_PMAX);
-                }));
+                });
         LOGGER.info("Pmax and Pmin are set to default values for network {}", network.getNameOrId());
         return initGenerators;
     }
@@ -148,7 +146,7 @@ public class StudyPointService {
                 List<Generator> generators = scalable.filterInjections(network).stream()
                         .filter(Generator.class::isInstance)
                         .map(Generator.class::cast)
-                        .collect(Collectors.toList());
+                        .toList();
 
                 generators.forEach(generator -> {
                     generator.setMaxP(Math.max(generator.getTargetP(), initGenerators.get(generator.getId()).getpMax()));

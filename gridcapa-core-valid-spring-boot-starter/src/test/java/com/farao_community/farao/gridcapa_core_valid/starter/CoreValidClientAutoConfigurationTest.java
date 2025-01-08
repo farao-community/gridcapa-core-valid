@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
-public class CoreValidClientAutoConfigurationTest {
+class CoreValidClientAutoConfigurationTest {
     private AnnotationConfigApplicationContext context;
 
     @BeforeEach

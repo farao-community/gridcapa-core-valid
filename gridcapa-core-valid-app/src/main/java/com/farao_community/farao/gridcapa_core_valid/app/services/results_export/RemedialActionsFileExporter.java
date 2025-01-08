@@ -28,7 +28,6 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Theo Pascoli {@literal <theo.pascoli at rte-france.com>}
@@ -60,7 +59,7 @@ public class RemedialActionsFileExporter extends AbstractResultFileExporter {
                     .map(studyPointResult -> getResultCsvItemsFromStudyPointResult(studyPointResult, cracCreationContext))
                     .flatMap(Collection::stream)
                     .distinct()
-                    .collect(Collectors.toList());
+                    .toList();
 
             for (List<String> resultCsvItem : resultCsvItems) {
                 resultCsvPrinter.printRecord(resultCsvItem);
@@ -81,18 +80,18 @@ public class RemedialActionsFileExporter extends AbstractResultFileExporter {
         return studyPointResult.getListLimitingBranchResult().stream()
                 .map(limitingBranchResult -> getResultCsvItemsFromLimitingBranchResult(limitingBranchResult, studyPointResult, cracCreationContext))
                 .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static List<List<String>> getResultCsvItemsFromLimitingBranchResult(LimitingBranchResult limitingBranchResult, StudyPointResult studyPointResult, FbConstraintCreationContext cracCreationContext) {
-        return limitingBranchResult.getRemedialActions().stream()
+        return limitingBranchResult.remedialActions().stream()
                 .map(remedialAction -> getRemedialActionResultFields(limitingBranchResult, studyPointResult, cracCreationContext, remedialAction))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static List<String> getRemedialActionResultFields(LimitingBranchResult limitingBranchResult, StudyPointResult studyPointResult, FbConstraintCreationContext cracCreationContext, RemedialAction<?> remedialAction) {
         List<String> remedialActionResultFields = new ArrayList<>();
-        CriticalBranchCreationContext branchCnecCreationContext = cracCreationContext.getBranchCnecCreationContext(limitingBranchResult.getCriticalBranchId());
+        CriticalBranchCreationContext branchCnecCreationContext = cracCreationContext.getBranchCnecCreationContext(limitingBranchResult.criticalBranchId());
         String contingencyName = branchCnecCreationContext.getContingencyId()
                 .flatMap(id -> cracCreationContext.getCrac().getContingency(id).getName())
                 .orElse("BASECASE");

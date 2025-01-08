@@ -26,7 +26,6 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * ResultFileExporter implementation generating a file which gives an
@@ -59,7 +58,7 @@ public class MainResultFileExporter extends AbstractResultFileExporter {
                 .map(MainResultFileExporter::getResultCsvItemsFromStudyPointResult)
                 .flatMap(Collection::stream)
                 .distinct()
-                .collect(Collectors.toList());
+                .toList();
 
             for (List<String> resultCsvItem : resultCsvItems) {
                 resultCsvPrinter.printRecord(resultCsvItem);
@@ -79,7 +78,7 @@ public class MainResultFileExporter extends AbstractResultFileExporter {
     private static List<List<String>> getResultCsvItemsFromStudyPointResult(StudyPointResult studyPointResult) {
         return studyPointResult.getListLimitingBranchResult().stream()
             .map(limitingBranchResult -> getMainResultFields(limitingBranchResult, studyPointResult))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     private static List<String> getMainResultFields(LimitingBranchResult limitingBranchResult, StudyPointResult studyPointResult) {
@@ -87,10 +86,10 @@ public class MainResultFileExporter extends AbstractResultFileExporter {
 
         mainResultFields.add(studyPointResult.getPeriod());
         mainResultFields.add(studyPointResult.getId());
-        mainResultFields.add(limitingBranchResult.getCriticalBranchId());
+        mainResultFields.add(limitingBranchResult.criticalBranchId());
         mainResultFields.add(limitingBranchResult.getBranchStatus());
-        mainResultFields.add(String.valueOf(Math.round(limitingBranchResult.getRamBefore())));
-        mainResultFields.add(String.valueOf(Math.round(limitingBranchResult.getRamAfter())));
+        mainResultFields.add(String.valueOf(Math.round(limitingBranchResult.ramBefore())));
+        mainResultFields.add(String.valueOf(Math.round(limitingBranchResult.ramAfter())));
 
         return mainResultFields;
     }
