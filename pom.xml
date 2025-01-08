@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.farao-community.farao</groupId>
         <artifactId>farao-parent-ws</artifactId>
-        <version>1.10.1</version>
+        <version>1.11.0</version>
     </parent>
 
     <artifactId>gridcapa-core-valid</artifactId>
@@ -79,7 +79,6 @@
         <jakarta.xml.bind.version>4.0.2</jakarta.xml.bind.version>
         <jaxb-runtime.version>4.0.5</jaxb-runtime.version>
         <jsonapi.converter.version>0.11</jsonapi.converter.version>
-        <logstash.version>7.4</logstash.version>
         <maven.jaxb.version>4.0.8</maven.jaxb.version>
         <opencsv.version>5.6</opencsv.version>
 
@@ -125,11 +124,6 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-csv</artifactId>
                 <version>${apache.commons.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.logstash.logback</groupId>
-                <artifactId>logstash-logback-encoder</artifactId>
-                <version>${logstash.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.opencsv</groupId>
