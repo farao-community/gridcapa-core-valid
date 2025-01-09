@@ -13,7 +13,6 @@ import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPoints
 import com.powsybl.glsk.api.GlskDocument;
 import com.powsybl.glsk.api.io.GlskDocumentImporters;
 import com.powsybl.iidm.network.Network;
-
 import com.powsybl.openrao.data.crac.api.parameters.CracCreationParameters;
 import com.powsybl.openrao.data.crac.io.fbconstraint.FbConstraintCreationContext;
 import com.powsybl.openrao.data.crac.io.fbconstraint.FbConstraintImporter;
@@ -27,7 +26,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -91,8 +91,8 @@ public class FileImporter {
 
     String getFilenameFromUrl(String url) {
         try {
-            return FilenameUtils.getName(new URL(url).getPath());
-        } catch (MalformedURLException e) {
+            return FilenameUtils.getName(new URI(url).toURL().getPath());
+        } catch (MalformedURLException | URISyntaxException e) {
             throw new CoreValidInvalidDataException(String.format("URL is invalid: %s", url), e);
         }
     }

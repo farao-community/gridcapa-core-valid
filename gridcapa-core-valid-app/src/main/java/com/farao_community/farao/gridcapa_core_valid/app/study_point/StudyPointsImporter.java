@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
@@ -43,7 +42,7 @@ public final class StudyPointsImporter {
     public static List<StudyPoint> importStudyPoints(InputStream studyPointsStream, OffsetDateTime timestamp) {
         List<StudyPoint> allStudyPoints = StudyPointsImporter.importStudyPoints(studyPointsStream);
         int period = timestamp.atZoneSameInstant(ZoneId.of("Europe/Paris")).getHour();
-        return allStudyPoints.stream().filter(studyPoint -> studyPoint.getPeriod() == period).collect(Collectors.toList());
+        return allStudyPoints.stream().filter(studyPoint -> studyPoint.getPeriod() == period).toList();
     }
 
     private static List<StudyPoint> importStudyPoints(Reader reader) {

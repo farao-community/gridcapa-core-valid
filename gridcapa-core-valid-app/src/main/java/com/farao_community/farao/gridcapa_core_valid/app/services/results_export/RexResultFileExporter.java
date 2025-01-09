@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * ResultFileExporter implementation generating a zip archive with the following files:
@@ -63,7 +62,7 @@ public class RexResultFileExporter extends AbstractResultFileExporter {
                     .map(RexResultFileExporter::getResultCsvItemsFromStudyPointResult)
                     .flatMap(Collection::stream)
                     .distinct()
-                    .collect(Collectors.toList());
+                    .toList();
 
             for (List<String> resultCsvItem : resultCsvItems) {
                 resultCsvPrinter.printRecord(resultCsvItem);
@@ -83,7 +82,7 @@ public class RexResultFileExporter extends AbstractResultFileExporter {
     private static List<List<String>> getResultCsvItemsFromStudyPointResult(StudyPointResult studyPointResult) {
         return studyPointResult.getListLimitingBranchResult().stream()
                 .map(limitingBranchResult -> getRexResultFields(limitingBranchResult, studyPointResult))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static List<String> getRexResultFields(LimitingBranchResult limitingBranchResult, StudyPointResult studyPointResult) {
@@ -91,19 +90,19 @@ public class RexResultFileExporter extends AbstractResultFileExporter {
 
         rexResultFields.add(studyPointResult.getPeriod());
         rexResultFields.add(studyPointResult.getId());
-        rexResultFields.add(limitingBranchResult.getCriticalBranchId());
-        rexResultFields.add(limitingBranchResult.getCriticalBranchName());
-        Optional<Contingency> optionalContingency = limitingBranchResult.getState().getContingency();
+        rexResultFields.add(limitingBranchResult.criticalBranchId());
+        rexResultFields.add(limitingBranchResult.criticalBranchName());
+        Optional<Contingency> optionalContingency = limitingBranchResult.state().getContingency();
         if (optionalContingency.isPresent()) {
             rexResultFields.add(optionalContingency.get().getName().orElse(""));
         } else {
             rexResultFields.add("");
         }
         rexResultFields.add(limitingBranchResult.getBranchStatus());
-        rexResultFields.add(String.valueOf(Math.round(limitingBranchResult.getRamBefore())));
-        rexResultFields.add(String.valueOf(Math.round(limitingBranchResult.getRamAfter())));
-        rexResultFields.add(String.valueOf(Math.round(limitingBranchResult.getFlowBefore())));
-        rexResultFields.add(String.valueOf(Math.round(limitingBranchResult.getFlowAfter())));
+        rexResultFields.add(String.valueOf(Math.round(limitingBranchResult.ramBefore())));
+        rexResultFields.add(String.valueOf(Math.round(limitingBranchResult.ramAfter())));
+        rexResultFields.add(String.valueOf(Math.round(limitingBranchResult.flowBefore())));
+        rexResultFields.add(String.valueOf(Math.round(limitingBranchResult.flowAfter())));
 
         return rexResultFields;
     }
