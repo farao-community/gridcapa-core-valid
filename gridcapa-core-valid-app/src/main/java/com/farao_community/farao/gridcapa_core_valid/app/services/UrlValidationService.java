@@ -38,7 +38,7 @@ public class UrlValidationService {
         try {
             URL url = new URI(urlString).toURL();
             return url.openStream();
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException | URISyntaxException | IllegalArgumentException e) {
             throw new CoreValidInvalidDataException(String.format("Cannot download FileResource file from URL '%s'", urlString), e);
         }
     }
