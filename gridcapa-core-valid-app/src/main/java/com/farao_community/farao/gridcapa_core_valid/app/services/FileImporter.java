@@ -92,7 +92,7 @@ public class FileImporter {
     String getFilenameFromUrl(String url) {
         try {
             return FilenameUtils.getName(new URI(url).toURL().getPath());
-        } catch (MalformedURLException | URISyntaxException e) {
+        } catch (MalformedURLException | URISyntaxException | IllegalArgumentException e) {
             throw new CoreValidInvalidDataException(String.format("URL is invalid: %s", url), e);
         }
     }
