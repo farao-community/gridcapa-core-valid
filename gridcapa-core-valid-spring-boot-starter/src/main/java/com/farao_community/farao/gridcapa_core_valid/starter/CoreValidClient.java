@@ -39,7 +39,7 @@ public class CoreValidClient {
 
     public void run(CoreValidRequest coreValidRequest, int priority) {
         LOGGER.info("Core valid request sent: {}", coreValidRequest);
-        amqpTemplate.send(coreValidClientProperties.getAmqp().getQueueName(), buildMessage(coreValidRequest, priority));
+        amqpTemplate.send(coreValidClientProperties.getBinding().getDestination(), buildMessage(coreValidRequest, priority));
     }
 
     public void run(CoreValidRequest coreValidRequest) {
@@ -54,11 +54,11 @@ public class CoreValidClient {
 
     private MessageProperties buildMessageProperties(int priority) {
         return MessagePropertiesBuilder.newInstance()
-                .setAppId(coreValidClientProperties.getAmqp().getApplicationId())
+                .setAppId(coreValidClientProperties.getBinding().getApplicationId())
                 .setContentEncoding(CONTENT_ENCODING)
                 .setContentType(CONTENT_TYPE)
                 .setDeliveryMode(MessageDeliveryMode.NON_PERSISTENT)
-                .setExpiration(coreValidClientProperties.getAmqp().getExpiration())
+                .setExpiration(coreValidClientProperties.getBinding().getExpiration())
                 .setPriority(priority)
                 .build();
     }

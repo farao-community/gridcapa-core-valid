@@ -34,11 +34,11 @@ class CoreValidClientTest {
 
     private CoreValidClientProperties buildProperties() {
         CoreValidClientProperties properties = new CoreValidClientProperties();
-        CoreValidClientProperties.AmqpConfiguration amqpConfiguration = new CoreValidClientProperties.AmqpConfiguration();
-        amqpConfiguration.setQueueName("my-queue");
-        amqpConfiguration.setExpiration("60000");
-        amqpConfiguration.setApplicationId("application-id");
-        properties.setAmqp(amqpConfiguration);
+        CoreValidClientProperties.BindingConfiguration bindingConfiguration = new CoreValidClientProperties.BindingConfiguration();
+        bindingConfiguration.setDestination("my-queue");
+        bindingConfiguration.setExpiration("60000");
+        bindingConfiguration.setApplicationId("application-id");
+        properties.setBinding(bindingConfiguration);
         return properties;
     }
 }

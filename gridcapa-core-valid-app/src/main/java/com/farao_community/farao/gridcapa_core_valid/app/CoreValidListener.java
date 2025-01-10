@@ -14,19 +14,20 @@ import com.farao_community.farao.gridcapa_core_valid.api.exception.AbstractCoreV
 import com.farao_community.farao.gridcapa_core_valid.api.resource.CoreValidRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageListener;
 import org.springframework.cloud.stream.function.StreamBridge;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
 @Component
-public class CoreValidListener implements MessageListener {
+public class CoreValidListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CoreValidListener.class);
     private static final String TASK_STATUS_UPDATE = "task-status-update";
@@ -35,38 +36,47 @@ public class CoreValidListener implements MessageListener {
     private final CoreValidHandler coreValidHandler;
     private final StreamBridge streamBridge;
 
-    public CoreValidListener(CoreValidHandler coreValidHandler, StreamBridge streamBridge) {
+    public CoreValidListener(final CoreValidHandler coreValidHandler,
+                             final StreamBridge streamBridge) {
         this.streamBridge = streamBridge;
         this.jsonApiConverter = new JsonApiConverter();
         this.coreValidHandler = coreValidHandler;
     }
 
-    @Override
-    public void onMessage(Message message) {
+    @Bean
+    public Consumer<Flux<byte[]>> request() {
+        return flux -> flux
+                .doOnNext(this::onMessage)
+                .subscribe();
+    }
+
+    public void onMessage(final byte[] req) {
         try {
-            CoreValidRequest coreValidRequest = jsonApiConverter.fromJsonMessage(message.getBody(), CoreValidRequest.class);
+            final CoreValidRequest coreValidRequest = jsonApiConverter.fromJsonMessage(req, CoreValidRequest.class);
             runCoreValidRequest(coreValidRequest);
-        } catch (RuntimeException e) {
+        } catch (final RuntimeException e) {
             LOGGER.error("Core valid exception occurred", e);
         }
     }
 
-    private void runCoreValidRequest(CoreValidRequest coreValidRequest) {
+    private void runCoreValidRequest(final CoreValidRequest coreValidRequest) {
         try {
             LOGGER.info("Core valid request received: {}", coreValidRequest);
             streamBridge.send(TASK_STATUS_UPDATE, new TaskStatusUpdate(UUID.fromString(coreValidRequest.getId()), TaskStatus.RUNNING));
-            String coreValidResponseId = coreValidHandler.handleCoreValidRequest(coreValidRequest);
+            final String coreValidResponseId = coreValidHandler.handleCoreValidRequest(coreValidRequest);
             updateTaskStatus(coreValidResponseId, coreValidRequest.getTimestamp(), TaskStatus.SUCCESS);
-        } catch (AbstractCoreValidException e) {
+        } catch (final AbstractCoreValidException e) {
             LOGGER.error("Core valid exception occurred", e);
             updateTaskStatus(coreValidRequest.getId(), coreValidRequest.getTimestamp(), TaskStatus.ERROR);
-        } catch (RuntimeException e) {
+        } catch (final RuntimeException e) {
             LOGGER.error("Unknown exception occurred", e);
             updateTaskStatus(coreValidRequest.getId(), coreValidRequest.getTimestamp(), TaskStatus.ERROR);
         }
     }
 
-    private void updateTaskStatus(String requestId, final OffsetDateTime timestamp, TaskStatus targetStatus) {
+    private void updateTaskStatus(final String requestId,
+                                  final OffsetDateTime timestamp,
+                                  final TaskStatus targetStatus) {
         streamBridge.send(TASK_STATUS_UPDATE, new TaskStatusUpdate(UUID.fromString(requestId), targetStatus));
         LOGGER.info("Updating task status to {} for timestamp {}", targetStatus, timestamp);
     }
