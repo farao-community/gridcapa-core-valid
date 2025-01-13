@@ -39,7 +39,9 @@ public class CoreValidClient {
 
     public void run(CoreValidRequest coreValidRequest, int priority) {
         LOGGER.info("Core valid request sent: {}", coreValidRequest);
-        amqpTemplate.send(coreValidClientProperties.getBinding().getDestination(), buildMessage(coreValidRequest, priority));
+        amqpTemplate.send(coreValidClientProperties.getBinding().getDestination(),
+                coreValidClientProperties.getBinding().getRoutingKey(),
+                buildMessage(coreValidRequest, priority));
     }
 
     public void run(CoreValidRequest coreValidRequest) {
