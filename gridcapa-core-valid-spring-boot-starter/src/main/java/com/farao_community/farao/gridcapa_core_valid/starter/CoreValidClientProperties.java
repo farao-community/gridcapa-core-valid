@@ -15,52 +15,15 @@ import java.util.Optional;
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
 @ConfigurationProperties("core-valid-runner")
-public class CoreValidClientProperties {
-    private BindingConfiguration binding;
-
-    public BindingConfiguration getBinding() {
-        return binding;
-    }
-
-    public void setBinding(final BindingConfiguration binding) {
-        this.binding = binding;
-    }
-
-    public static class BindingConfiguration {
-        private String destination;
-        private String routingKey;
-        private String expiration;
-        private String applicationId;
-
-        public String getDestination() {
-            return destination;
-        }
-
-        public void setDestination(final String destination) {
+public record CoreValidClientProperties(BindingConfiguration binding) {
+    public record BindingConfiguration(String destination, String routingKey, String expiration, String applicationId) {
+        public BindingConfiguration(final String destination,
+                                    final String routingKey,
+                                    final String expiration,
+                                    final String applicationId) {
             this.destination = destination;
-        }
-
-        public String getRoutingKey() {
-            return Optional.ofNullable(routingKey).orElse("#");
-        }
-
-        public void setRoutingKey(final String routingKey) {
-            this.routingKey = routingKey;
-        }
-
-        public String getExpiration() {
-            return expiration;
-        }
-
-        public void setExpiration(final String expiration) {
+            this.routingKey = Optional.ofNullable(routingKey).orElse("#");
             this.expiration = expiration;
-        }
-
-        public String getApplicationId() {
-            return applicationId;
-        }
-
-        public void setApplicationId(final String applicationId) {
             this.applicationId = applicationId;
         }
     }

@@ -33,12 +33,10 @@ class CoreValidClientTest {
     }
 
     private CoreValidClientProperties buildProperties() {
-        CoreValidClientProperties properties = new CoreValidClientProperties();
-        CoreValidClientProperties.BindingConfiguration bindingConfiguration = new CoreValidClientProperties.BindingConfiguration();
-        bindingConfiguration.setDestination("my-queue");
-        bindingConfiguration.setExpiration("60000");
-        bindingConfiguration.setApplicationId("application-id");
-        properties.setBinding(bindingConfiguration);
-        return properties;
+        return new CoreValidClientProperties(
+                new CoreValidClientProperties.BindingConfiguration("my-queue",
+                        null,
+                        "60000",
+                        "application-id"));
     }
 }

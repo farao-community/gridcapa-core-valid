@@ -31,36 +31,37 @@ public class CoreValidClient {
     private final CoreValidClientProperties coreValidClientProperties;
     private final JsonApiConverter jsonConverter;
 
-    public CoreValidClient(AmqpTemplate amqpTemplate, CoreValidClientProperties coreValidClientProperties) {
+    public CoreValidClient(final AmqpTemplate amqpTemplate, final CoreValidClientProperties coreValidClientProperties) {
         this.amqpTemplate = amqpTemplate;
         this.coreValidClientProperties = coreValidClientProperties;
         this.jsonConverter = new JsonApiConverter();
     }
 
-    public void run(CoreValidRequest coreValidRequest, int priority) {
+    public void run(final CoreValidRequest coreValidRequest,
+                    final int priority) {
         LOGGER.info("Core valid request sent: {}", coreValidRequest);
-        amqpTemplate.send(coreValidClientProperties.getBinding().getDestination(),
-                coreValidClientProperties.getBinding().getRoutingKey(),
+        amqpTemplate.send(coreValidClientProperties.binding().destination(),
+                coreValidClientProperties.binding().routingKey(),
                 buildMessage(coreValidRequest, priority));
     }
 
-    public void run(CoreValidRequest coreValidRequest) {
+    public void run(final CoreValidRequest coreValidRequest) {
         run(coreValidRequest, DEFAULT_PRIORITY);
     }
 
-    public Message buildMessage(CoreValidRequest coreValidRequest, int priority) {
+    public Message buildMessage(final CoreValidRequest coreValidRequest, final int priority) {
         return MessageBuilder.withBody(jsonConverter.toJsonMessage(coreValidRequest))
                 .andProperties(buildMessageProperties(priority))
                 .build();
     }
 
-    private MessageProperties buildMessageProperties(int priority) {
+    private MessageProperties buildMessageProperties(final int priority) {
         return MessagePropertiesBuilder.newInstance()
-                .setAppId(coreValidClientProperties.getBinding().getApplicationId())
+                .setAppId(coreValidClientProperties.binding().applicationId())
                 .setContentEncoding(CONTENT_ENCODING)
                 .setContentType(CONTENT_TYPE)
                 .setDeliveryMode(MessageDeliveryMode.NON_PERSISTENT)
-                .setExpiration(coreValidClientProperties.getBinding().getExpiration())
+                .setExpiration(coreValidClientProperties.binding().expiration())
                 .setPriority(priority)
                 .build();
     }
