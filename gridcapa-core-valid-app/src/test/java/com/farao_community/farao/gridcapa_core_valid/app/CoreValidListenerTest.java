@@ -14,8 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -64,8 +62,7 @@ class CoreValidListenerTest {
     @Test
     void checkThatCorrectMessageIsHandledCorrectly() throws URISyntaxException, IOException {
         byte[] correctMessage = Files.readAllBytes(Paths.get(getClass().getResource("/validRequest.json").toURI()));
-        Message message = MessageBuilder.withBody(correctMessage).build();
-        coreValidListener.onMessage(message);
+        coreValidListener.onMessage(correctMessage);
         Mockito.verify(streamBridge, Mockito.times(2)).send(Mockito.anyString(), Mockito.any());
         Mockito.verify(coreValidHandler, Mockito.times(1)).handleCoreValidRequest(Mockito.any(CoreValidRequest.class));
     }
@@ -73,8 +70,7 @@ class CoreValidListenerTest {
     @Test
     void checkThatInvalidMessageReturnsError() throws URISyntaxException, IOException {
         byte[] invalidMessage = Files.readAllBytes(Paths.get(getClass().getResource("/invalidRequest.json").toURI()));
-        Message message = MessageBuilder.withBody(invalidMessage).build();
-        coreValidListener.onMessage(message);
+        coreValidListener.onMessage(invalidMessage);
         Mockito.verify(streamBridge, Mockito.times(0)).send(Mockito.anyString(), Mockito.any());
         Mockito.verify(coreValidHandler, Mockito.times(0)).handleCoreValidRequest(Mockito.any(CoreValidRequest.class));
     }
