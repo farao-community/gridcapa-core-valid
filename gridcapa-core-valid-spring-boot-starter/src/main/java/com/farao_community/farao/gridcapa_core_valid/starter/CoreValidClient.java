@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
+// EnableConfigurationProperties has been put here to make this package standalone and simplify its usage by other applications
 @EnableConfigurationProperties(CoreValidClientProperties.class)
 @Component
 public class CoreValidClient {
