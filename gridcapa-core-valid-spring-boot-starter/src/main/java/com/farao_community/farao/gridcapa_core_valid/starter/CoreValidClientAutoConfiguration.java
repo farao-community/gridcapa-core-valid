@@ -8,12 +8,14 @@
 package com.farao_community.farao.gridcapa_core_valid.starter;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
+ * This config class allows the scanning of the package by Spring Boot, hence declaring CoreValidClient as a bean
  */
-// This config class allows the scanning of the package by Spring Boot, hence declaring CoreValidClient as a bean
 @Configuration
 @EnableConfigurationProperties(CoreValidClientProperties.class)
-public class CoreValidAutoConfiguration {
+@ComponentScan
+public class CoreValidClientAutoConfiguration {
 }
