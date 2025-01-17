@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
+// This config class allows the scanning of the package by Spring Boot, hence declaring CoreValidClient as a bean
 @Configuration
 @EnableConfigurationProperties(CoreValidClientProperties.class)
 public class CoreValidAutoConfiguration {
