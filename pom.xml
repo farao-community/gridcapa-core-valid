@@ -84,7 +84,7 @@
 
         <!-- BUSINESS DEPENDENCIES -->
         <farao.dependencies.version>1.40.0</farao.dependencies.version>
-        <gridcapa.rao.runner.starter.version>1.34.0</gridcapa.rao.runner.starter.version>
+        <gridcapa.rao.runner.starter.version>1.37.0</gridcapa.rao.runner.starter.version>
         <task-manager.version>1.34.0</task-manager.version>
         <gridcapa.starter.minio.adapter.version>1.4.0</gridcapa.starter.minio.adapter.version>
     </properties>
