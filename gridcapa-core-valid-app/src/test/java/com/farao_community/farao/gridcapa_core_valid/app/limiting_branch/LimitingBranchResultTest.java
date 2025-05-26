@@ -69,7 +69,7 @@ class LimitingBranchResultTest {
 
         assertEquals(6, limitingBranchResults.size());
         assertEquals("BE_CBCO_000003", limitingBranchResults.get(4).criticalBranchId());
-        assertEquals("BE_CO_00001 - curative", limitingBranchResults.get(4).state().getId());
+        assertEquals("BE_CO_00001 - curative - 202107222230", limitingBranchResults.get(4).state().getId());
         assertEquals(0, limitingBranchResults.get(4).remedialActions().size());
         assertEquals("id", limitingBranchResults.get(4).verticeId());
         assertEquals(-1564, Math.floor(limitingBranchResults.get(4).ramAfter()));
