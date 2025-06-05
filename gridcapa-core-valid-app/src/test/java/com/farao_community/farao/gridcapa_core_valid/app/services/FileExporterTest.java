@@ -22,7 +22,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,7 +47,7 @@ class FileExporterTest {
     @Autowired
     private FileImporter fileImporter;
 
-    @MockBean
+    @MockitoBean
     private MinioAdapter minioAdapter;
 
     private final OffsetDateTime dateTime = OffsetDateTime.parse("2021-07-22T22:30Z");
