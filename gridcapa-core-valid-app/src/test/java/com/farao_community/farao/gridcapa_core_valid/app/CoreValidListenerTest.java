@@ -55,7 +55,7 @@ class CoreValidListenerTest {
     }
 
     @BeforeEach
-    public void resetMocks() {
+    void resetMocks() {
         Mockito.reset(amqpTemplate, coreValidHandler, streamBridge);
     }
 

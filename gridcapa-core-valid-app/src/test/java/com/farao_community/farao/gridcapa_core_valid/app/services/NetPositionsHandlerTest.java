@@ -37,7 +37,7 @@ class NetPositionsHandlerTest {
     private GlskDocument glskDocument;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         refProgStream = getClass().getResourceAsStream(testDirectory + "/20210723-F110.xml");
         allStudyPoints = StudyPointsImporter.importStudyPoints(getClass().getResourceAsStream(testDirectory + "/20210723-Points_Etudes-v01.csv"));
         glskDocument = GlskDocumentImporters.importGlsk(getClass().getResourceAsStream(testDirectory + "/20210723-F226-v1.xml"));
