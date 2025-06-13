@@ -63,7 +63,7 @@ class StudyPointServiceTest {
     private final Map<String, Double> coreNetPositions = new HashMap<>();
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         coreNetPositions.put("FR", -50.);
         coreNetPositions.put("DE", -450.);
         coreNetPositions.put("NL", 225.);
