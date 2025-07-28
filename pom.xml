@@ -71,6 +71,7 @@
     </modules>
 
     <properties>
+        <argLine /> <!-- required for java agent declaration, do not remove -->
         <!-- TECHNICAL DEPENDENCIES -->
         <apache.commons.version>1.9.0</apache.commons.version>
         <commons.io.version>2.15.1</commons.io.version>
