@@ -39,12 +39,12 @@ public final class NetPositionsHandler {
         throw new IllegalStateException("Utility class");
     }
 
-    public static Map<String, Double> computeCoreReferenceNetPositions(ReferenceProgram referenceProgram) {
+    public static Map<String, Double> computeCoreReferenceNetPositions(final ReferenceProgram referenceProgram) {
         final Map<String, Double> coreNetPositions = new TreeMap<>();
-        referenceProgram.getReferenceExchangeDataList().forEach(refXData -> {
-            final String areaIn = refXData.getAreaIn().toString();
-            final String areaOut = refXData.getAreaOut().toString();
-            final double refFlow = refXData.getFlow();
+        referenceProgram.getReferenceExchangeDataList().forEach(referenceExchangeData -> {
+            final String areaIn = referenceExchangeData.getAreaIn().toString();
+            final String areaOut = referenceExchangeData.getAreaOut().toString();
+            final double refFlow = referenceExchangeData.getFlow();
 
             if (isAreaInCore(areaIn) && isAreaInCore(areaOut)) {
                 coreNetPositions.put(areaIn, coreNetPositions.getOrDefault(areaIn, 0.) - refFlow);

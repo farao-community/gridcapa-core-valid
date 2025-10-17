@@ -48,7 +48,7 @@ public class RemedialActionsFileExporter extends AbstractResultFileExporter {
                                        final FbConstraintCreationContext cracCreationContext) {
         exportStudyPointResult(studyPointResults,
                                timestamp,
-                                  r -> getResultCsvItemsFromStudyPointResult(r, cracCreationContext));
+                               r -> getResultCsvItemsFromStudyPointResult(r, cracCreationContext));
         LOGGER.info("Remedial Actions result file was successfully uploaded on minIO");
     }
 
