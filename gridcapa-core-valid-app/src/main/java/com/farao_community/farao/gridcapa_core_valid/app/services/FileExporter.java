@@ -49,7 +49,10 @@ public class FileExporter {
     private final RemedialActionsFileExporter remedialActionsFileExporter;
     private final RexResultFileExporter rexResultFileExporter;
 
-    public FileExporter(MinioAdapter minioAdapter, MainResultFileExporter mainResultFileExporter, RemedialActionsFileExporter remedialActionsFileExporter, RexResultFileExporter rexResultFileExporter) {
+    public FileExporter(final MinioAdapter minioAdapter,
+                        final MainResultFileExporter mainResultFileExporter,
+                        final RemedialActionsFileExporter remedialActionsFileExporter,
+                        final RexResultFileExporter rexResultFileExporter) {
         this.minioAdapter = minioAdapter;
         this.mainResultFileExporter = mainResultFileExporter;
         this.remedialActionsFileExporter = remedialActionsFileExporter;
@@ -57,26 +60,29 @@ public class FileExporter {
     }
 
     //region Export of Results
-    public void exportStudyPointResult(List<StudyPointResult> studyPointResults, CoreValidRequest coreValidRequest, FbConstraintCreationContext cracCreationContext) {
+    public void exportStudyPointResult(final List<StudyPointResult> studyPointResults,
+                                       final CoreValidRequest coreValidRequest,
+                                       final FbConstraintCreationContext cracCreationContext) {
+        final OffsetDateTime validRequestTimestamp = coreValidRequest.getTimestamp();
         if (coreValidRequest.getLaunchedAutomatically()) {
-            mainResultFileExporter.exportStudyPointResult(studyPointResults, coreValidRequest.getTimestamp());
+            mainResultFileExporter.exportStudyPointResult(studyPointResults, validRequestTimestamp);
         }
-        rexResultFileExporter.exportStudyPointResult(studyPointResults, coreValidRequest.getTimestamp());
-        remedialActionsFileExporter.exportStudyPointResult(studyPointResults, coreValidRequest.getTimestamp(), cracCreationContext);
+        rexResultFileExporter.exportStudyPointResult(studyPointResults, validRequestTimestamp);
+        remedialActionsFileExporter.exportStudyPointResult(studyPointResults, validRequestTimestamp, cracCreationContext);
     }
     //endregion
 
     //region Shifted CGM uploading on minIO
-    public String saveShiftedCgm(Network network, StudyPoint studyPoint) {
-        String fileName = network.getNameOrId() + "_" + studyPoint.getVerticeId() + ".xiidm";
-        String networkPath = String.format(ARTIFACTS_S, fileName);
-        MemDataSource memDataSource = new MemDataSource();
+    public String saveShiftedCgm(final Network network, final StudyPoint studyPoint) {
+        final String fileName = network.getNameOrId() + "_" + studyPoint.getVertexId() + ".xiidm";
+        final String networkPath = getNetworkPathOf(fileName);
+        final MemDataSource memDataSource = new MemDataSource();
         NetworkHandler.removeAlegroVirtualGeneratorsFromNetwork(network);
         network.write("XIIDM", new Properties(), memDataSource);
-        try (InputStream is = memDataSource.newInputStream("", "xiidm")) {
+        try (final InputStream is = memDataSource.newInputStream("", "xiidm")) {
             LOGGER.info("Uploading shifted cgm to {}", networkPath);
             minioAdapter.uploadArtifact(networkPath, is);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new CoreValidInternalException("Error while trying to save shifted network", e);
         }
         return minioAdapter.generatePreSignedUrl(networkPath);
@@ -84,14 +90,14 @@ public class FileExporter {
     //endregion
 
     //region Shifted CGM with Pra uploading on minIO
-    public String saveShiftedCgmWithPra(Network network, String filename) {
-        String networkPath = String.format(ARTIFACTS_S, filename);
-        MemDataSource memDataSource = new MemDataSource();
+    public String saveShiftedCgmWithPra(final Network network, final String fileName) {
+        final String networkPath = getNetworkPathOf(fileName);
+        final MemDataSource memDataSource = new MemDataSource();
         network.write("UCTE", new Properties(), memDataSource);
-        try (InputStream is = memDataSource.newInputStream("", "uct")) {
+        try (final InputStream is = memDataSource.newInputStream("", "uct")) {
             LOGGER.info("Uploading shifted cgm with pra to {}", networkPath);
             minioAdapter.uploadArtifact(networkPath, is);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new CoreValidInternalException("Error while trying to save shifted network with pra", e);
         }
         return minioAdapter.generatePreSignedUrl(networkPath);
@@ -100,10 +106,10 @@ public class FileExporter {
 
     //region RaoParameters uploading on minIO
     public String saveRaoParametersAndGetUrl(RaoParameters raoParameters) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         JsonRaoParameters.write(raoParameters, baos);
-        String raoParametersDestinationPath = String.format(ARTIFACTS_S, RAO_PARAMETERS_FILE_NAME);
-        ByteArrayInputStream inStream = new ByteArrayInputStream(baos.toByteArray());
+        final String raoParametersDestinationPath = getNetworkPathOf(RAO_PARAMETERS_FILE_NAME);
+        final ByteArrayInputStream inStream = new ByteArrayInputStream(baos.toByteArray());
         minioAdapter.uploadArtifact(raoParametersDestinationPath, inStream);
         return minioAdapter.generatePreSignedUrl(raoParametersDestinationPath);
     }
@@ -111,20 +117,24 @@ public class FileExporter {
 
     //region Crac uploading on minIO
     public String saveCracInJsonFormat(Crac crac, OffsetDateTime timestamp) {
-        MemDataSource memDataSource = new MemDataSource();
-        String jsonCracFileName = String.format("crac_%s.json", removeIllegalCharacter(timestamp.toString()));
-        try (OutputStream os = memDataSource.newOutputStream(jsonCracFileName, false)) {
+        final MemDataSource memDataSource = new MemDataSource();
+        final String jsonCracFileName = String.format("crac_%s.json", removeIllegalCharacter(timestamp.toString()));
+        try (final OutputStream os = memDataSource.newOutputStream(jsonCracFileName, false)) {
             crac.write("JSON", os);
         } catch (IOException e) {
             throw new CoreValidInternalException("Error while trying to save converted CRAC file.", e);
         }
-        String cracPath = String.format(ARTIFACTS_S, jsonCracFileName);
-        try (InputStream is = memDataSource.newInputStream(jsonCracFileName)) {
+        final String cracPath = getNetworkPathOf(jsonCracFileName);
+        try (final InputStream is = memDataSource.newInputStream(jsonCracFileName)) {
             minioAdapter.uploadArtifact(cracPath, is);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new CoreValidInternalException("Error while trying to upload converted CRAC file.", e);
         }
         return minioAdapter.generatePreSignedUrl(cracPath);
+    }
+
+    private String getNetworkPathOf(final String fileName) {
+        return String.format(ARTIFACTS_S, fileName);
     }
 
     private String removeIllegalCharacter(String url) {

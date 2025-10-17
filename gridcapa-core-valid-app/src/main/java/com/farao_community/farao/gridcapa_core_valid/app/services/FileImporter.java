@@ -32,6 +32,8 @@ import java.net.URISyntaxException;
 import java.time.OffsetDateTime;
 import java.util.List;
 
+import static com.powsybl.openrao.data.crac.api.parameters.CracCreationParameters.MonitoredLineSide.MONITOR_LINES_ON_SIDE_ONE;
+
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  * @author Oualid Aloui {@literal <oualid.aloui at rte-france.com>}
@@ -41,61 +43,62 @@ public class FileImporter {
     private final UrlValidationService urlValidationService;
     private static final Logger LOGGER = LoggerFactory.getLogger(FileImporter.class);
 
-    public FileImporter(UrlValidationService urlValidationService) {
+    public FileImporter(final UrlValidationService urlValidationService) {
         this.urlValidationService = urlValidationService;
     }
 
-    public Network importNetwork(CoreValidFileResource cgmFile) {
-        InputStream networkStream = urlValidationService.openUrlStream(cgmFile.getUrl());
+    public Network importNetwork(final CoreValidFileResource cgmFile) {
+        final InputStream networkStream = urlValidationService.openUrlStream(cgmFile.getUrl());
         return NetworkHandler.loadNetwork(cgmFile.getFilename(), networkStream);
     }
 
-    public Network importNetworkFromUrl(String cgmUrl) {
+    public Network importNetworkFromUrl(final String cgmUrl) {
         return Network.read(getFilenameFromUrl(cgmUrl), urlValidationService.openUrlStream(cgmUrl));
     }
 
-    public GlskDocument importGlskFile(CoreValidFileResource glskFileResource) {
-        try (InputStream glskStream = urlValidationService.openUrlStream(glskFileResource.getUrl())) {
+    public GlskDocument importGlskFile(final CoreValidFileResource glskFileResource) {
+        try (final InputStream glskStream = urlValidationService.openUrlStream(glskFileResource.getUrl())) {
             LOGGER.info("Import of Glsk file {} ", glskFileResource.getFilename());
             return GlskDocumentImporters.importGlsk(glskStream);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new CoreValidInvalidDataException(String.format("Cannot download reference program file from URL '%s'", glskFileResource.getUrl()), e);
         }
     }
 
-    public ReferenceProgram importReferenceProgram(CoreValidFileResource refProgFile, OffsetDateTime timestamp) {
-        try (InputStream refProgStream = urlValidationService.openUrlStream(refProgFile.getUrl())) {
+    public ReferenceProgram importReferenceProgram(final CoreValidFileResource refProgFile, final OffsetDateTime timestamp) {
+        try (final InputStream refProgStream = urlValidationService.openUrlStream(refProgFile.getUrl())) {
             return RefProgImporter.importRefProg(refProgStream, timestamp);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new CoreValidInvalidDataException(String.format("Cannot download GLSK file from URL '%s'", refProgFile.getUrl()), e);
         }
     }
 
-    public List<StudyPoint> importStudyPoints(CoreValidFileResource studyPointsFileResource, OffsetDateTime timestamp) {
-        try (InputStream studyPointsStream = urlValidationService.openUrlStream(studyPointsFileResource.getUrl())) {
+    public List<StudyPoint> importStudyPoints(final CoreValidFileResource studyPointsFileResource, final OffsetDateTime timestamp) {
+        try (final InputStream studyPointsStream = urlValidationService.openUrlStream(studyPointsFileResource.getUrl())) {
             LOGGER.info("Import of study points from {} file for timestamp {} ", studyPointsFileResource.getFilename(), timestamp);
             return StudyPointsImporter.importStudyPoints(studyPointsStream, timestamp);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new CoreValidInvalidDataException(String.format("Cannot download study points file from URL '%s'", studyPointsFileResource.getUrl()), e);
         }
     }
 
-    public FbConstraintCreationContext importCrac(String cbcoraUrl, OffsetDateTime targetProcessDateTime, Network network) {
-        CracCreationParameters cracCreationParameters = new CracCreationParameters();
-        cracCreationParameters.setDefaultMonitoredLineSide(CracCreationParameters.MonitoredLineSide.MONITOR_LINES_ON_SIDE_ONE);
-        cracCreationParameters.addExtension(FbConstraintCracCreationParameters.class, new FbConstraintCracCreationParameters());
+    public FbConstraintCreationContext importCrac(final String cbcoraUrl, final OffsetDateTime targetProcessDateTime, final Network network) {
+        final CracCreationParameters cracCreationParameters = new CracCreationParameters();
+        cracCreationParameters.setDefaultMonitoredLineSide(MONITOR_LINES_ON_SIDE_ONE);
+        cracCreationParameters.addExtension(FbConstraintCracCreationParameters.class,
+                                            new FbConstraintCracCreationParameters());
         cracCreationParameters.getExtension(FbConstraintCracCreationParameters.class).setTimestamp(targetProcessDateTime);
-        try (InputStream cracInputStream = urlValidationService.openUrlStream(cbcoraUrl)) {
+        try (final InputStream cracInputStream = urlValidationService.openUrlStream(cbcoraUrl)) {
             return (FbConstraintCreationContext) new FbConstraintImporter().importData(cracInputStream, cracCreationParameters, network);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new CoreValidInvalidDataException(String.format("Cannot download cbcora file from URL '%s'", cbcoraUrl), e);
         }
     }
 
-    String getFilenameFromUrl(String url) {
+    String getFilenameFromUrl(final String url) {
         try {
             return FilenameUtils.getName(new URI(url).toURL().getPath());
-        } catch (MalformedURLException | URISyntaxException | IllegalArgumentException e) {
+        } catch (final MalformedURLException | URISyntaxException | IllegalArgumentException e) {
             throw new CoreValidInvalidDataException(String.format("URL is invalid: %s", url), e);
         }
     }

@@ -18,6 +18,7 @@ import com.powsybl.openrao.data.crac.api.cnec.Cnec;
 import com.powsybl.openrao.data.crac.api.cnec.FlowCnec;
 import com.powsybl.openrao.data.crac.api.networkaction.NetworkAction;
 import com.powsybl.openrao.data.crac.api.rangeaction.RangeAction;
+import com.powsybl.openrao.data.crac.io.commons.api.stdcreationcontext.BranchCnecCreationContext;
 import com.powsybl.openrao.data.crac.io.fbconstraint.FbConstraintCreationContext;
 import com.powsybl.openrao.data.raoresult.api.RaoResult;
 import com.powsybl.openrao.data.raoresult.io.json.RaoResultJsonImporter;
@@ -47,30 +48,38 @@ public class LimitingBranchResultService {
         this.urlValidationService = urlValidationService;
     }
 
-    public List<LimitingBranchResult> importRaoResult(StudyPoint studyPoint, FbConstraintCreationContext cracCreationContext, String raoResultUrl) {
-        String verticeId = studyPoint.getVerticeId();
-        try (InputStream raoResultStream = urlValidationService.openUrlStream(raoResultUrl)) {
+    public List<LimitingBranchResult> importRaoResult(final StudyPoint studyPoint,
+                                                      final FbConstraintCreationContext cracCreationContext,
+                                                      final String raoResultUrl) {
+        final String vertexId = studyPoint.getVertexId();
+        try (final InputStream raoResultStream = urlValidationService.openUrlStream(raoResultUrl)) {
 
-            RaoResult raoResult = new RaoResultJsonImporter().importData(raoResultStream, cracCreationContext.getCrac());
-            List<LimitingBranchResult> listLimitingBranches = new ArrayList<>();
-            cracCreationContext.getBranchCnecCreationContexts().forEach(branchCnecCreationContext -> {
-                if (branchCnecCreationContext.isImported()) {
-                    String criticalBranchId = branchCnecCreationContext.getNativeObjectId();
-                    Map<String, String> flowCnecsIds = branchCnecCreationContext.getCreatedCnecsIds();
-                    flowCnecsIds.forEach((instant, flowCnecId) -> {
-                        FlowCnec cnec = cracCreationContext.getCrac().getFlowCnec(flowCnecId);
-                        LimitingBranchResult branchResult = createLimitingBranchResult(verticeId, criticalBranchId, raoResult, cnec);
-                        listLimitingBranches.add(branchResult);
+            final RaoResult raoResult = new RaoResultJsonImporter().importData(raoResultStream,
+                                                                               cracCreationContext.getCrac());
+            final List<LimitingBranchResult> listLimitingBranches = new ArrayList<>();
+            cracCreationContext.getBranchCnecCreationContexts()
+                    .stream()
+                    .filter(BranchCnecCreationContext::isImported)
+                    .forEach(context -> {
+                        final String criticalBranchId = context.getNativeObjectId();
+                        final Map<String, String> flowCnecsIds = context.getCreatedCnecsIds();
+                        flowCnecsIds.forEach((instant, flowCnecId) -> {
+                            final FlowCnec cnec = cracCreationContext.getCrac().getFlowCnec(flowCnecId);
+                            final LimitingBranchResult branchResult = createLimitingBranchResult(vertexId, criticalBranchId, raoResult, cnec);
+                            listLimitingBranches.add(branchResult);
+                        });
+
                     });
-                }
-            });
             return listLimitingBranches;
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new CoreValidInvalidDataException(String.format("Cannot import RaoResult file from URL '%s'", raoResultUrl), e);
         }
     }
 
-    private LimitingBranchResult createLimitingBranchResult(String studyPointId, String criticalBranchId, RaoResult raoResult, FlowCnec cnec) {
+    private LimitingBranchResult createLimitingBranchResult(String studyPointId,
+                                                            String criticalBranchId,
+                                                            RaoResult raoResult,
+                                                            FlowCnec cnec) {
         Double ramBefore = raoResult.getMargin(null, cnec, Unit.MEGAWATT);
         Double ramAfter = raoResult.getMargin(cnec.getState().getInstant(), cnec, Unit.MEGAWATT);
         TwoSides cnecSide = cnec.getMonitoredSides().stream().collect(toOne());
@@ -92,7 +101,10 @@ public class LimitingBranchResultService {
         );
     }
 
-    private static double getFlow(RaoResult raoResult, Instant optimizedInstant, FlowCnec cnec, TwoSides cnecSide) {
+    private static double getFlow(RaoResult raoResult,
+                                  Instant optimizedInstant,
+                                  FlowCnec cnec,
+                                  TwoSides cnecSide) {
         Optional<Double> upperBound = cnec.getUpperBound(cnecSide, Unit.MEGAWATT);
         Optional<Double> lowerBound = cnec.getLowerBound(cnecSide, Unit.MEGAWATT);
 
@@ -106,7 +118,8 @@ public class LimitingBranchResultService {
         return flow;
     }
 
-    private Set<RemedialAction<?>> getRemedialActions(RaoResult raoResult, Cnec<?> cnec) {
+    private Set<RemedialAction<?>> getRemedialActions(RaoResult raoResult,
+                                                      Cnec<?> cnec) {
         Set<NetworkAction> networkActions = raoResult.getActivatedNetworkActionsDuringState(cnec.getState());
         Set<RangeAction<?>> rangeActions = raoResult.getActivatedRangeActionsDuringState(cnec.getState());
         Set<RemedialAction<?>> remedialActionsActivated = new HashSet<>();
