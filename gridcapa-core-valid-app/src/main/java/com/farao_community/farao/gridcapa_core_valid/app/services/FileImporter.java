@@ -48,12 +48,19 @@ public class FileImporter {
     }
 
     public Network importNetwork(final CoreValidFileResource cgmFile) {
-        final InputStream networkStream = urlValidationService.openUrlStream(cgmFile.getUrl());
-        return NetworkHandler.loadNetwork(cgmFile.getFilename(), networkStream);
+        try (final InputStream networkStream = urlValidationService.openUrlStream(cgmFile.getUrl())) {
+            return NetworkHandler.loadNetwork(cgmFile.getFilename(), networkStream);
+        } catch (final IOException e) {
+            throw new CoreValidInvalidDataException(String.format("Cannot download network file from URL '%s'", cgmFile.getUrl()), e);
+        }
     }
 
     public Network importNetworkFromUrl(final String cgmUrl) {
-        return Network.read(getFilenameFromUrl(cgmUrl), urlValidationService.openUrlStream(cgmUrl));
+        try (final InputStream networkStream = urlValidationService.openUrlStream(cgmUrl)) {
+            return Network.read(getFilenameFromUrl(cgmUrl), networkStream);
+        } catch (final IOException e) {
+            throw new CoreValidInvalidDataException(String.format("Cannot download network file from URL '%s'", cgmUrl), e);
+        }
     }
 
     public GlskDocument importGlskFile(final CoreValidFileResource glskFileResource) {
@@ -65,7 +72,8 @@ public class FileImporter {
         }
     }
 
-    public ReferenceProgram importReferenceProgram(final CoreValidFileResource refProgFile, final OffsetDateTime timestamp) {
+    public ReferenceProgram importReferenceProgram(final CoreValidFileResource refProgFile,
+                                                   final OffsetDateTime timestamp) {
         try (final InputStream refProgStream = urlValidationService.openUrlStream(refProgFile.getUrl())) {
             return RefProgImporter.importRefProg(refProgStream, timestamp);
         } catch (final IOException e) {
@@ -73,7 +81,8 @@ public class FileImporter {
         }
     }
 
-    public List<StudyPoint> importStudyPoints(final CoreValidFileResource studyPointsFileResource, final OffsetDateTime timestamp) {
+    public List<StudyPoint> importStudyPoints(final CoreValidFileResource studyPointsFileResource,
+                                              final OffsetDateTime timestamp) {
         try (final InputStream studyPointsStream = urlValidationService.openUrlStream(studyPointsFileResource.getUrl())) {
             LOGGER.info("Import of study points from {} file for timestamp {} ", studyPointsFileResource.getFilename(), timestamp);
             return StudyPointsImporter.importStudyPoints(studyPointsStream, timestamp);
@@ -82,7 +91,9 @@ public class FileImporter {
         }
     }
 
-    public FbConstraintCreationContext importCrac(final String cbcoraUrl, final OffsetDateTime targetProcessDateTime, final Network network) {
+    public FbConstraintCreationContext importCrac(final String cbcoraUrl,
+                                                  final OffsetDateTime targetProcessDateTime,
+                                                  final Network network) {
         final CracCreationParameters cracCreationParameters = new CracCreationParameters();
         cracCreationParameters.setDefaultMonitoredLineSide(MONITOR_LINES_ON_SIDE_ONE);
         cracCreationParameters.addExtension(FbConstraintCracCreationParameters.class,

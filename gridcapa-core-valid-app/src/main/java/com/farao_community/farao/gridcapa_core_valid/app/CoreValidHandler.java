@@ -125,7 +125,9 @@ public class CoreValidHandler {
         return studyPointResults;
     }
 
-    private StudyPointData fillStudyPointData(CoreValidRequest coreValidRequest, Network network, FbConstraintCreationContext cracCreationContext) {
+    private StudyPointData fillStudyPointData(final CoreValidRequest coreValidRequest,
+                                              final Network network,
+                                              final FbConstraintCreationContext cracCreationContext) {
         final ReferenceProgram referenceProgram = fileImporter.importReferenceProgram(coreValidRequest.getRefProg(), coreValidRequest.getTimestamp());
         final Map<String, Double> coreNetPositions = NetPositionsHandler.computeCoreReferenceNetPositions(referenceProgram);
         final GlskDocument glskDocument = fileImporter.importGlskFile(coreValidRequest.getGlsk());

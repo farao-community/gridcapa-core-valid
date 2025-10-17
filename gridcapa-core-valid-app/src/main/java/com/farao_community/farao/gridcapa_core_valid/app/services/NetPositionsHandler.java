@@ -67,13 +67,13 @@ public final class NetPositionsHandler {
                 if (studyPointZoneId.equals("NP_BE_ALEGrO")) {
                     // XLI_OB1B
                     final Optional<DanglingLine> danglingLine = network.getDanglingLineStream()
-                            .filter(dl -> dl.getPairingKey().equals(ALEGRO_BE_NODE_ID))
+                            .filter(dl -> ALEGRO_BE_NODE_ID.equals(dl.getPairingKey()))
                             .findAny();
                     danglingLine.ifPresent(dl -> dl.setP0(-netPosition));
                 } else if (studyPointZoneId.equals("NP_DE_ALEGrO")) {
                     // XLI_OB1A
                     final Optional<DanglingLine> danglingLine = network.getDanglingLineStream()
-                            .filter(dl -> dl.getPairingKey().equals(ALEGRO_DE_NODE_ID))
+                            .filter(dl -> ALEGRO_DE_NODE_ID.equals(dl.getPairingKey()))
                             .findAny();
                     danglingLine.ifPresent(dl -> dl.setP0(-netPosition));
                 } else {
