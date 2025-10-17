@@ -65,10 +65,10 @@ public class FileImporter {
 
     public GlskDocument importGlskFile(final CoreValidFileResource glskFileResource) {
         try (final InputStream glskStream = urlValidationService.openUrlStream(glskFileResource.getUrl())) {
-            LOGGER.info("Import of Glsk file {} ", glskFileResource.getFilename());
+            LOGGER.info("Import of GLSK file {} ", glskFileResource.getFilename());
             return GlskDocumentImporters.importGlsk(glskStream);
         } catch (final IOException e) {
-            throw new CoreValidInvalidDataException(String.format("Cannot download reference program file from URL '%s'", glskFileResource.getUrl()), e);
+            throw new CoreValidInvalidDataException(String.format("Cannot download GLSK file from URL '%s'", glskFileResource.getUrl()), e);
         }
     }
 
@@ -77,7 +77,7 @@ public class FileImporter {
         try (final InputStream refProgStream = urlValidationService.openUrlStream(refProgFile.getUrl())) {
             return RefProgImporter.importRefProg(refProgStream, timestamp);
         } catch (final IOException e) {
-            throw new CoreValidInvalidDataException(String.format("Cannot download GLSK file from URL '%s'", refProgFile.getUrl()), e);
+            throw new CoreValidInvalidDataException(String.format("Cannot download reference program file from URL '%s'", refProgFile.getUrl()), e);
         }
     }
 
