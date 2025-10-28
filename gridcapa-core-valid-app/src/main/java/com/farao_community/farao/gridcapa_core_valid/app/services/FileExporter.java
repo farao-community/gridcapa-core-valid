@@ -73,7 +73,8 @@ public class FileExporter {
     //endregion
 
     //region Shifted CGM uploading on minIO
-    public String saveShiftedCgm(final Network network, final StudyPoint studyPoint) {
+    public String saveShiftedCgm(final Network network,
+                                 final StudyPoint studyPoint) {
         final String fileName = network.getNameOrId() + "_" + studyPoint.getVertexId() + ".xiidm";
         final String networkPath = getNetworkPathOf(fileName);
         final MemDataSource memDataSource = new MemDataSource();
@@ -90,7 +91,8 @@ public class FileExporter {
     //endregion
 
     //region Shifted CGM with Pra uploading on minIO
-    public String saveShiftedCgmWithPra(final Network network, final String fileName) {
+    public String saveShiftedCgmWithPra(final Network network,
+                                        final String fileName) {
         final String networkPath = getNetworkPathOf(fileName);
         final MemDataSource memDataSource = new MemDataSource();
         network.write("UCTE", new Properties(), memDataSource);

@@ -108,11 +108,13 @@ public class CoreValidHandler {
                                                       final String formattedTimestamp) throws InterruptedException, ExecutionException {
         final Map<StudyPoint, RaoRequest> studyPointRaoRequests = new HashMap<>();
         final Map<StudyPoint, CompletableFuture<AbstractRaoResponse>> studyPointCompletableFutures = new HashMap<>();
-        List<StudyPointResult> studyPointResults = new ArrayList<>();
+        final List<StudyPointResult> studyPointResults;
 
         final List<StudyPoint> studyPoints = fileImporter.importStudyPoints(coreValidRequest.getStudyPoints(), coreValidRequest.getTimestamp());
-        if (!studyPoints.isEmpty()) {
-            StudyPointData studyPointData = fillStudyPointData(coreValidRequest, network, cracCreationContext);
+        if (studyPoints.isEmpty()) {
+            studyPointResults = new ArrayList<>();
+        } else {
+            final StudyPointData studyPointData = fillStudyPointData(coreValidRequest, network, cracCreationContext);
             studyPoints.forEach(studyPoint -> studyPointRaoRequests.put(studyPoint, studyPointService.computeStudyPointShift(studyPoint,
                                                                                                                              studyPointData,
                                                                                                                              coreValidRequest.getTimestamp(),
