@@ -7,24 +7,16 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.services.results_export;
 
-import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInvalidDataException;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResult;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
 import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
 import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -39,50 +31,33 @@ public class MainResultFileExporter extends AbstractResultFileExporter {
     private static final Logger LOGGER = LoggerFactory.getLogger(MainResultFileExporter.class);
     private static final String MAIN_SAMPLE_CSV_FILE = "outputs/%s-ValidationCORE-v[v].csv";
     private static final CSVFormat MAIN_CSV_FORMAT = CSVFormat.EXCEL.builder()
-        .setDelimiter(';')
-        .setHeader("Period", "Vertice ID", "Branch ID", "Branch Status", "RAM before", "RAM after")
-        .build();
+            .setDelimiter(';')
+            .setHeader("Period", "Vertice ID", "Branch ID", "Branch Status", "RAM before", "RAM after")
+            .build();
 
     private final MinioAdapter minioAdapter;
 
-    public MainResultFileExporter(MinioAdapter minioAdapter) {
+    public MainResultFileExporter(final MinioAdapter minioAdapter) {
         this.minioAdapter = minioAdapter;
     }
 
-    public void exportStudyPointResult(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp) {
-        ByteArrayOutputStream resultBaos = new ByteArrayOutputStream();
-        try {
-            CSVPrinter resultCsvPrinter = new CSVPrinter(new OutputStreamWriter(resultBaos), MAIN_CSV_FORMAT);
-
-            List<List<String>> resultCsvItems = studyPointResults.stream()
-                .map(MainResultFileExporter::getResultCsvItemsFromStudyPointResult)
-                .flatMap(Collection::stream)
-                .distinct()
-                .toList();
-
-            for (List<String> resultCsvItem : resultCsvItems) {
-                resultCsvPrinter.printRecord(resultCsvItem);
-            }
-
-            resultCsvPrinter.flush();
-            resultCsvPrinter.close();
-        } catch (IOException e) {
-            throw new CoreValidInvalidDataException("Error during export of studypoint results on Minio", e);
-        }
-        String filePath = getFormattedFilename(MAIN_SAMPLE_CSV_FILE, timestamp, minioAdapter);
-        InputStream inStream = new ByteArrayInputStream(resultBaos.toByteArray());
-        minioAdapter.uploadOutputForTimestamp(filePath, inStream, "CORE_VALID", ResultType.MAIN_RESULT.getFileType(), timestamp);
+    public void exportStudyPointResult(final List<StudyPointResult> studyPointResults,
+                                       final OffsetDateTime timestamp) {
+        exportStudyPointResult(studyPointResults,
+                               timestamp,
+                               MainResultFileExporter::getResultCsvItemsFromStudyPointResult);
         LOGGER.info("Main result file was successfully uploaded on minIO");
     }
 
-    private static List<List<String>> getResultCsvItemsFromStudyPointResult(StudyPointResult studyPointResult) {
-        return studyPointResult.getListLimitingBranchResult().stream()
-            .map(limitingBranchResult -> getMainResultFields(limitingBranchResult, studyPointResult))
-            .toList();
+    private static List<List<String>> getResultCsvItemsFromStudyPointResult(final StudyPointResult studyPointResult) {
+        return studyPointResult.getLimitingBranchResults().stream()
+                .map(limitingBranchResult -> getMainResultFields(limitingBranchResult, studyPointResult))
+                .toList();
     }
 
-    private static List<String> getMainResultFields(LimitingBranchResult limitingBranchResult, StudyPointResult studyPointResult) {
-        List<String> mainResultFields = new ArrayList<>();
+    private static List<String> getMainResultFields(final LimitingBranchResult limitingBranchResult,
+                                                    final StudyPointResult studyPointResult) {
+        final List<String> mainResultFields = new ArrayList<>();
 
         mainResultFields.add(studyPointResult.getPeriod());
         mainResultFields.add(studyPointResult.getId());
@@ -92,5 +67,25 @@ public class MainResultFileExporter extends AbstractResultFileExporter {
         mainResultFields.add(String.valueOf(Math.round(limitingBranchResult.ramAfter())));
 
         return mainResultFields;
+    }
+
+    @Override
+    protected MinioAdapter getMinioAdapter() {
+        return minioAdapter;
+    }
+
+    @Override
+    protected CSVFormat getCsvFormat() {
+        return MAIN_CSV_FORMAT;
+    }
+
+    @Override
+    protected String getCsvFile() {
+        return MAIN_SAMPLE_CSV_FILE;
+    }
+
+    @Override
+    protected ResultType getResultType() {
+        return ResultType.MAIN_RESULT;
     }
 }

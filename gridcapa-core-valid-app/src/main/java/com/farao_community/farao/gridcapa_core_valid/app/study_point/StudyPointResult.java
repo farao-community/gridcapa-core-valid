@@ -22,15 +22,15 @@ public class StudyPointResult {
     private String networkWithPraUrl;
     private String raoResultFileUrl;
     private String period;
-    private List<LimitingBranchResult> listLimitingBranchResult;
+    private List<LimitingBranchResult> limitingBranchResults;
 
-    public StudyPointResult(String id) {
+    public StudyPointResult(final String id) {
         this.id = id;
         this.status = Status.NOT_STARTED;
         this.shiftedCgmUrl = "";
         this.networkWithPraUrl = "";
         this.raoResultFileUrl = "";
-        this.listLimitingBranchResult = new ArrayList<>();
+        this.limitingBranchResults = new ArrayList<>();
     }
 
     public String getId() {
@@ -73,12 +73,12 @@ public class StudyPointResult {
         this.raoResultFileUrl = raoResultFileUrl;
     }
 
-    public List<LimitingBranchResult> getListLimitingBranchResult() {
-        return listLimitingBranchResult;
+    public List<LimitingBranchResult> getLimitingBranchResults() {
+        return limitingBranchResults;
     }
 
-    public void setListLimitingBranchResult(List<LimitingBranchResult> listLimitingBranchResult) {
-        this.listLimitingBranchResult = listLimitingBranchResult;
+    public void setLimitingBranchResults(final List<LimitingBranchResult> limitingBranchResults) {
+        this.limitingBranchResults = limitingBranchResults;
     }
 
     public String getPeriod() {

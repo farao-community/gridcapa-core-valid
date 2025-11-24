@@ -32,8 +32,8 @@ class StudyPointResultTest {
     }
 
     @Test
-    void getListLimitingBranchResult() {
-        assertEquals(0, studyPointResult.getListLimitingBranchResult().size());
+    void getLimitingBranchResults() {
+        assertEquals(0, studyPointResult.getLimitingBranchResults().size());
     }
 
     @Test

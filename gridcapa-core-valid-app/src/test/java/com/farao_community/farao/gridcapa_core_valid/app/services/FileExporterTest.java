@@ -122,7 +122,7 @@ class FileExporterTest {
         Mockito.when(limitingBranchResult.verticeId()).thenReturn("");
         List<LimitingBranchResult> limitingBranchResults = Collections.singletonList(limitingBranchResult);
         StudyPointResult studyPointResult = Mockito.mock(StudyPointResult.class);
-        Mockito.when(studyPointResult.getListLimitingBranchResult()).thenReturn(limitingBranchResults);
+        Mockito.when(studyPointResult.getLimitingBranchResults()).thenReturn(limitingBranchResults);
         return studyPointResult;
     }
 
@@ -143,7 +143,7 @@ class FileExporterTest {
         Mockito.when(remedialActionMock.getName()).thenReturn("RemedialActionName");
         Mockito.when(limitingBranchResult.remedialActions()).thenReturn(Set.of(remedialActionMock));
         StudyPointResult studyPointResult = Mockito.mock(StudyPointResult.class);
-        Mockito.when(studyPointResult.getListLimitingBranchResult()).thenReturn(List.of(limitingBranchResult));
+        Mockito.when(studyPointResult.getLimitingBranchResults()).thenReturn(List.of(limitingBranchResult));
         Mockito.when(studyPointResult.getPeriod()).thenReturn("period");
         Mockito.when(studyPointResult.getId()).thenReturn("vertice ID");
         return studyPointResult;

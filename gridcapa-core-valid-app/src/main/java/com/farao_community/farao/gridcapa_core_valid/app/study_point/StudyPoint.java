@@ -14,23 +14,23 @@ import java.util.Map;
  */
 public class StudyPoint {
     private final int period;
-    private final String verticeId;
+    private final String vertexId;
     private final Map<String, Double> positions;
     private final StudyPointResult studyPointResult;
 
-    public StudyPoint(int period, String verticeId, Map<String, Double> positions) {
+    public StudyPoint(final int period, final String vertexId, final Map<String, Double> positions) {
         this.period = period;
-        this.verticeId = verticeId;
+        this.vertexId = vertexId;
         this.positions = positions;
-        this.studyPointResult = new StudyPointResult(verticeId);
+        this.studyPointResult = new StudyPointResult(vertexId);
     }
 
     public int getPeriod() {
         return period;
     }
 
-    public String getVerticeId() {
-        return verticeId;
+    public String getVertexId() {
+        return vertexId;
     }
 
     public Map<String, Double> getPositions() {

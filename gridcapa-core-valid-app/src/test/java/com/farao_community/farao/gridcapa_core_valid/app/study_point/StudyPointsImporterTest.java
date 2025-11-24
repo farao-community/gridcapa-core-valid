@@ -28,7 +28,7 @@ class StudyPointsImporterTest {
         InputStream inputStream = getClass().getResource(testDirectory + "/20210723-Points_Etudes.csv").openStream();
         List<StudyPoint> studyPointList = StudyPointsImporter.importStudyPoints(inputStream);
         assertEquals(6, studyPointList.size());
-        assertEquals("0_1", studyPointList.get(0).getVerticeId());
+        assertEquals("0_1", studyPointList.get(0).getVertexId());
         assertEquals(0, studyPointList.get(0).getPeriod());
         assertEquals(3000.0, studyPointList.get(0).getPositions().get("NP_AT"));
     }
@@ -40,7 +40,7 @@ class StudyPointsImporterTest {
         OffsetDateTime dateTime = OffsetDateTime.parse("2021-07-23T22:30Z");
         List<StudyPoint> studyPointList = StudyPointsImporter.importStudyPoints(inputStream, dateTime);
         assertEquals(3, studyPointList.size());
-        assertEquals("0_1", studyPointList.get(0).getVerticeId());
+        assertEquals("0_1", studyPointList.get(0).getVertexId());
         assertEquals(0, studyPointList.get(0).getPeriod());
         assertEquals(3000.0, studyPointList.get(0).getPositions().get("NP_AT"));
 
@@ -49,7 +49,7 @@ class StudyPointsImporterTest {
         dateTime = OffsetDateTime.parse("2021-07-23T23:30Z");
         studyPointList = StudyPointsImporter.importStudyPoints(inputStream, dateTime);
         assertEquals(3, studyPointList.size());
-        assertEquals("1_1", studyPointList.get(0).getVerticeId());
+        assertEquals("1_1", studyPointList.get(0).getVertexId());
         assertEquals(1, studyPointList.get(0).getPeriod());
         assertEquals(4500.0, studyPointList.get(0).getPositions().get("NP_AT"));
 

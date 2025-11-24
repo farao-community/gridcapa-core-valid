@@ -17,22 +17,30 @@ import org.slf4j.LoggerFactory;
 import java.io.InputStream;
 import java.util.Optional;
 
+import static com.farao_community.farao.gridcapa_core_valid.app.CoreValidConstants.ALEGRO_BE_NODE_ID;
+import static com.farao_community.farao.gridcapa_core_valid.app.CoreValidConstants.ALEGRO_DE_NODE_ID;
+
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  */
 public final class NetworkHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NetworkHandler.class);
-    private static final String ALEGRO_GEN_BE = "XLI_OB1B_generator";
-    private static final String ALEGRO_GEN_DE = "XLI_OB1A_generator";
+    private static final String GENERATOR = "_generator";
+    private static final String ALEGRO_GEN_BE = ALEGRO_BE_NODE_ID + GENERATOR;
+    private static final String ALEGRO_GEN_DE = ALEGRO_DE_NODE_ID + GENERATOR;
+    private static final int VOLTAGE_LEVEL_6_UCTE = 220;
+    private static final int VOLTAGE_LEVEL_7_UCTE = 380;
+    private static final int VOLTAGE_LEVEL_6_CORE = 225;
+    private static final int VOLTAGE_LEVEL_7_CORE = 400;
 
     private NetworkHandler() {
         throw new IllegalStateException("Utility class");
     }
 
-    public static Network loadNetwork(String filename, InputStream inputStream) {
+    public static Network loadNetwork(final String filename, final InputStream inputStream) {
         LOGGER.info("IIDM import of network : {}", filename);
-        Network network = Network.read(filename, inputStream);
+        final Network network = Network.read(filename, inputStream);
         processNetworkForCore(network);
         return network;
     }
@@ -62,24 +70,24 @@ public final class NetworkHandler {
 
     }
 
-    static void updateVoltageLevelNominalV(Network network) {
+    static void updateVoltageLevelNominalV(final Network network) {
         network.getVoltageLevelStream().forEach(voltageLevel -> {
-            if (safeDoubleEquals(voltageLevel.getNominalV(), 380)) {
-                voltageLevel.setNominalV(400);
-            } else if (safeDoubleEquals(voltageLevel.getNominalV(), 220)) {
-                voltageLevel.setNominalV(225);
+            if (safeDoubleEquals(voltageLevel.getNominalV(), VOLTAGE_LEVEL_7_UCTE)) {
+                voltageLevel.setNominalV(VOLTAGE_LEVEL_7_CORE);
+            } else if (safeDoubleEquals(voltageLevel.getNominalV(), VOLTAGE_LEVEL_6_UCTE)) {
+                voltageLevel.setNominalV(VOLTAGE_LEVEL_6_CORE);
             }
             // Else it should not be changed cause is not equal to the default nominal voltage of voltage levels 6 or 7
         });
     }
 
-    private static boolean safeDoubleEquals(double a, double b) {
+    private static boolean safeDoubleEquals(final double a, final double b) {
         return Math.abs(a - b) < 1e-3;
     }
 
     static void createGeneratorOnAlegroNodes(Network network) {
-        createGeneratorOnXnode(network, "XLI_OB1B");
-        createGeneratorOnXnode(network, "XLI_OB1A");
+        createGeneratorOnXnode(network, ALEGRO_BE_NODE_ID);
+        createGeneratorOnXnode(network, ALEGRO_DE_NODE_ID);
     }
 
     private static void createGeneratorOnXnode(Network network, String xNodeId) {
@@ -92,7 +100,7 @@ public final class NetworkHandler {
             xNodeBus.getVoltageLevel().newGenerator()
                     .setBus(xNodeBus.getId())
                     .setEnsureIdUnicity(true)
-                    .setId(xNodeId + "_generator")
+                    .setId(xNodeId + GENERATOR)
                     .setMaxP(9999)
                     .setMinP(0)
                     .setTargetP(0)

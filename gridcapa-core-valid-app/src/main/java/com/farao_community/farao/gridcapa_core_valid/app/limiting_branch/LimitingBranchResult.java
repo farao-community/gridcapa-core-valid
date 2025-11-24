@@ -18,14 +18,14 @@ import java.util.Set;
  * @author Oualid Aloui {@literal <oualid.aloui at rte-france.com>}
  */
 public record LimitingBranchResult(String verticeId,
-                                                                String criticalBranchId,
-                                                                Double ramBefore,
-                                                                Double ramAfter,
-                                                                Double flowBefore,
-                                                                Double flowAfter,
-                                                                Set<RemedialAction<?>> remedialActions,
-                                                                String criticalBranchName,
-                                                                State state) {
+                                   String criticalBranchId,
+                                   Double ramBefore,
+                                   Double ramAfter,
+                                   Double flowBefore,
+                                   Double flowAfter,
+                                   Set<RemedialAction<?>> remedialActions,
+                                   String criticalBranchName,
+                                   State state) {
 
     public String getBranchStatus() {
         return switch (state().getInstant().getKind()) {

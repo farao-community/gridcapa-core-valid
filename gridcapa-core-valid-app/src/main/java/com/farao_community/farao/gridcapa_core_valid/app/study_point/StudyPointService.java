@@ -60,7 +60,7 @@ public class StudyPointService {
     }
 
     public RaoRequest computeStudyPointShift(StudyPoint studyPoint, StudyPointData studyPointData, OffsetDateTime timestamp, String coreValidRequesttId, String coreValidRunId) {
-        LOGGER.info("Running computation for study point {} ", studyPoint.getVerticeId());
+        LOGGER.info("Running computation for study point {} ", studyPoint.getVertexId());
         Network network = studyPointData.getNetwork();
         ZonalData<Scalable> scalableZonalData = studyPointData.getScalableZonalData();
         Map<String, Double> coreNetPositions = studyPointData.getCoreNetPositions();
@@ -68,7 +68,7 @@ public class StudyPointService {
         String raoParametersUrl = studyPointData.getRaoParametersUrl();
         RaoRequest raoRequest = null;
         String initialVariant = network.getVariantManager().getWorkingVariantId();
-        String newVariant = initialVariant + "_" + studyPoint.getVerticeId();
+        String newVariant = initialVariant + "_" + studyPoint.getVertexId();
         network.getVariantManager().cloneVariant(initialVariant, newVariant);
         network.getVariantManager().setWorkingVariant(newVariant);
         try {
@@ -77,7 +77,7 @@ public class StudyPointService {
             resetInitialPminPmax(network, scalableZonalData, initGenerators);
             String shiftedCgmUrl = fileExporter.saveShiftedCgm(network, studyPoint);
             studyPoint.getStudyPointResult().setShiftedCgmUrl(shiftedCgmUrl);
-            String raoDirPath = String.format("%s/artifacts/RAO-%s-%s/", minioAdapter.getProperties().getBasePath(), timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'_'HH-mm")), studyPoint.getVerticeId());
+            String raoDirPath = String.format("%s/artifacts/RAO-%s-%s/", minioAdapter.getProperties().getBasePath(), timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'_'HH-mm")), studyPoint.getVertexId());
             // For rao logs dispatcher, the rao request should correspond to the core valid request
             raoRequest = new RaoRequest.RaoRequestBuilder()
                     .withId(coreValidRequesttId)
@@ -88,7 +88,7 @@ public class StudyPointService {
                     .withResultsDestination(raoDirPath)
                     .build();
         } catch (Exception e) {
-            LOGGER.error("Error during study point {} computation", studyPoint.getVerticeId(), e);
+            LOGGER.error("Error during study point {} computation", studyPoint.getVertexId(), e);
             studyPoint.getStudyPointResult().setStatus(StudyPointResult.Status.ERROR);
         } finally {
             network.getVariantManager().setWorkingVariant(initialVariant);
@@ -98,11 +98,11 @@ public class StudyPointService {
     }
 
     public CompletableFuture<AbstractRaoResponse> computeStudyPointRao(StudyPoint studyPoint, RaoRequest raoRequest) {
-        eventsLogger.info("Running RAO for studypoint {} ...", studyPoint.getVerticeId());
+        eventsLogger.info("Running RAO for studypoint {} ...", studyPoint.getVertexId());
         try {
             return asynchronousRaoRunnerClient.runRaoAsynchronously(raoRequest);
         } catch (Exception e) {
-            String message = String.format("Error during RAO %s: %s", studyPoint.getVerticeId(), e.getMessage());
+            String message = String.format("Error during RAO %s: %s", studyPoint.getVertexId(), e.getMessage());
             eventsLogger.error(message);
             throw new CoreValidRaoException(message, e);
         }
@@ -159,7 +159,7 @@ public class StudyPointService {
 
     private void setSuccessResult(StudyPoint studyPoint, RaoSuccessResponse raoResponse, List<LimitingBranchResult> limitingBranchResults) {
         StudyPointResult result = studyPoint.getStudyPointResult();
-        result.setListLimitingBranchResult(limitingBranchResults);
+        result.setLimitingBranchResults(limitingBranchResults);
         result.setStatus(StudyPointResult.Status.SUCCESS);
         result.setNetworkWithPraUrl(raoResponse.getNetworkWithPraFileUrl());
         result.setRaoResultFileUrl(raoResponse.getRaoResultFileUrl());
