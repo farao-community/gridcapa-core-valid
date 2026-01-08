@@ -6,7 +6,6 @@
  */
 package com.farao_community.farao.gridcapa_core_valid.app.services.results_export;
 
-import com.farao_community.farao.gridcapa_core_valid.api.exception.CoreValidInvalidDataException;
 import com.farao_community.farao.gridcapa_core_valid.app.limiting_branch.LimitingBranchResult;
 import com.farao_community.farao.gridcapa_core_valid.app.study_point.StudyPointResult;
 import com.farao_community.farao.minio_adapter.starter.MinioAdapter;
@@ -14,16 +13,10 @@ import com.powsybl.openrao.data.crac.api.RemedialAction;
 import com.powsybl.openrao.data.crac.io.fbconstraint.CriticalBranchCreationContext;
 import com.powsybl.openrao.data.crac.io.fbconstraint.FbConstraintCreationContext;
 import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,53 +39,42 @@ public class RemedialActionsFileExporter extends AbstractResultFileExporter {
 
     private final MinioAdapter minioAdapter;
 
-    public RemedialActionsFileExporter(MinioAdapter minioAdapter) {
+    public RemedialActionsFileExporter(final MinioAdapter minioAdapter) {
         this.minioAdapter = minioAdapter;
     }
 
-    public void exportStudyPointResult(List<StudyPointResult> studyPointResults, OffsetDateTime timestamp, FbConstraintCreationContext cracCreationContext) {
-        ByteArrayOutputStream resultBaos = new ByteArrayOutputStream();
-        try {
-            CSVPrinter resultCsvPrinter = new CSVPrinter(new OutputStreamWriter(resultBaos), REMEDIAL_ACTIONS_CSV_FORMAT);
-
-            List<List<String>> resultCsvItems = studyPointResults.stream()
-                    .map(studyPointResult -> getResultCsvItemsFromStudyPointResult(studyPointResult, cracCreationContext))
-                    .flatMap(Collection::stream)
-                    .distinct()
-                    .toList();
-
-            for (List<String> resultCsvItem : resultCsvItems) {
-                resultCsvPrinter.printRecord(resultCsvItem);
-            }
-
-            resultCsvPrinter.flush();
-            resultCsvPrinter.close();
-        } catch (IOException e) {
-            throw new CoreValidInvalidDataException("Error during export of studypoint results on Minio", e);
-        }
-        String filePath = getFormattedFilename(REMEDIAL_ACTIONS_SAMPLE_CSV_FILE, timestamp, minioAdapter);
-        InputStream inStream = new ByteArrayInputStream(resultBaos.toByteArray());
-        minioAdapter.uploadOutputForTimestamp(filePath, inStream, "CORE_VALID", ResultType.REMEDIAL_ACTIONS_RESULT.getFileType(), timestamp);
+    public void exportStudyPointResult(final List<StudyPointResult> studyPointResults,
+                                       final OffsetDateTime timestamp,
+                                       final FbConstraintCreationContext cracCreationContext) {
+        exportStudyPointResult(studyPointResults,
+                               timestamp,
+                               r -> getResultCsvItemsFromStudyPointResult(r, cracCreationContext));
         LOGGER.info("Remedial Actions result file was successfully uploaded on minIO");
     }
 
-    private static List<List<String>> getResultCsvItemsFromStudyPointResult(StudyPointResult studyPointResult, FbConstraintCreationContext cracCreationContext) {
-        return studyPointResult.getListLimitingBranchResult().stream()
+    private static List<List<String>> getResultCsvItemsFromStudyPointResult(final StudyPointResult studyPointResult,
+                                                                            final FbConstraintCreationContext cracCreationContext) {
+        return studyPointResult.getLimitingBranchResults().stream()
                 .map(limitingBranchResult -> getResultCsvItemsFromLimitingBranchResult(limitingBranchResult, studyPointResult, cracCreationContext))
                 .flatMap(Collection::stream)
                 .toList();
     }
 
-    private static List<List<String>> getResultCsvItemsFromLimitingBranchResult(LimitingBranchResult limitingBranchResult, StudyPointResult studyPointResult, FbConstraintCreationContext cracCreationContext) {
+    private static List<List<String>> getResultCsvItemsFromLimitingBranchResult(final LimitingBranchResult limitingBranchResult,
+                                                                                final StudyPointResult studyPointResult,
+                                                                                final FbConstraintCreationContext cracCreationContext) {
         return limitingBranchResult.remedialActions().stream()
                 .map(remedialAction -> getRemedialActionResultFields(limitingBranchResult, studyPointResult, cracCreationContext, remedialAction))
                 .toList();
     }
 
-    private static List<String> getRemedialActionResultFields(LimitingBranchResult limitingBranchResult, StudyPointResult studyPointResult, FbConstraintCreationContext cracCreationContext, RemedialAction<?> remedialAction) {
-        List<String> remedialActionResultFields = new ArrayList<>();
-        CriticalBranchCreationContext branchCnecCreationContext = cracCreationContext.getBranchCnecCreationContext(limitingBranchResult.criticalBranchId());
-        String contingencyName = branchCnecCreationContext.getContingencyId()
+    private static List<String> getRemedialActionResultFields(final LimitingBranchResult limitingBranchResult,
+                                                              final StudyPointResult studyPointResult,
+                                                              final FbConstraintCreationContext cracCreationContext,
+                                                              final RemedialAction<?> remedialAction) {
+        final List<String> remedialActionResultFields = new ArrayList<>();
+        final CriticalBranchCreationContext branchCnecCreationContext = cracCreationContext.getBranchCnecCreationContext(limitingBranchResult.criticalBranchId());
+        final String contingencyName = branchCnecCreationContext.getContingencyId()
                 .flatMap(id -> cracCreationContext.getCrac().getContingency(id).getName())
                 .orElse("BASECASE");
 
@@ -103,5 +85,25 @@ public class RemedialActionsFileExporter extends AbstractResultFileExporter {
         remedialActionResultFields.add(remedialAction.getName());
 
         return remedialActionResultFields;
+    }
+
+    @Override
+    protected MinioAdapter getMinioAdapter() {
+        return minioAdapter;
+    }
+
+    @Override
+    protected CSVFormat getCsvFormat() {
+        return REMEDIAL_ACTIONS_CSV_FORMAT;
+    }
+
+    @Override
+    protected String getCsvFile() {
+        return REMEDIAL_ACTIONS_SAMPLE_CSV_FILE;
+    }
+
+    @Override
+    protected ResultType getResultType() {
+        return ResultType.REMEDIAL_ACTIONS_RESULT;
     }
 }

@@ -25,20 +25,20 @@ import java.util.StringJoiner;
 public class UrlValidationService {
     private final UrlWhitelistConfiguration urlWhitelistConfiguration;
 
-    public UrlValidationService(UrlWhitelistConfiguration urlWhitelistConfiguration) {
+    public UrlValidationService(final UrlWhitelistConfiguration urlWhitelistConfiguration) {
         this.urlWhitelistConfiguration = urlWhitelistConfiguration;
     }
 
-    public InputStream openUrlStream(String urlString) {
+    public InputStream openUrlStream(final String urlString) {
         if (urlWhitelistConfiguration.getWhitelist().stream().noneMatch(urlString::startsWith)) {
             StringJoiner sj = new StringJoiner(", ", "Whitelist: ", ".");
             urlWhitelistConfiguration.getWhitelist().forEach(sj::add);
             throw new CoreValidInvalidDataException(String.format("URL '%s' is not part of application's whitelisted url's %s", urlString, sj));
         }
         try {
-            URL url = new URI(urlString).toURL();
+            final URL url = new URI(urlString).toURL();
             return url.openStream();
-        } catch (IOException | URISyntaxException | IllegalArgumentException e) {
+        } catch (final IOException | URISyntaxException | IllegalArgumentException e) {
             throw new CoreValidInvalidDataException(String.format("Cannot download FileResource file from URL '%s'", urlString), e);
         }
     }

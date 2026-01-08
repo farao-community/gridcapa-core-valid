@@ -24,6 +24,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 
+import static com.farao_community.farao.gridcapa_core_valid.app.CoreValidConstants.ALEGRO_BE_NODE_ID;
+import static com.farao_community.farao.gridcapa_core_valid.app.CoreValidConstants.ALEGRO_DE_NODE_ID;
+import static com.powsybl.iidm.modification.scalable.ScalingParameters.Priority.RESPECT_OF_VOLUME_ASKED;
+
 /**
  * @author Ameni Walha {@literal <ameni.walha at rte-france.com>}
  * @author Oualid Aloui {@literal <oualid.aloui at rte-france.com>}
@@ -35,46 +39,56 @@ public final class NetPositionsHandler {
         throw new IllegalStateException("Utility class");
     }
 
-    public static Map<String, Double> computeCoreReferenceNetPositions(ReferenceProgram referenceProgram) {
-        Map<String, Double> coreNetPositions = new TreeMap<>();
+    public static Map<String, Double> computeCoreReferenceNetPositions(final ReferenceProgram referenceProgram) {
+        final Map<String, Double> coreNetPositions = new TreeMap<>();
         referenceProgram.getReferenceExchangeDataList().forEach(referenceExchangeData -> {
-            String areaIn = referenceExchangeData.getAreaIn().toString();
-            String areaOut = referenceExchangeData.getAreaOut().toString();
-            if (CoreAreasId.ID_MAPPING.containsValue(areaIn) && CoreAreasId.ID_MAPPING.containsValue(areaOut)) {
-                coreNetPositions.put(areaIn, coreNetPositions.getOrDefault(areaIn, 0.) - referenceExchangeData.getFlow());
-                coreNetPositions.put(areaOut, coreNetPositions.getOrDefault(areaOut, 0.) + referenceExchangeData.getFlow());
+            final String areaIn = referenceExchangeData.getAreaIn().toString();
+            final String areaOut = referenceExchangeData.getAreaOut().toString();
+            final double refFlow = referenceExchangeData.getFlow();
+
+            if (isAreaInCore(areaIn) && isAreaInCore(areaOut)) {
+                coreNetPositions.put(areaIn, coreNetPositions.getOrDefault(areaIn, 0.) - refFlow);
+                coreNetPositions.put(areaOut, coreNetPositions.getOrDefault(areaOut, 0.) + refFlow);
             }
         });
         return coreNetPositions;
     }
 
-    public static void shiftNetPositionToStudyPoint(Network network, StudyPoint studyPoint, ZonalData<Scalable> scalableZonalData, Map<String, Double> coreNetPositions) {
+    private static boolean isAreaInCore(final String area) {
+        return CoreAreasId.ID_MAPPING.containsValue(area);
+    }
+
+    public static void shiftNetPositionToStudyPoint(final Network network,
+                                                    final StudyPoint studyPoint,
+                                                    final ZonalData<Scalable> scalableZonalData,
+                                                    final Map<String, Double> coreNetPositions) {
         studyPoint.getPositions().forEach((studyPointZoneId, netPosition) -> {
             try {
                 if (studyPointZoneId.equals("NP_BE_ALEGrO")) {
                     // XLI_OB1B
-                    Optional<DanglingLine> danglingLine = network.getDanglingLineStream()
-                            .filter(dl -> dl.getPairingKey().equals("XLI_OB1B"))
+                    final Optional<DanglingLine> danglingLine = network.getDanglingLineStream()
+                            .filter(dl -> ALEGRO_BE_NODE_ID.equals(dl.getPairingKey()))
                             .findAny();
                     danglingLine.ifPresent(dl -> dl.setP0(-netPosition));
                 } else if (studyPointZoneId.equals("NP_DE_ALEGrO")) {
                     // XLI_OB1A
-                    Optional<DanglingLine> danglingLine = network.getDanglingLineStream()
-                            .filter(dl -> dl.getPairingKey().equals("XLI_OB1A"))
+                    final Optional<DanglingLine> danglingLine = network.getDanglingLineStream()
+                            .filter(dl -> ALEGRO_DE_NODE_ID.equals(dl.getPairingKey()))
                             .findAny();
                     danglingLine.ifPresent(dl -> dl.setP0(-netPosition));
                 } else {
-                    String zone = CoreAreasId.ID_MAPPING.get(studyPointZoneId);
-                    double shift = netPosition - coreNetPositions.getOrDefault(zone, 0.);
-                    LOGGER.info("Shift for zone {} : Study point {} | Ref prog {} | variation {}", zone, netPosition, coreNetPositions.getOrDefault(zone, 0.), shift);
-                    String zoneEiCode = new CountryEICode(Country.valueOf(zone)).getCode();
-                    Scalable scalable = scalableZonalData.getData(zoneEiCode);
+                    final String zone = CoreAreasId.ID_MAPPING.get(studyPointZoneId);
+                    final double refProg = coreNetPositions.getOrDefault(zone, 0.);
+                    final double shift = netPosition - refProg;
+                    LOGGER.info("Shift for zone {} : Study point {} | Ref prog {} | variation {}", zone, netPosition, refProg, shift);
+                    final String zoneEiCode = new CountryEICode(Country.valueOf(zone)).getCode();
+                    final Scalable scalable = scalableZonalData.getData(zoneEiCode);
                     if (scalable != null) {
-                        ScalingParameters scalingParameters = new ScalingParameters().setPriority(ScalingParameters.Priority.RESPECT_OF_VOLUME_ASKED);
+                        final ScalingParameters scalingParameters = new ScalingParameters().setPriority(RESPECT_OF_VOLUME_ASKED);
                         scalable.scale(network, shift, scalingParameters);
                     }
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 throw new CoreValidInternalException("Error during the net position shift for zone " + CoreAreasId.ID_MAPPING.get(studyPointZoneId), e);
             }
         });

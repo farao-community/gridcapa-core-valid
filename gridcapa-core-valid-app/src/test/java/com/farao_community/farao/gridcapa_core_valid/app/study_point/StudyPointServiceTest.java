@@ -123,7 +123,7 @@ class StudyPointServiceTest {
         Mockito.when(asynchronousRaoRunnerClient.runRaoAsynchronously(Mockito.any())).thenThrow(new RuntimeException(exceptionMessage));
         StudyPoint studyPoint = Mockito.mock(StudyPoint.class);
         String verticeId = "verticeId";
-        Mockito.when(studyPoint.getVerticeId()).thenReturn(verticeId);
+        Mockito.when(studyPoint.getVertexId()).thenReturn(verticeId);
         RaoRequest raoRequest = Mockito.mock(RaoRequest.class);
         try {
             studyPointService.computeStudyPointRao(studyPoint, raoRequest);
