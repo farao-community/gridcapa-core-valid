@@ -7,8 +7,8 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.services;
 
+import com.powsybl.iidm.network.BoundaryLine;
 import com.powsybl.iidm.network.Bus;
-import com.powsybl.iidm.network.DanglingLine;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Network;
 import org.slf4j.Logger;
@@ -83,7 +83,7 @@ public final class NetworkHandler {
     }
 
     private static void createGeneratorOnXnode(Network network, String xNodeId) {
-        Optional<DanglingLine> danglingLine = network.getDanglingLineStream()
+        Optional<BoundaryLine> danglingLine = network.getBoundaryLineStream()
                 .filter(dl -> dl.getPairingKey().equals(xNodeId))
                 .findAny();
 
