@@ -54,15 +54,15 @@ public final class NetPositionsHandler {
                 if (studyPointZoneId.equals("NP_BE_ALEGrO")) {
                     // XLI_OB1B
                     Optional<BoundaryLine> boundaryLine = network.getBoundaryLineStream()
-                            .filter(dl -> dl.getPairingKey().equals("XLI_OB1B"))
+                            .filter(bl -> bl.getPairingKey().equals("XLI_OB1B"))
                             .findAny();
-                    boundaryLine.ifPresent(dl -> dl.setP0(-netPosition));
+                    boundaryLine.ifPresent(bl -> bl.setP0(-netPosition));
                 } else if (studyPointZoneId.equals("NP_DE_ALEGrO")) {
                     // XLI_OB1A
                     Optional<BoundaryLine> boundaryLine = network.getBoundaryLineStream()
-                            .filter(dl -> dl.getPairingKey().equals("XLI_OB1A"))
+                            .filter(bl -> bl.getPairingKey().equals("XLI_OB1A"))
                             .findAny();
-                    boundaryLine.ifPresent(dl -> dl.setP0(-netPosition));
+                    boundaryLine.ifPresent(bl -> bl.setP0(-netPosition));
                 } else {
                     String zone = CoreAreasId.ID_MAPPING.get(studyPointZoneId);
                     double shift = netPosition - coreNetPositions.getOrDefault(zone, 0.);
