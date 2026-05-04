@@ -7,8 +7,8 @@
 
 package com.farao_community.farao.gridcapa_core_valid.app.services;
 
+import com.powsybl.iidm.network.BoundaryLine;
 import com.powsybl.iidm.network.Bus;
-import com.powsybl.iidm.network.DanglingLine;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Network;
 import org.slf4j.Logger;
@@ -50,13 +50,13 @@ public final class NetworkHandler {
         updateVoltageLevelNominalV(network);
 
         /*
-        When importing an UCTE network file, powsybl merges its X-nodes into dangling lines.
+        When importing an UCTE network file, powsybl merges its X-nodes into boundary lines.
         It can cause an error if a GLSK file associated to this network includes some factors on
         xNodes. The GLSK importers looks for a Generator (GSK) or Load (LSK) associated to this
         xNode. If the Generator/Load does not exist, the GLSK cannot be created.
 
         This post processor fix this problem, by creating for these two nodes a fictitious generator (P, Q = 0),
-        connected to the voltage level on which the dangling lines are linked.
+        connected to the voltage level on which the boundary lines are linked.
         */
         createGeneratorOnAlegroNodes(network);
 
@@ -83,12 +83,12 @@ public final class NetworkHandler {
     }
 
     private static void createGeneratorOnXnode(Network network, String xNodeId) {
-        Optional<DanglingLine> danglingLine = network.getDanglingLineStream()
+        Optional<BoundaryLine> boundaryLine = network.getBoundaryLineStream()
                 .filter(dl -> dl.getPairingKey().equals(xNodeId))
                 .findAny();
 
-        if (danglingLine.isPresent() && danglingLine.get().getTerminal().isConnected()) {
-            Bus xNodeBus = danglingLine.get().getTerminal().getBusBreakerView().getConnectableBus();
+        if (boundaryLine.isPresent() && boundaryLine.get().getTerminal().isConnected()) {
+            Bus xNodeBus = boundaryLine.get().getTerminal().getBusBreakerView().getConnectableBus();
             xNodeBus.getVoltageLevel().newGenerator()
                     .setBus(xNodeBus.getId())
                     .setEnsureIdUnicity(true)

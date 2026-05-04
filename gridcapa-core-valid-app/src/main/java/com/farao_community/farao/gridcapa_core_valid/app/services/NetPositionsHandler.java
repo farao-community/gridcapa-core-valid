@@ -13,8 +13,8 @@ import com.powsybl.glsk.commons.CountryEICode;
 import com.powsybl.glsk.commons.ZonalData;
 import com.powsybl.iidm.modification.scalable.Scalable;
 import com.powsybl.iidm.modification.scalable.ScalingParameters;
+import com.powsybl.iidm.network.BoundaryLine;
 import com.powsybl.iidm.network.Country;
-import com.powsybl.iidm.network.DanglingLine;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.openrao.data.refprog.referenceprogram.ReferenceProgram;
 import org.slf4j.Logger;
@@ -53,16 +53,16 @@ public final class NetPositionsHandler {
             try {
                 if (studyPointZoneId.equals("NP_BE_ALEGrO")) {
                     // XLI_OB1B
-                    Optional<DanglingLine> danglingLine = network.getDanglingLineStream()
-                            .filter(dl -> dl.getPairingKey().equals("XLI_OB1B"))
+                    Optional<BoundaryLine> boundaryLine = network.getBoundaryLineStream()
+                            .filter(bl -> bl.getPairingKey().equals("XLI_OB1B"))
                             .findAny();
-                    danglingLine.ifPresent(dl -> dl.setP0(-netPosition));
+                    boundaryLine.ifPresent(bl -> bl.setP0(-netPosition));
                 } else if (studyPointZoneId.equals("NP_DE_ALEGrO")) {
                     // XLI_OB1A
-                    Optional<DanglingLine> danglingLine = network.getDanglingLineStream()
-                            .filter(dl -> dl.getPairingKey().equals("XLI_OB1A"))
+                    Optional<BoundaryLine> boundaryLine = network.getBoundaryLineStream()
+                            .filter(bl -> bl.getPairingKey().equals("XLI_OB1A"))
                             .findAny();
-                    danglingLine.ifPresent(dl -> dl.setP0(-netPosition));
+                    boundaryLine.ifPresent(bl -> bl.setP0(-netPosition));
                 } else {
                     String zone = CoreAreasId.ID_MAPPING.get(studyPointZoneId);
                     double shift = netPosition - coreNetPositions.getOrDefault(zone, 0.);
