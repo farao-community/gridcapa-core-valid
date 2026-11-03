@@ -21,6 +21,7 @@ import com.farao_community.farao.rao_runner.api.resource.AbstractRaoResponse;
 import com.farao_community.farao.rao_runner.api.resource.RaoFailureResponse;
 import com.farao_community.farao.rao_runner.api.resource.RaoRequest;
 import com.farao_community.farao.rao_runner.api.resource.RaoSuccessResponse;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.glsk.api.GlskDocument;
 import com.powsybl.glsk.commons.ZonalData;
 import com.powsybl.iidm.modification.scalable.Scalable;
@@ -117,7 +118,7 @@ public class CoreValidHandler {
         GlskDocument glskDocument = fileImporter.importGlskFile(coreValidRequest.getGlsk());
         ZonalData<Scalable> scalableZonalData = glskDocument.getZonalScalable(network, coreValidRequest.getTimestamp().toInstant());
         String jsonCracUrl = fileExporter.saveCracInJsonFormat(cracCreationContext.getCrac(), coreValidRequest.getTimestamp());
-        RaoParameters raoParameters = RaoParameters.load();
+        RaoParameters raoParameters = RaoParameters.load(ReportNode.NO_OP);
         String raoParametersUrl = fileExporter.saveRaoParametersAndGetUrl(raoParameters);
         return new StudyPointData(network, coreNetPositions, scalableZonalData, cracCreationContext, jsonCracUrl, raoParametersUrl);
     }
